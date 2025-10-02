@@ -10,9 +10,7 @@
 
 ## Project Description
 
-Homeless shelters often face urgent and unpredictable needs for supplies like food, clothing, and hygiene products. Community members want to help but often lack visibility into what shelters need most, resulting in mismatched or wasted donations. ShelterLink is a mobile application that streamlines this process by allowing shelters to post real-time needs and enabling donors to match those needs with items they already have. By centralizing and simplifying communication, ShelterLink makes donating easier, faster, and more impactful. This is especially relevant in Seattle, where shelters are overwhelmed due to the homelessness crisis.
-
-The goal of ShelterLink is to connect community members with local homeless shelters by making donation needs visible, actionable, and real-time. Donors can list items they are willing to give, while shelters post current requests. The system automatically matches supply with demand, facilitating efficient, targeted donations.
+Homeless shelters often face urgent, unpredictable shortages of supplies, while donors lack visibility into what is most needed, leading to mismatched or wasted donations. ShelterLink is a mobile app that solves this by letting shelters post real-time requests and donors list items they can give, with the system automatically matching supply and demand. By centralizing communication, ShelterLink makes donating easier, faster, and more impactful, addressing the critical needs of overwhelmed Seattle shelters.
 
 ## Links
 
