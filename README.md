@@ -14,7 +14,6 @@ Charity organizations often face urgent needs for goods including food, clothing
 
 Cornucopia is a mobile application that streamlines donations by allowing charities to post real-time needs and enabling donors to browse and filter those needs. By centralizing communication, Cornucopia reduces logistical barriers while increasing donor confidence that their contributions are received and appreciated.
 
-
 ## Links
 
 - [Proposal Document](https://docs.google.com/document/d/1MNm4lgE8vIqCnj3oJq1o6MpgDq2Q1TAc0yENPEfM0sc/edit?tab=t.0#heading=h.a9qxd8i05pbz)
