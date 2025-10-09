@@ -12,7 +12,7 @@ export type Profile = {
 
 /**
  * Create or update a profile row for a Supabase Auth user.
- * This upserts into the 'profiles' table which should exist in your DB.
+ * This upserts into the 'profiles' table which should exist in DB.
  *
  * Contract:
  * - Input: Supabase User object
