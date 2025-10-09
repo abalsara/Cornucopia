@@ -8,7 +8,7 @@ export default function RootLayout() {
     // Create a profile row for any user that signs in.
     // We attach this listener at the app root so it runs once.
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session?.user) {
+      if ((event === "INITIAL_SESSION" || event === "USER_UPDATED") && session?.user) {
         // log any errors to console.
         createOrUpdateProfile(session.user).catch((err) => {
           // eslint-disable-next-line no-console

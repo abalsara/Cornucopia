@@ -4,10 +4,11 @@ import { supabase } from "./supabase";
 // Profile shape in the database. Add fields here as Schema is made and grows
 export type Profile = {
   id: string; // matches auth user's id
-  email?: string | null;
-  full_name?: string | null;
-  avatar_url?: string | null;
-  created_at?: string | null;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  created_at: string | null;
 };
 
 /**
