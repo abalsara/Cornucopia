@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
+import { createOrUpdateProfile } from "../lib/profiles";
 import { supabase } from "../lib/supabase";
 
 export default function Auth() {
@@ -37,6 +38,13 @@ export default function Auth() {
     if (error) Alert.alert(error.message);
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
+    else if (session.user) {
+      // Create a profile row for the newly signed up user.
+      createOrUpdateProfile(session.user).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error("createOrUpdateProfile error:", err);
+      });
+    }
     setLoading(false);
   }
 
