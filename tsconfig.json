@@ -5,7 +5,7 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "module": "es2022"
   },
+  "module": "es2022",
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
