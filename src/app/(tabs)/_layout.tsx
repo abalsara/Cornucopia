@@ -13,6 +13,42 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="donate"
+        options={{
+          title: "Donate",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="heart" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="myDonations"
+        options={{
+          title: "My Donations",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="history" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="charities"
+        options={{
+          title: "Charities",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="list" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="user" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
