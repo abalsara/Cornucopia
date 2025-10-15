@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from "react-native";
 
 export default function donate() {
   return (
@@ -11,7 +11,7 @@ export default function donate() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
