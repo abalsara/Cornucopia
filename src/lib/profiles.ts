@@ -1,15 +1,9 @@
 import type { User } from "@supabase/supabase-js";
+import { Tables } from "../types/database.types";
 import { supabase } from "./supabase";
 
-// Profile shape in the database. Add fields here as Schema is made and grows
-export type Profile = {
-  id: string; // matches auth user's id
-  email: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  avatar_url: string | null;
-  created_at: string | null;
-};
+// Profile shape in the database. Regenerate 'database.types.ts' as Schema is made and grows
+export type Profile = Tables<"Profiles">;
 
 /**
  * Create or update a profile row for a Supabase Auth user.
@@ -19,7 +13,7 @@ export type Profile = {
  * - Input: Supabase User object
  * - Output: the upserted profile row or throws an error
  */
-export async function createOrUpdateProfile(user: User) {
+export async function createOrUpdateProfile(user: User): Promise<Profile> {
   if (!user || !user.id) throw new Error("Invalid user");
 
   const profile: Partial<Profile> = {
@@ -28,16 +22,34 @@ export async function createOrUpdateProfile(user: User) {
     created_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase.from<Profile>("profiles").upsert(profile, {
-    onConflict: "id",
-  });
-
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(profile, {
+      onConflict: "id",
+    })
+    .select()
+    .single();
   if (error) throw error;
-  return data?.[0] ?? null;
+
+  const responseProfile: Profile = data;
+  return responseProfile;
 }
 
-export async function getProfile(id: string) {
-  const { data, error } = await supabase.from<Profile>("profiles").select("*").eq("id", id).single();
+/**
+ * Retrieves a user profile from the `profiles` table in the database.
+ *
+ * @param id - The unique user ID associated with the desired profile.
+ * @returns A Promise that resolves to a Profile object.
+ * @throws If the profile cannot be found or a database error occurs.
+ */
+export async function getProfile(id: string): Promise<Profile> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select()
+    .eq("id", id)
+    .single();
   if (error) throw error;
-  return data as Profile;
+
+  const profile: Profile = data;
+  return profile;
 }
