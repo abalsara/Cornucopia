@@ -1,6 +1,13 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {styles} from "./profile-styles";
+import { styles } from "./profile-styles";
 
 // Placeholder data
 const PLACEHOLDER_USER = {
@@ -18,7 +25,11 @@ export default function profile() {
       <View style={styles.header}>
         {/* Messages Icon - Top Right */}
         <TouchableOpacity style={styles.messagesButton}>
-          <Ionicons name="chatbubble-ellipses-outline" size={24} color="#2196F3" />
+          <Ionicons
+            name="chatbubble-ellipses-outline"
+            size={24}
+            color="#2196F3"
+          />
         </TouchableOpacity>
 
         {/* Profile Content - Left and Right Layout */}
@@ -43,7 +54,9 @@ export default function profile() {
 
             <Text style={styles.userName}>{PLACEHOLDER_USER.name}</Text>
             <Text style={styles.userEmail}>{PLACEHOLDER_USER.email}</Text>
-            <Text style={styles.memberSince}>Member since {PLACEHOLDER_USER.memberSince}</Text>
+            <Text style={styles.memberSince}>
+              Member since {PLACEHOLDER_USER.memberSince}
+            </Text>
           </View>
 
           {/* Right Side - Bio */}
@@ -57,7 +70,6 @@ export default function profile() {
           </View>
         </View>
       </View>
-
 
       {/* Account Settings Section */}
       <View style={styles.section}>
@@ -128,5 +140,3 @@ export default function profile() {
     </ScrollView>
   );
 }
-
-
