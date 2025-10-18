@@ -32,7 +32,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Check formatting
-        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,md}"
+        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,md}" --ignore-path .prettierignore
 
       - name: Run linter
         run: npm run lint
