@@ -1,9 +1,37 @@
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as SystemUI from "expo-system-ui";
+import { useColorScheme } from "react-native";
+import {
+  MD3DarkTheme as darkTheme,
+  MD3LightTheme as lightTheme,
+  PaperProvider,
+} from "react-native-paper";
 
 export default function RootLayout() {
+  // apply a theme to the app depending on the device's theme
+  const colorScheme = useColorScheme();
+  const paperTheme = colorScheme === "dark" ? darkTheme : lightTheme;
+
+  if (colorScheme === "dark") {
+    SystemUI.setBackgroundColorAsync("black");
+  }
+
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <PaperProvider theme={paperTheme}>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: paperTheme.colors.background,
+          },
+          headerShadowVisible: false,
+          headerTintColor: paperTheme.colors.onBackground,
+          presentation: "transparentModal",
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+    </PaperProvider>
   );
 }

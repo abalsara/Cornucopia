@@ -1,8 +1,10 @@
+import ThemedView from "@/src/components/ThemedView";
 import { supabase } from "@/src/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
 import "react-native-url-polyfill/auto";
 
 export default function Index() {
@@ -27,14 +29,18 @@ export default function Index() {
     return <Redirect href={"/Auth"} />;
   }
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <ThemedView>
+      <View style={styles.container}>
+        <Text>Edit app/index.tsx to edit this screen.</Text>
+      </View>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
