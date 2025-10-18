@@ -11,6 +11,10 @@ jobs:
     name: Lint, Format, and Test
     runs-on: ubuntu-latest
 
+    env:
+      EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+      EXPO_PUBLIC_SUPABASE_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_KEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,7 +38,7 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npm test -- --coverage
+        run: npm test
 
       - name: Validate Expo config
         run: npx expo-doctor
