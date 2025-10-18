@@ -1,0 +1,10 @@
+# Reports directory
+reports/
+
+# Generated files
+.expo/
+expo-env.d.ts
+
+# Native folders (should be generated)
+ios/
+android/

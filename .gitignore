@@ -1,5 +1,7 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+.gitignore
+
 # dependencies
 node_modules/
 
@@ -48,3 +50,10 @@ credentials/
 # local builds
 *.apk
 *.aab
+*.tar.gz
+
+# IDE
+.idea/
+
+# App builds
+*.app/
