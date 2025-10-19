@@ -7,6 +7,7 @@ import {
   MD3LightTheme as lightTheme,
   PaperProvider,
 } from "react-native-paper";
+import ThemedView from "../components/ThemedView";
 
 export default function RootLayout() {
   // apply a theme to the app depending on the device's theme
@@ -19,18 +20,22 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: paperTheme.colors.background,
-          },
-          headerShadowVisible: false,
-          headerTintColor: paperTheme.colors.onBackground,
-          presentation: "transparentModal",
-        }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <ThemedView>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: paperTheme.colors.background,
+            },
+            headerShadowVisible: false,
+            headerTintColor: paperTheme.colors.onBackground,
+            presentation: "transparentModal",
+          }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+        </Stack>
+      </ThemedView>
+
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
     </PaperProvider>
   );
