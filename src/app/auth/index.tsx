@@ -41,7 +41,7 @@ export default function Auth() {
           </View>
           <View style={[styles.mt20, styles.inline]}>
             <Text variant="titleLarge">Already have an account? </Text>
-            <Pressable>
+            <Pressable onPress={() => router.push("/auth/login")}>
               <Text variant="titleLarge" style={styles.login}>
                 Login
               </Text>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   buttonText: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "light",
   },
   buttonContent: {

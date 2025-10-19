@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
@@ -9,7 +8,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function signUpWithEmail() {
     setLoading(true);
@@ -47,7 +45,7 @@ export default function SignUp() {
             autoCapitalize={"none"}
           />
         </View>
-        <View style={styles.verticallySpaced}>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
           <Button
             disabled={loading}
             onPress={() => signUpWithEmail()}
