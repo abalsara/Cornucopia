@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, Keyboard, StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import ThemedView from "../../components/ThemedView";
 import { supabase } from "../../lib/supabase";
@@ -12,6 +12,7 @@ export default function Login() {
   const router = useRouter();
 
   async function signInWithEmail() {
+    Keyboard.dismiss();
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -22,7 +23,7 @@ export default function Login() {
       Alert.alert(error.message);
       setLoading(false);
     } else {
-      router.replace("/");
+      router.push("/");
     }
   }
 
@@ -33,7 +34,7 @@ export default function Login() {
           <TextInput
             onChangeText={(text) => setEmail(text)}
             value={email}
-            placeholder="email@address.com"
+            label="Email address"
             autoCapitalize={"none"}
           />
         </View>
@@ -42,7 +43,7 @@ export default function Login() {
             onChangeText={(text) => setPassword(text)}
             value={password}
             secureTextEntry={true}
-            placeholder="Password"
+            label="Password"
             autoCapitalize={"none"}
           />
         </View>
