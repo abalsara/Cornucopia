@@ -1,0 +1,3 @@
+# Coding Guidelines
+- Since we are developing an Expo app written in TypeScript, we will follow the official coding style guidelines used by Expo for their internal projects. These guidelines emphasize best practices for TypeScript and React component development. We will enforce these guidelines by integrating ESLint into our CI pipeline with GitHub Actions so that all code is automatically checked before it is merged into the main branch.
+- https://github.com/expo/expo/tree/main/packages/eslint-config-universe
