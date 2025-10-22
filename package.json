@@ -58,6 +58,7 @@
     "jest": "~29.7.0",
     "jest-expo": "~54.0.13",
     "prettier": "3.6.2",
+    "supabase": "^2.53.6",
     "typescript": "~5.9.2"
   },
   "private": true
