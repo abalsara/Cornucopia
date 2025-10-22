@@ -125,12 +125,12 @@ export type Database = {
             foreignKeyName: "Donation_pid_fkey";
             columns: ["pid"];
             isOneToOne: false;
-            referencedRelation: "profiles";
+            referencedRelation: "Profiles";
             referencedColumns: ["id"];
           },
         ];
       };
-      profiles: {
+      Profiles: {
         Row: {
           avatar_url: string | null;
           created_at: string;
