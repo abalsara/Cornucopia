@@ -41,26 +41,96 @@ export type Database = {
     Tables: {
       Charities: {
         Row: {
+          address: string;
+          admin: string;
           c_name: string | null;
-          cid: number;
+          cid: string;
+          city: string;
           created_at: string;
           email: string | null;
+          state: string;
+          zip_code: string;
         };
         Insert: {
+          address: string;
+          admin: string;
           c_name?: string | null;
-          cid?: number;
+          cid?: string;
+          city: string;
           created_at?: string;
           email?: string | null;
+          state: string;
+          zip_code: string;
         };
         Update: {
+          address?: string;
+          admin?: string;
           c_name?: string | null;
-          cid?: number;
+          cid?: string;
+          city?: string;
           created_at?: string;
           email?: string | null;
+          state?: string;
+          zip_code?: string;
         };
         Relationships: [];
       };
-      Profiles: {
+      Donation: {
+        Row: {
+          cid: string | null;
+          created_at: string;
+          donation_id: string;
+          fulfilled: boolean | null;
+          item_id: string | null;
+          pid: string | null;
+          quantitiy_comitted: number | null;
+          scheduled_date: string | null;
+        };
+        Insert: {
+          cid?: string | null;
+          created_at?: string;
+          donation_id?: string;
+          fulfilled?: boolean | null;
+          item_id?: string | null;
+          pid?: string | null;
+          quantitiy_comitted?: number | null;
+          scheduled_date?: string | null;
+        };
+        Update: {
+          cid?: string | null;
+          created_at?: string;
+          donation_id?: string;
+          fulfilled?: boolean | null;
+          item_id?: string | null;
+          pid?: string | null;
+          quantitiy_comitted?: number | null;
+          scheduled_date?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Donation_cid_fkey";
+            columns: ["cid"];
+            isOneToOne: false;
+            referencedRelation: "Charities";
+            referencedColumns: ["cid"];
+          },
+          {
+            foreignKeyName: "Donation_item_id_fkey";
+            columns: ["item_id"];
+            isOneToOne: false;
+            referencedRelation: "Request";
+            referencedColumns: ["item_id"];
+          },
+          {
+            foreignKeyName: "Donation_pid_fkey";
+            columns: ["pid"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      profiles: {
         Row: {
           avatar_url: string | null;
           created_at: string;
@@ -86,6 +156,89 @@ export type Database = {
           last_name?: string | null;
         };
         Relationships: [];
+      };
+      Request: {
+        Row: {
+          cid: string | null;
+          created_at: string;
+          item_id: string;
+          item_name: string | null;
+          post_id: string;
+          quantitiy_requested: number | null;
+          quantity_fulfilled: number | null;
+          urgency: number | null;
+        };
+        Insert: {
+          cid?: string | null;
+          created_at?: string;
+          item_id?: string;
+          item_name?: string | null;
+          post_id?: string;
+          quantitiy_requested?: number | null;
+          quantity_fulfilled?: number | null;
+          urgency?: number | null;
+        };
+        Update: {
+          cid?: string | null;
+          created_at?: string;
+          item_id?: string;
+          item_name?: string | null;
+          post_id?: string;
+          quantitiy_requested?: number | null;
+          quantity_fulfilled?: number | null;
+          urgency?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Request_cid_fkey";
+            columns: ["cid"];
+            isOneToOne: false;
+            referencedRelation: "Charities";
+            referencedColumns: ["cid"];
+          },
+          {
+            foreignKeyName: "Request_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "RequestPost";
+            referencedColumns: ["post_id"];
+          },
+        ];
+      };
+      RequestPost: {
+        Row: {
+          cid: string | null;
+          created_at: string;
+          dropoff_details: string | null;
+          is_active: boolean | null;
+          post_id: string;
+          post_title: string | null;
+        };
+        Insert: {
+          cid?: string | null;
+          created_at?: string;
+          dropoff_details?: string | null;
+          is_active?: boolean | null;
+          post_id?: string;
+          post_title?: string | null;
+        };
+        Update: {
+          cid?: string | null;
+          created_at?: string;
+          dropoff_details?: string | null;
+          is_active?: boolean | null;
+          post_id?: string;
+          post_title?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "RequestPost_cid_fkey";
+            columns: ["cid"];
+            isOneToOne: false;
+            referencedRelation: "Charities";
+            referencedColumns: ["cid"];
+          },
+        ];
       };
     };
     Views: {
