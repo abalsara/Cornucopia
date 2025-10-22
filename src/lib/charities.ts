@@ -1,14 +1,8 @@
 import { supabase } from './supabase';
+import { Tables } from '../types/database.types';
 import type { User } from '@supabase/supabase-js';
 
-export interface Charity {
-    id: string;
-    admin: string;
-    email: string;
-    name: string;
-    created_at?: string | null;
-    updated_at?: string | null;
-}
+export type Charity = Tables<'Charities'>;
 
 /**
  * Upsert a charity row (onConflict: "admin") and return the created/updated row.
