@@ -1,33 +1,40 @@
 import { Stack } from "expo-router";
-import { useEffect } from "react";
-import { createOrUpdateProfile } from "../lib/profiles";
-import { supabase } from "../lib/supabase";
+import { StatusBar } from "expo-status-bar";
+import * as SystemUI from "expo-system-ui";
+import { useColorScheme } from "react-native";
+import { PaperProvider } from "react-native-paper";
+import ThemedView from "../components/ThemedView";
+import { darkTheme, lightTheme } from "../styles/themes";
 
 export default function RootLayout() {
-  useEffect(() => {
-    // Create a profile row for any user that signs in.
-    // We attach this listener at the app root so it runs once.
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (
-          (event === "INITIAL_SESSION" || event === "USER_UPDATED") &&
-          session?.user
-        ) {
-          // log any errors to console.
-          createOrUpdateProfile(session.user).catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error("createOrUpdateProfile error:", err);
-          });
-        }
-      },
-    );
+  // apply a theme to the app depending on the device's theme
+  const colorScheme = useColorScheme();
+  const paperTheme = colorScheme === "dark" ? darkTheme : lightTheme;
 
-    return () => listener?.subscription?.unsubscribe();
-  }, []);
+  if (colorScheme === "dark") {
+    // prevent flickering on navigation
+    SystemUI.setBackgroundColorAsync("black");
+  }
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <PaperProvider theme={paperTheme}>
+      <ThemedView>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: paperTheme.colors.background,
+            },
+            headerShadowVisible: false,
+            headerTintColor: paperTheme.colors.onBackground,
+            presentation: "transparentModal",
+          }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+        </Stack>
+      </ThemedView>
+
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+    </PaperProvider>
   );
 }
