@@ -44,15 +44,28 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
-    # Ignore major version updates for React Native (requires manual testing)
-    # will need to change these later, specifically expo
+    # Ignore React and React Native packages entirely (requires careful manual testing)
+    # These updates often cause breaking changes and need to be coordinated
     ignore:
-      - dependency-name: "react-native"
-        update-types: ["version-update:semver-major"]
+      # React core packages - ignore all updates
       - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native"
+
+      # React Native related packages - ignore all updates
+      - dependency-name: "react-native-gesture-handler"
+      - dependency-name: "react-native-reanimated"
+      - dependency-name: "react-native-screens"
+      - dependency-name: "react-native-web"
+      - dependency-name: "react-native-worklets"
+      - dependency-name: "react-native-safe-area-context"
+
+      # React Navigation packages - ignore all updates
+      - dependency-name: "@react-navigation/bottom-tabs"
+      - dependency-name: "@react-navigation/elements"
+      - dependency-name: "@react-navigation/native"
+
+      # Expo - ignore major updates only
       - dependency-name: "expo"
         update-types: ["version-update:semver-major"]
 
