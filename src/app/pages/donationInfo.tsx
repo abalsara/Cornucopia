@@ -1,15 +1,14 @@
 import { useRouter } from "expo-router";
 import * as React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { IconButton, Text, useTheme } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 
-export default function HowDonationWorksScreen({ }: any) {
-  const theme = useTheme();
+export default function HowDonationWorksScreen() {
   const router = useRouter();
 
   const handleBackPress = (): void => {
     router.back();
-  }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

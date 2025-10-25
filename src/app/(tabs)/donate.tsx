@@ -1,15 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ThemedView from "@/src/components/ThemedView";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Button, IconButton, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, IconButton, Text, TextInput } from "react-native-paper";
 
 export default function FindCharityScreen() {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [useLocation, setUseLocation] = useState(false);
-  const theme = useTheme();
   const router = useRouter();
 
   const searchNearbyCharities = async (lat: number, lon: number) => {
@@ -33,15 +33,16 @@ export default function FindCharityScreen() {
           text: "Yes, use location",
           onPress: async () => {
             try {
-              const { status } = await Location.requestForegroundPermissionsAsync();
+              const { status } =
+                await Location.requestForegroundPermissionsAsync();
               if (status !== "granted") {
                 Alert.alert(
                   "Permission denied",
-                  "Location permission is required to find nearby charities."
+                  "Location permission is required to find nearby charities.",
                 );
                 return;
               }
-  
+
               const location = await Location.getCurrentPositionAsync({});
               const { latitude, longitude } = location.coords;
               setUseLocation(true);
@@ -53,13 +54,13 @@ export default function FindCharityScreen() {
             }
           },
         },
-      ]
+      ],
     );
   };
 
   const handleInfoPress = (): void => {
-    router.push('/pages/donationInfo');
-  }
+    router.push("/pages/donationInfo");
+  };
 
   const handleSubmitSearch = () => {
     // implement search for city / zip here
@@ -73,8 +74,8 @@ export default function FindCharityScreen() {
   };
 
   /**
-  * Checks if a string is a valid US ZIP code (5-digit or ZIP+4).
-  */
+   * Checks if a string is a valid US ZIP code (5-digit or ZIP+4).
+   */
   function isValidZipCode(zipCode: string) {
     const pattern = /^\d{5}(?:-\d{4})?$/;
     return pattern.test(zipCode);
@@ -82,36 +83,35 @@ export default function FindCharityScreen() {
 
   return (
     <ThemedView>
-        <View style={styles.headerRow}>
-          <Text variant="headlineMedium" style={styles.title}>
-            Find a Charity
-          </Text>
-          <IconButton icon="information-outline" onPress={handleInfoPress} />
-        </View>
-
-        <Text variant="bodyMedium" style={styles.subtitle}>
-          Search by zip code, city, or use your own location.
+      <View style={styles.headerRow}>
+        <Text variant="headlineMedium" style={styles.title}>
+          Find a Charity
         </Text>
+        <IconButton icon="information-outline" onPress={handleInfoPress} />
+      </View>
 
-        {!searchVisible ? (
-          <Button
-            mode="outlined"
-            icon="magnify"
-            style={styles.searchButton}
-            onPress={handleSearchPress}
-          >
-            Search by location
-          </Button>
-        ) : (
-          <TextInput
-            
-            mode="outlined"
-            label="Search by city or zip"
-            value={searchText}
-            onChangeText={setSearchText}
-            right={<TextInput.Icon icon="magnify" onPress={handleSubmitSearch} />}
-          />
-        )}
+      <Text variant="bodyMedium" style={styles.subtitle}>
+        Search by zip code, city, or use your own location.
+      </Text>
+
+      {!searchVisible ? (
+        <Button
+          mode="outlined"
+          icon="magnify"
+          style={styles.searchButton}
+          onPress={handleSearchPress}
+        >
+          Search by location
+        </Button>
+      ) : (
+        <TextInput
+          mode="outlined"
+          label="Search by city or zip"
+          value={searchText}
+          onChangeText={setSearchText}
+          right={<TextInput.Icon icon="magnify" onPress={handleSubmitSearch} />}
+        />
+      )}
     </ThemedView>
   );
 }
