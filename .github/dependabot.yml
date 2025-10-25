@@ -1,0 +1,68 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Allow up to 5 open pull requests for npm dependencies
+    open-pull-requests-limit: 5
+    # Group dependencies to reduce PR noise
+    groups:
+      # Group all Expo-related packages together
+      expo:
+        patterns:
+          - "expo*"
+          - "@expo/*"
+      # Group React packages together
+      react:
+        patterns:
+          - "react"
+          - "react-*"
+      # Group React Navigation packages together
+      react-navigation:
+        patterns:
+          - "@react-navigation/*"
+      # Group development dependencies together
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    # Add labels to PRs for easier identification
+    labels:
+      - "dependencies"
+      - "automated"
+    # Commit message prefix
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # Ignore major version updates for React Native (requires manual testing)
+    # will need to change these later, specifically expo
+    ignore:
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "expo"
+        update-types: ["version-update:semver-major"]
+
+  # Enable version updates for GitHub Actions (if you add any)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
