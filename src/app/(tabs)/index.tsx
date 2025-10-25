@@ -1,10 +1,11 @@
-import ThemedView from '@/src/components/ThemedView';
-import { supabase } from '@/src/lib/supabase';
 import { Session } from '@supabase/supabase-js';
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
+
+import ThemedView from '@/src/components/ThemedView';
+import { supabase } from '@/src/lib/supabase';
 import 'react-native-url-polyfill/auto';
 
 export default function Index() {

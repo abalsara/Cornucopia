@@ -1,6 +1,7 @@
-import ThemedView from '@/src/components/ThemedView';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+
+import ThemedView from '@/src/components/ThemedView';
 
 export default function profile() {
   return (

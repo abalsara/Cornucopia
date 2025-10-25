@@ -1,8 +1,9 @@
-import { authColorScheme, lightColorScheme } from '@/src/styles/colors';
-import { authTheme } from '@/src/styles/themes';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { Button, PaperProvider, Text } from 'react-native-paper';
+
+import { authColorScheme, lightColorScheme } from '@/src/styles/colors';
+import { authTheme } from '@/src/styles/themes';
 
 const primaryColor = lightColorScheme.colors.primary;
 

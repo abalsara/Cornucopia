@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import ThemedView from '@/src/components/ThemedView';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Button, IconButton, Text, TextInput } from 'react-native-paper';
+
+import ThemedView from '@/src/components/ThemedView';
 
 export default function FindCharityScreen() {
   const [searchVisible, setSearchVisible] = useState(false);

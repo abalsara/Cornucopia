@@ -1,9 +1,11 @@
-import { emailIsValid, validatePassword } from '@/src/util/auth';
 import React, { useState } from 'react';
 import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+
 import ThemedView from '../../components/ThemedView';
 import { supabase } from '../../lib/supabase';
+
+import { emailIsValid, validatePassword } from '@/src/util/auth';
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
@@ -45,8 +47,8 @@ export default function SignUp() {
       data: { session },
       error,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
       options: {
         data: {
           first_name: firstName,

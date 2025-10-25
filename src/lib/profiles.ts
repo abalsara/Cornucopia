@@ -1,4 +1,5 @@
 import type { User } from '@supabase/supabase-js';
+
 import { Tables } from '../types/database.types';
 import { supabase } from './supabase';
 

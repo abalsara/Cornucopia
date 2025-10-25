@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+
 import ThemedView from '../../components/ThemedView';
 import { supabase } from '../../lib/supabase';
 
@@ -15,8 +16,8 @@ export default function Login() {
     Keyboard.dismiss();
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+      email,
+      password,
     });
 
     if (error) {

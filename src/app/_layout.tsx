@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
 import { useColorScheme } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
+
 import ThemedView from '../components/ThemedView';
 import { darkTheme, lightTheme } from '../styles/themes';
 
