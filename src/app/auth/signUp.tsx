@@ -84,7 +84,7 @@ export default function SignUp() {
             label="Email address"
             onChangeText={(text) => setEmail(text)}
             value={email}
-            autoCapitalize={'none'}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.verticallySpaced}>
@@ -92,8 +92,8 @@ export default function SignUp() {
             label="Password"
             onChangeText={(text) => setPassword(text)}
             value={password}
-            secureTextEntry={true}
-            autoCapitalize={'none'}
+            secureTextEntry
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.verticallySpaced}>
@@ -101,8 +101,8 @@ export default function SignUp() {
             label="Confirm password"
             onChangeText={(text) => setConfirmPassword(text)}
             value={confirmPassword}
-            secureTextEntry={true}
-            autoCapitalize={'none'}
+            secureTextEntry
+            autoCapitalize="none"
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>

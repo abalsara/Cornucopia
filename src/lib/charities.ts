@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 
-import { Tables } from '../types/database.types';
 import { supabase } from './supabase';
+import { Tables } from '../types/database.types';
 
 export type Charity = Tables<'Charities'>;
 

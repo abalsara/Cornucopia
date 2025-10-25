@@ -34,7 +34,7 @@ export default function Index() {
   if (!session || !session.user) {
     return (
       <ThemedView>
-        <Redirect href={'/auth'} />
+        <Redirect href="/auth" />
       </ThemedView>
     );
   }

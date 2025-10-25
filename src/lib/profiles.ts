@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 
-import { Tables } from '../types/database.types';
 import { supabase } from './supabase';
+import { Tables } from '../types/database.types';
 
 // Profile shape in the database. Regenerate 'database.types.ts' as Schema is made and grows
 export type Profile = Tables<'Profiles'>;

@@ -6,9 +6,7 @@ type ThemedViewProps = ViewProps;
 export default function ThemedView({ ...Props }: ThemedViewProps) {
   const theme = useTheme();
 
-  return (
-    <View style={{ ...styles.view, backgroundColor: theme.colors.background }} {...Props}></View>
-  );
+  return <View style={{ ...styles.view, backgroundColor: theme.colors.background }} {...Props} />;
 }
 
 const styles = StyleSheet.create({

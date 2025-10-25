@@ -36,16 +36,16 @@ export default function Login() {
             onChangeText={(text) => setEmail(text)}
             value={email}
             label="Email address"
-            autoCapitalize={'none'}
+            autoCapitalize="none"
           />
         </View>
         <View style={styles.verticallySpaced}>
           <TextInput
             onChangeText={(text) => setPassword(text)}
             value={password}
-            secureTextEntry={true}
+            secureTextEntry
             label="Password"
-            autoCapitalize={'none'}
+            autoCapitalize="none"
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
