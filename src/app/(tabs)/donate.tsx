@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import ThemedView from "@/src/components/ThemedView";
-import * as Location from "expo-location";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import { Button, IconButton, Text, TextInput } from "react-native-paper";
+import * as Location from 'expo-location';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
+import { Button, IconButton, Text, TextInput } from 'react-native-paper';
+
+import ThemedView from '@/src/components/ThemedView';
 
 export default function FindCharityScreen() {
   const [searchVisible, setSearchVisible] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [useLocation, setUseLocation] = useState(false);
   const router = useRouter();
 
@@ -21,24 +22,23 @@ export default function FindCharityScreen() {
 
   const handleSearchPress = () => {
     Alert.alert(
-      "Use Your Location?",
-      "Would you like to use your current location to find charities nearby?",
+      'Use Your Location?',
+      'Would you like to use your current location to find charities nearby?',
       [
         {
-          text: "No, search manually",
+          text: 'No, search manually',
           onPress: () => setSearchVisible(true),
-          style: "cancel",
+          style: 'cancel',
         },
         {
-          text: "Yes, use location",
+          text: 'Yes, use location',
           onPress: async () => {
             try {
-              const { status } =
-                await Location.requestForegroundPermissionsAsync();
-              if (status !== "granted") {
+              const { status } = await Location.requestForegroundPermissionsAsync();
+              if (status !== 'granted') {
                 Alert.alert(
-                  "Permission denied",
-                  "Location permission is required to find nearby charities.",
+                  'Permission denied',
+                  'Location permission is required to find nearby charities.',
                 );
                 return;
               }
@@ -49,8 +49,8 @@ export default function FindCharityScreen() {
               // Call charity search logic here
               // await searchNearbyCharities(latitude, longitude);
             } catch (error) {
-              console.error("Error getting location:", error);
-              Alert.alert("Error", "Failed to retrieve your location.");
+              console.error('Error getting location:', error);
+              Alert.alert('Error', 'Failed to retrieve your location.');
             }
           },
         },
@@ -59,7 +59,7 @@ export default function FindCharityScreen() {
   };
 
   const handleInfoPress = (): void => {
-    router.push("/pages/donationInfo");
+    router.push('/pages/donationInfo');
   };
 
   const handleSubmitSearch = () => {
@@ -70,7 +70,7 @@ export default function FindCharityScreen() {
     } else {
       // city
     }
-    console.log("Searching for:", searchText);
+    console.log('Searching for:', searchText);
   };
 
   /**
@@ -99,8 +99,7 @@ export default function FindCharityScreen() {
           mode="outlined"
           icon="magnify"
           style={styles.searchButton}
-          onPress={handleSearchPress}
-        >
+          onPress={handleSearchPress}>
           Search by location
         </Button>
       ) : (
@@ -120,18 +119,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subtitle: {
-    color: "#888",
+    color: '#888',
     marginBottom: 20,
   },
   searchButton: {
@@ -139,15 +138,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    position: "absolute",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     borderTopWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     paddingVertical: 8,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
 });

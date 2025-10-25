@@ -1,5 +1,5 @@
-import { Stack } from "expo-router";
-import { useTheme } from "react-native-paper";
+import { Stack } from 'expo-router';
+import { useTheme } from 'react-native-paper';
 
 export default function AuthLayout() {
   const theme = useTheme();
@@ -11,26 +11,25 @@ export default function AuthLayout() {
         },
         headerShadowVisible: false,
         headerTintColor: theme.colors.onBackground,
-        presentation: "transparentModal",
-      }}
-    >
+        presentation: 'transparentModal',
+      }}>
       <Stack.Screen
         name="index"
         options={{
           headerShown: false,
-          title: "landingPage",
+          title: 'landingPage',
         }}
       />
       <Stack.Screen
         name="login"
         options={{
-          title: "Login",
+          title: 'Login',
         }}
       />
       <Stack.Screen
         name="signUp"
         options={{
-          title: "Create an Account",
+          title: 'Create an Account',
         }}
       />
     </Stack>

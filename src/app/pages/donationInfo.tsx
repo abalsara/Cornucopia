@@ -1,7 +1,7 @@
-import { useRouter } from "expo-router";
-import * as React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { useRouter } from 'expo-router';
+import * as React from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { IconButton, Text } from 'react-native-paper';
 
 export default function HowDonationWorksScreen() {
   const router = useRouter();
@@ -13,12 +13,7 @@ export default function HowDonationWorksScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Back Button */}
-      <IconButton
-        icon="arrow-left"
-        size={28}
-        onPress={handleBackPress}
-        style={styles.backButton}
-      />
+      <IconButton icon="arrow-left" size={28} onPress={handleBackPress} style={styles.backButton} />
 
       {/* Title */}
       <Text style={styles.title}>How Donation Works</Text>
@@ -40,9 +35,7 @@ export default function HowDonationWorksScreen() {
         <Text style={styles.stepNumber}>2</Text>
         <View style={styles.stepContent}>
           <Text style={styles.stepTitle}>Select items to donate</Text>
-          <Text style={styles.stepDescription}>
-            Choose from their current needs list.
-          </Text>
+          <Text style={styles.stepDescription}>Choose from their current needs list.</Text>
         </View>
         <IconButton icon="hand-pointing-up" size={28} />
       </View>
@@ -66,26 +59,26 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     marginTop: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flexGrow: 1,
   },
   backButton: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginBottom: 10,
   },
   title: {
     fontSize: 26,
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 30,
   },
   step: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 30,
   },
   stepNumber: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginRight: 12,
   },
   stepContent: {
@@ -93,11 +86,11 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   stepDescription: {
     fontSize: 14,
-    color: "gray",
+    color: 'gray',
     marginTop: 4,
   },
 });

@@ -1,11 +1,12 @@
-import ThemedView from "@/src/components/ThemedView";
-import { supabase } from "@/src/lib/supabase";
-import { Session } from "@supabase/supabase-js";
-import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { ActivityIndicator, Text } from "react-native-paper";
-import "react-native-url-polyfill/auto";
+import { Session } from '@supabase/supabase-js';
+import { Redirect } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native-paper';
+
+import ThemedView from '@/src/components/ThemedView';
+import { supabase } from '@/src/lib/supabase';
+import 'react-native-url-polyfill/auto';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,7 @@ export default function Index() {
   if (!session || !session.user) {
     return (
       <ThemedView>
-        <Redirect href={"/auth"} />
+        <Redirect href="/auth" />
       </ThemedView>
     );
   }
@@ -49,7 +50,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

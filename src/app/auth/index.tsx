@@ -1,8 +1,9 @@
-import { authColorScheme, lightColorScheme } from "@/src/styles/colors";
-import { authTheme } from "@/src/styles/themes";
-import { useRouter } from "expo-router";
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import { Button, PaperProvider, Text } from "react-native-paper";
+import { useRouter } from 'expo-router';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Button, PaperProvider, Text } from 'react-native-paper';
+
+import { authColorScheme, lightColorScheme } from '@/src/styles/colors';
+import { authTheme } from '@/src/styles/themes';
 
 const primaryColor = lightColorScheme.colors.primary;
 
@@ -14,13 +15,10 @@ export default function Auth() {
       <View style={styles.layout}>
         <View style={styles.container}>
           <Image
-            source={require("../../../assets/images/app-icon.jpg")}
+            source={require('../../../assets/images/app-icon.jpg')}
             style={[styles.image, styles.mt20]}
           />
-          <Text
-            variant="displayLarge"
-            style={[styles.text, styles.mt20, styles.brandName]}
-          >
+          <Text variant="displayLarge" style={[styles.text, styles.mt20, styles.brandName]}>
             Cornucopia
           </Text>
           <Text variant="titleLarge" style={[styles.text, styles.mt10]}>
@@ -32,16 +30,15 @@ export default function Auth() {
 
           <View style={[styles.buttonWrapper, styles.mt20]}>
             <Button
-              onPress={() => router.push("/auth/signUp")}
+              onPress={() => router.push('/auth/signUp')}
               labelStyle={styles.buttonText}
-              contentStyle={styles.buttonContent}
-            >
+              contentStyle={styles.buttonContent}>
               Create an Account
             </Button>
           </View>
           <View style={[styles.mt20, styles.inline]}>
             <Text variant="titleLarge">Already have an account? </Text>
-            <Pressable onPress={() => router.push("/auth/login")}>
+            <Pressable onPress={() => router.push('/auth/login')}>
               <Text variant="titleLarge" style={styles.login}>
                 Login
               </Text>
@@ -71,11 +68,11 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 20,
-    fontWeight: "light",
+    fontWeight: 'light',
   },
   buttonContent: {
     height: 60,
@@ -84,21 +81,21 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: primaryColor,
     borderRadius: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     marginHorizontal: 40,
   },
   inline: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   brandName: {
     color: primaryColor,
   },
   text: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   login: {
     color: authColorScheme.colors.primary,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
 });
