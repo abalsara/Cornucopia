@@ -15,30 +15,30 @@
 export const validatePassword = (password: string): string => {
   // Minimum length check
   if (password.length < 8) {
-    return "Password must be at least 8 characters long.";
+    return 'Password must be at least 8 characters long.';
   }
 
   // Uppercase letter check
   if (!/[A-Z]/.test(password)) {
-    return "Password must contain at least one uppercase letter.";
+    return 'Password must contain at least one uppercase letter.';
   }
 
   // Lowercase letter check
   if (!/[a-z]/.test(password)) {
-    return "Password must contain at least one lowercase letter.";
+    return 'Password must contain at least one lowercase letter.';
   }
 
   // Number check
   if (!/[0-9]/.test(password)) {
-    return "Password must contain at least one number.";
+    return 'Password must contain at least one number.';
   }
 
   // No spaces check
   if (/\s/.test(password)) {
-    return "Password cannot contain spaces.";
+    return 'Password cannot contain spaces.';
   }
 
-  return "";
+  return '';
 };
 
 /**

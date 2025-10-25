@@ -1,18 +1,15 @@
-import { supabase } from "./supabase";
-import { Tables } from "../types/database.types";
-import type { User } from "@supabase/supabase-js";
+import { supabase } from './supabase';
+import { Tables } from '../types/database.types';
+import type { User } from '@supabase/supabase-js';
 
-export type Charity = Tables<"Charities">;
+export type Charity = Tables<'Charities'>;
 
 /**
  * Upsert a charity row (onConflict: "admin") and return the created/updated row.
  * Uses the passed user's id as the admin, c_name as the charity name
  */
-export async function createCharity(
-  user: User,
-  c_name: string,
-): Promise<Charity> {
-  if (!user || !user.id) throw new Error("User with a valid id is required");
+export async function createCharity(user: User, c_name: string): Promise<Charity> {
+  if (!user || !user.id) throw new Error('User with a valid id is required');
 
   const charity = {
     admin: user.id,
@@ -20,13 +17,13 @@ export async function createCharity(
   };
 
   const { data, error } = await supabase
-    .from("charities")
-    .upsert([charity], { onConflict: "admin" })
+    .from('charities')
+    .upsert([charity], { onConflict: 'admin' })
     .select()
     .single();
 
   if (error) throw error;
-  if (!data) throw new Error("No charity returned from upsert");
+  if (!data) throw new Error('No charity returned from upsert');
 
   return data;
 }
@@ -39,16 +36,16 @@ export async function createCharity(
  * @throws If the charity cannot be found or a database error occurs.
  */
 export async function getCharityByAdmin(adminId: string): Promise<Charity> {
-  if (!adminId) throw new Error("adminId is required");
+  if (!adminId) throw new Error('adminId is required');
 
   const { data, error } = await supabase
-    .from("charities")
-    .select("*")
-    .eq("admin", adminId)
+    .from('charities')
+    .select('*')
+    .eq('admin', adminId)
     .single();
 
   if (error) throw error;
-  if (!data) throw new Error("Charity not found");
+  if (!data) throw new Error('Charity not found');
 
   return data;
 }

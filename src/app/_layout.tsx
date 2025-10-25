@@ -1,19 +1,19 @@
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import * as SystemUI from "expo-system-ui";
-import { useColorScheme } from "react-native";
-import { PaperProvider } from "react-native-paper";
-import ThemedView from "../components/ThemedView";
-import { darkTheme, lightTheme } from "../styles/themes";
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import * as SystemUI from 'expo-system-ui';
+import { useColorScheme } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import ThemedView from '../components/ThemedView';
+import { darkTheme, lightTheme } from '../styles/themes';
 
 export default function RootLayout() {
   // apply a theme to the app depending on the device's theme
   const colorScheme = useColorScheme();
-  const paperTheme = colorScheme === "dark" ? darkTheme : lightTheme;
+  const paperTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
-  if (colorScheme === "dark") {
+  if (colorScheme === 'dark') {
     // prevent flickering on navigation
-    SystemUI.setBackgroundColorAsync("black");
+    SystemUI.setBackgroundColorAsync('black');
   }
 
   return (
@@ -26,19 +26,15 @@ export default function RootLayout() {
             },
             headerShadowVisible: false,
             headerTintColor: paperTheme.colors.onBackground,
-            presentation: "transparentModal",
-          }}
-        >
+            presentation: 'transparentModal',
+          }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="pages/donationInfo"
-            options={{ headerShown: false }}
-          />
+          <Stack.Screen name="pages/donationInfo" options={{ headerShown: false }} />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
         </Stack>
       </ThemedView>
 
-      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </PaperProvider>
   );
 }

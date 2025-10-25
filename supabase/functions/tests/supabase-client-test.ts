@@ -1,14 +1,14 @@
 // Import required libraries and modules
-import { assertEquals } from "jsr:@std/assert@1";
-import { SupabaseClient } from "npm:@supabase/supabase-js@2.76.1";
+import { assertEquals } from 'jsr:@std/assert@1';
+import { load } from 'jsr:@std/dotenv';
+import { SupabaseClient } from 'npm:@supabase/supabase-js@2.76.1';
 
 // Will load the .env file to Deno.env
 // deno-lint-ignore no-unversioned-import
-import { load } from "jsr:@std/dotenv";
-import testSupabaseClient from "../_shared/supabaseClient.ts";
+import testSupabaseClient from '../_shared/supabaseClient.ts';
 
 await load({
-  envPath: ".env.local", // Path to your Expo .env.local file
+  envPath: '.env.local', // Path to your Expo .env.local file
   export: true, // Export variables to Deno.env
 });
 
@@ -18,13 +18,13 @@ const testClientCreation = async () => {
 
   // Test a simple query to the database
   const { data: table_data, error: table_error } = await client
-    .from("Profiles")
-    .select("*")
+    .from('Profiles')
+    .select('*')
     .limit(1);
 
   assertEquals(table_data, null);
-  assertEquals(table_error?.message, "permission denied for table Profiles");
+  assertEquals(table_error?.message, 'permission denied for table Profiles');
 };
 
 // Register and run the tests
-Deno.test("Non-Admin Client Creation Test", testClientCreation);
+Deno.test('Non-Admin Client Creation Test', testClientCreation);

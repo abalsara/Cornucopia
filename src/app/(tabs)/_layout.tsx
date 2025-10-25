@@ -1,6 +1,6 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
-import { useTheme } from "react-native-paper";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Tabs } from 'expo-router';
+import { useTheme } from 'react-native-paper';
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -16,51 +16,40 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: theme.colors.background,
         },
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
+          title: 'Home',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="donate"
         options={{
-          title: "Donate",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="heart" color={color} />
-          ),
+          title: 'Donate',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="heart" color={color} />,
         }}
       />
       <Tabs.Screen
         name="charities"
         options={{
-          title: "Charities",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="map-marker" color={color} />
-          ),
+          title: 'Charities',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="map-marker" color={color} />,
         }}
       />
       <Tabs.Screen
         name="myDonations"
         options={{
-          title: "My Donations",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="gift" color={color} />
-          ),
+          title: 'My Donations',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="gift" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
-          ),
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
         }}
       />
     </Tabs>
