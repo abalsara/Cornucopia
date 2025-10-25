@@ -12,7 +12,8 @@
     "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "deno-test": "deno test --allow-all supabase/functions/tests/*.ts"
   },
   "jest": {
     "preset": "jest-expo"
@@ -23,7 +24,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "@supabase/supabase-js": "^2.74.0",
+    "@supabase/supabase-js": "^2.76.1",
     "expo": "54.0.17",
     "expo-constants": "~18.0.10",
     "expo-dev-client": "~6.0.16",
