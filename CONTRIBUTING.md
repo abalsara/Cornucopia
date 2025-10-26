@@ -1,22 +1,33 @@
 # Contributing to Cornucopia
 
+Thank you for your interest in contributing to Cornucopia!
+This guide will walk you through setting up the project, building the app, running tests, and contributing new code or tests.
+
+- [How to obtain the source code](#how-to-obtain-the-source-code)
+- [Directory structure](#directory-structure)
+- [How to build the software](#how-to-build-the-software)
+- [How to test the software](#how-to-test-the-software)
+- [How to add new tests](#how-to-add-new-tests)
+
 ## How to obtain the source code
 
 If you are a Cornucopia team member, clone the repository. If you are an external contributor, fork this repository to your own GitHub account and then clone it to your local device.
 
 ## Directory structure
 
-The project contains the following important files and directories:
+Below is an overview of the key directories and files:
 
-- **~/\_\_tests\_\_**: Unit and integration tests for each of the pages of this app
-- **~/src/app**: All of the routable pages of this app
-- **~/src/app/(tabs)**: each of the pages in this directory correspond to a tab in the bottom tabs navigation
-- **~/src/components**: Reusable react components
-- **~/src/lib**: Functions for API calls
-- **~/src/util**: contains utility functions
-- **~/app.json**: configuration of the app such as the app name, icon, and splash screen
-- **~/eas.json**: configuration of different build profiles for this app (e.g., development, preview, production)
-- **~/package.json**: lists all of the npm dependencies for this app
+| Path              | Description                                                    |
+| ----------------- | -------------------------------------------------------------- |
+| `__tests__/`      | Unit and integration tests for each page of the app            |
+| `src/app/`        | All routable pages in the app                                  |
+| `src/app/(tabs)/` | Pages corresponding to tabs in the bottom tab navigation       |
+| `src/components/` | Reusable React components                                      |
+| `src/lib/`        | API utility functions and data-fetching logic                  |
+| `src/util/`       | General-purpose utility functions                              |
+| `app.json`        | App configuration (name, icon, splash screen, etc.)            |
+| `eas.json`        | Build profile configuration (development, preview, production) |
+| `package.json`    | Lists npm dependencies and scripts                             |
 
 ## How to build the software
 
@@ -25,7 +36,7 @@ The project contains the following important files and directories:
 1. Install [Node](https://nodejs.org/en/download)
 
 2. Open the root project directory in your IDE and Install all npm packages:
-   `npm i`
+   `npm install`
 
 3. Install expo-dev-client:
    `npx expo install expo-dev-client`
@@ -69,11 +80,21 @@ The project contains the following important files and directories:
 ## How to test the software
 
 1. Ensure all npm dependencies are installed
-   `npm i`
+   `npm install`
 
 2. Run the test script to execute our test suite
    `npm run test`
 
 ## How to add new tests
 
-We use the Jest library for testing. Name your test file "**{name of relevant page}.spec.ts**" and place the file under "**~/\_\_tests\_\_/{name of relevant page}/**"
+We use [Jest](https://jestjs.io/) for unit and integration testing.  
+Follow these conventions when creating new tests:
+
+- Test filenames should follow this format:  
+   `{page-name}.spec.ts`
+
+- Place test files inside the corresponding directory under:  
+   `\_\_tests\_\_/{page-name}/{unit | integration}`
+
+Example:  
+\_\_tests\_\_/home/unit/home.spec.ts
