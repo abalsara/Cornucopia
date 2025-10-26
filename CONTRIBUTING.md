@@ -41,14 +41,9 @@ Below is an overview of the key directories and files:
 3. Install expo-dev-client:
    `npx expo install expo-dev-client`
 
-4. Install eas-cli and login using your Expo credentials:
-   `npm install -g eas-cli && eas login`
-
-5. Join our Expo organization
-
 ### IOS
 
-1. Complete all the steps under General prerequisites
+1. Complete all the steps under [General prerequisites](#general-prerequisites)
 
 2. Install IOS simulator on Xcode
 
@@ -61,21 +56,18 @@ Below is an overview of the key directories and files:
    `brew install cocoapods`
 
 6. Build and launch the app
-   `npx expo run:ios`
+   `npm run ios`
 
 ### Android
 
-1. Complete all the steps under General prerequisites
+1. Complete all the steps under [General prerequisites](#general-prerequisites)
 
-2. Install [Android Studio](https://developer.android.com/studio)
+2. Install a JDK (e.g., [openjdk 21](https://openjdk.org/install/))
 
-3. Build the app
-   `eas build --platform android --profile development --local`
+3. Install [Android Studio](https://developer.android.com/studio)
 
-4. Copy the generated .apk file onto your Android device and install it
-
-5. Run the development server and scan the generated QR code in the terminal
-   `npx expo start`
+4. Build and launch the app
+   `npm run android`
 
 ## How to test the software
 
@@ -97,4 +89,24 @@ Follow these conventions when creating new tests:
    `\_\_tests\_\_/{page-name}/{unit | integration}`
 
 Example:  
-\_\_tests\_\_/home/unit/home.spec.ts
+/\_\_tests\_\_/home/unit/home.spec.ts
+
+## How to build a release of the software
+
+This section is only applicable to internal contributors
+
+1. Update the app's version in /app.json
+
+2. Build the app using the production profile
+
+```sh
+eas build --platform ios --profile production
+eas build --platform android --profile production
+```
+
+3. Submit the app to stores
+
+```sh
+eas submit --platform ios
+eas submit --platform android
+```
