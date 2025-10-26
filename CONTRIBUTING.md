@@ -86,7 +86,7 @@ Follow these conventions when creating new tests:
    `{page-name}.spec.ts`
 
 - Place test files inside the corresponding directory under:  
-   `\_\_tests\_\_/{page-name}/{unit | integration}`
+   `__tests__/{page-name}/{unit | integration}`
 
 Example:  
 /\_\_tests\_\_/home/unit/home.spec.ts
