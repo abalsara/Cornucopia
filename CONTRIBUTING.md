@@ -79,17 +79,7 @@ Below is an overview of the key directories and files:
 
 ## How to add new tests
 
-We use [Jest](https://jestjs.io/) for unit and integration testing.  
-Follow these conventions when creating new tests:
-
-- Test filenames should follow this format:  
-   `{page-name}.spec.ts`
-
-- Place test files inside the corresponding directory under:  
-   `__tests__/{page-name}/{unit | integration}`
-
-Example:  
-/\_\_tests\_\_/home/unit/home.spec.ts
+Follow our comprehensive testing guidelines on [TEST-GUIDE.md](TEST-GUIDE.md)
 
 ## How to build a release of the software
 
