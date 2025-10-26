@@ -6,8 +6,7 @@ This guide will walk you through setting up the project, building the app, runni
 - [How to obtain the source code](#how-to-obtain-the-source-code)
 - [Directory structure](#directory-structure)
 - [How to build the software](#how-to-build-the-software)
-- [How to test the software](#how-to-test-the-software)
-- [How to add new tests](#how-to-add-new-tests)
+- [How to add and run tests](#how-to-add-and-run-tests)
 
 ## How to obtain the source code
 
@@ -69,15 +68,7 @@ Below is an overview of the key directories and files:
 4. Build and launch the app
    `npm run android`
 
-## How to test the software
-
-1. Ensure all npm dependencies are installed
-   `npm install`
-
-2. Run the test script to execute our test suite
-   `npm run test`
-
-## How to add new tests
+## How to add and run tests
 
 Follow our comprehensive testing guidelines on [TEST-GUIDE.md](TEST-GUIDE.md)
 
