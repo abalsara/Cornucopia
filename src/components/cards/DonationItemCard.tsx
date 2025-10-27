@@ -48,7 +48,7 @@ export default function DonationItemCard({ item }: DonationItemCardProps) {
 
   return (
     <>
-      <Card>
+      <Card style={{ marginTop: 10 }}>
         <Card.Title title={itemName} subtitle={getSubtitle()} />
       </Card>
     </>

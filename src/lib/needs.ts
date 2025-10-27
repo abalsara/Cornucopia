@@ -15,6 +15,15 @@ const DONATION_ITEMS: DonationItem[] = [
     type: 'Food',
   },
   {
+    category: 'animalCareSupplies',
+    itemName: 'Cat foot',
+    notes: 'Canned cat food',
+    quantity: 20,
+    unit: 'cans',
+    animal: 'Cats',
+    type: 'Food',
+  },
+  {
     category: 'clothing',
     itemName: 'Winter Jacket',
     notes: 'Warm and waterproof',
