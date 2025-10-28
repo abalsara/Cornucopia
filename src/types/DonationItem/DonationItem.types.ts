@@ -11,13 +11,6 @@ import {
   SportsEquipmentSubtype,
 } from './DonationItemSubtypes.types';
 
-export type BaseDonationItem = {
-  itemName: string;
-  notes: string;
-  quantity: number;
-  unit: string;
-};
-
 export type DonationItem =
   | AnimalCareSuppliesItem
   | ClothingItem
@@ -31,6 +24,29 @@ export type DonationItem =
   | SportsEquipmentItem
   | ToysAndGames
   | UncategorizedItem;
+
+// all DonationItems have at least these attributes
+export type BaseDonationItem = {
+  itemName: string;
+  notes: string;
+  quantity: number;
+  unit: string;
+  category: Category;
+};
+
+export type Category =
+  | 'food'
+  | 'clothing'
+  | 'furniture'
+  | 'electronics'
+  | 'hygiene'
+  | 'medical'
+  | 'sports'
+  | 'toysAndGames'
+  | 'schoolAndOffice'
+  | 'animalCareSupplies'
+  | 'householdGoods'
+  | 'uncategorized';
 
 export type AnimalCareSuppliesItem = BaseDonationItem &
   Animal &
