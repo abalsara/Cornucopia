@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -9,6 +8,7 @@ import { formatDonationItemCategory } from '@/src/util/donationItem';
 
 type DonationListProps = {
   items: DonationItem[];
+  onCardPress: (item: DonationItem) => void;
 };
 
 /**
@@ -16,15 +16,15 @@ type DonationListProps = {
  * @param items - List of DonationItems the charity is requesting
  * @returns a title and list of cards representing each item for each item category
  */
-export default function DonationList({ items }: DonationListProps) {
-  if (!items || items.length === 0) {
+export default function DonationList(props: DonationListProps) {
+  if (!props.items || props.items.length === 0) {
     return <Text>No donation needs available.</Text>;
   }
 
   // Use a Map to group items by category
   const grouped = new Map<Category, DonationItem[]>();
 
-  for (const item of items) {
+  for (const item of props.items) {
     if (!grouped.has(item.category)) {
       grouped.set(item.category, []);
     }
@@ -40,7 +40,7 @@ export default function DonationList({ items }: DonationListProps) {
           </Text>
 
           {categoryItems.map((item) => (
-            <DonationItemCard key={item.itemName} item={item} />
+            <DonationItemCard onPress={props.onCardPress} key={item.itemName} item={item} />
           ))}
         </View>
       ))}
