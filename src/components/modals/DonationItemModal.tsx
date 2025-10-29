@@ -1,7 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Portal, Text, useTheme, Modal, Button, TextInput } from 'react-native-paper';
+import { Portal, Text, useTheme, Modal, TextInput } from 'react-native-paper';
 
 import ActionButton from '../buttons/ActionButton';
 
@@ -11,13 +11,14 @@ type DonationItemModalProps = {
   isVisible: boolean;
   setIsVisible: (status: boolean) => void;
   item?: DonationItem;
+  onAddDonationPress: (item: DonationItem) => void;
 };
 
 export default function DonationItemModal(props: DonationItemModalProps) {
-  const theme = useTheme();
-
+  const item = props.item;
   const [quantity, setQuantity] = useState('');
-  const [notes, setNotes] = useState(props.item?.notes);
+  const [notes, setNotes] = useState(item?.notes);
+  const theme = useTheme();
 
   const handleTextChange = (text: string) => {
     // Remove any non-numeric characters using a regular expression
@@ -25,11 +26,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
     setQuantity(numericValue);
   };
 
-  const handleAddDonationPress = (): void => {
-    props.setIsVisible(false);
-  };
-
-  if (props.item) {
+  if (item) {
     return (
       <View>
         <Portal>
@@ -51,7 +48,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
             </View>
             <View style={styles.modalContent}>
               <View>
-                <Text variant="headlineMedium">{props.item.itemName}</Text>
+                <Text variant="headlineMedium">{item.itemName}</Text>
                 <Text variant="titleLarge" style={styles.mt20}>
                   Quantity
                 </Text>
@@ -62,7 +59,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                   <TextInput
                     value={quantity}
                     onChangeText={handleTextChange}
-                    placeholder={String(props.item.quantity)}
+                    placeholder={String(item.quantity)}
                     keyboardType="numeric"
                     style={{ width: 140 }}
                   />
@@ -81,7 +78,10 @@ export default function DonationItemModal(props: DonationItemModalProps) {
             </View>
             <View style={styles.buttonContainer}>
               <View style={{ flex: 1 }} />
-              <ActionButton label="Add to Donation" onPress={handleAddDonationPress} />
+              <ActionButton
+                label="Add to Donation"
+                onPress={() => props.onAddDonationPress(item)}
+              />
             </View>
           </Modal>
         </Portal>

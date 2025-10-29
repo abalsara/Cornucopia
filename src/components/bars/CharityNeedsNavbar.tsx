@@ -1,22 +1,26 @@
+import { useRouter } from 'expo-router';
 import { JSX } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import ActionButton from '../buttons/ActionButton';
 
+import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
+
 type CharityNeedsNavbarProps = {
   inSelectStage: boolean;
-  selectedItems: string[];
   onStartDonation: () => void;
+  donations: DonationItem[];
 };
 
 export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
+  const router = useRouter();
   const renderNumSelected = (): JSX.Element => {
     if (props.inSelectStage) {
       return (
-        <Pressable>
+        <Pressable onPress={() => router.push('pages/yourDonationPage')}>
           <Text variant="titleLarge" style={styles.text}>
-            {props.selectedItems.length} items selected
+            {props.donations.length} items selected
           </Text>
         </Pressable>
       );
@@ -31,6 +35,7 @@ export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
         <ActionButton
           label="Next"
           onPress={() => console.log('redirect to Schedule Dropoff Page')}
+          disabled={props.donations.length === 0}
         />
       </View>
     );

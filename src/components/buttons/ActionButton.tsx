@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 type ActionButtonProps = {
   label: string;
   onPress: () => void;
+  disabled?: boolean;
 };
 
 export default function ActionButton(props: ActionButtonProps) {
@@ -11,6 +12,7 @@ export default function ActionButton(props: ActionButtonProps) {
     <Button
       mode="contained"
       onPress={props.onPress}
+      disabled={props.disabled}
       style={styles.button}
       labelStyle={styles.buttonText}
       contentStyle={styles.buttonContent}>

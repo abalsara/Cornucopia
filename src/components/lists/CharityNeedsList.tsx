@@ -1,14 +1,14 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import DonationItemCard from '../cards/DonationItemCard';
+import DonationItemCardList from './DonationItemCardList';
 
 import { Category, DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { formatDonationItemCategory } from '@/src/util/donationItem';
 
 type DonationListProps = {
   items: DonationItem[];
-  onCardPress: (item: DonationItem) => void;
+  onCardPress?: (item: DonationItem) => void;
 };
 
 /**
@@ -39,9 +39,7 @@ export default function DonationList(props: DonationListProps) {
             {formatDonationItemCategory(category)}
           </Text>
 
-          {categoryItems.map((item) => (
-            <DonationItemCard onPress={props.onCardPress} key={item.itemName} item={item} />
-          ))}
+          <DonationItemCardList items={categoryItems} onCardPress={props.onCardPress} />
         </View>
       ))}
     </>
