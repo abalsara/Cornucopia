@@ -16,7 +16,7 @@ Cornucopia is a mobile application that streamlines donations by allowing charit
 
 ## Links
 
-- [Proposal Document](https://docs.google.com/document/d/1MNm4lgE8vIqCnj3oJq1o6MpgDq2Q1TAc0yENPEfM0sc/edit?tab=t.0#heading=h.a9qxd8i05pbz)
-- [Orginizational Documentation](https://docs.google.com/document/d/1w2Ql-3Q95YtEth-4TeeAd_fKIWuH4WNiWsU_rfOtZ9A/edit?tab=t.0#heading=h.wcy407y6cj9p)
-- [Development Setup](https://docs.google.com/document/d/1Tqk6vjNawrgG4LFsarCnLGoLLJSEFkyjqfKXvwruRws/edit?tab=t.0)
-- [User Guide](https://docs.google.com/document/d/1MqTERnoD9LHOu0tSDbQ6XOCHUd6v2qrnJ5Y2hdr0Zdg/edit?tab=t.0#heading=h.etdya9eput1e)
+- [Living Document](https://docs.google.com/document/d/1MNm4lgE8vIqCnj3oJq1o6MpgDq2Q1TAc0yENPEfM0sc/edit?tab=t.0#heading=h.a9qxd8i05pbz): The ongoing project plan and internal documentation, including team roles, schedules, and detailed feature descriptions.
+- [Orginizational Documentation](https://docs.google.com/document/d/1w2Ql-3Q95YtEth-4TeeAd_fKIWuH4WNiWsU_rfOtZ9A/edit?tab=t.0#heading=h.wcy407y6cj9p): Guidelines for managing the project, including issue priority levels, progress stages, and task sizing.
+- [Development Setup](https://docs.google.com/document/d/1Tqk6vjNawrgG4LFsarCnLGoLLJSEFkyjqfKXvwruRws/edit?tab=t.0): Instructions for setting up the development environment, including required tools, dependencies, and build steps.
+- [User Guide](https://docs.google.com/document/d/1MqTERnoD9LHOu0tSDbQ6XOCHUd6v2qrnJ5Y2hdr0Zdg/edit?tab=t.0#heading=h.etdya9eput1e): Comprehensive manual for donors and charities, including instructions on using the app, managing donations, and reporting bugs.
