@@ -3,18 +3,20 @@ import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
 import { useColorScheme } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
+import { en, registerTranslation } from 'react-native-paper-dates';
 
 import ThemedView from '../components/ThemedView';
 import { darkTheme, lightTheme } from '../styles/themes';
 
-// on top of your index.android.js file
-const isAndroid = require('react-native').Platform.OS === 'android'; // this line is only needed if you don't use an .android.js file
-const isHermesEnabled = !!global.HermesInternal; // this line is only needed if you don't use an .android.js file
+/**
+ * --------------------------------------------------------
+ *  This section configures the React Native Paper Dates module
+ * --------------------------------------------------------
+ */
+const isAndroid = require('react-native').Platform.OS === 'android';
+const isHermesEnabled = !!global.HermesInternal;
 
-// in your index.js file
 if (isHermesEnabled || isAndroid) {
-  // this line is only needed if you don't use an .android.js file
-
   require('@formatjs/intl-getcanonicallocales/polyfill');
   require('@formatjs/intl-locale/polyfill');
 
@@ -42,7 +44,11 @@ if (isHermesEnabled || isAndroid) {
   if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
     Intl.DateTimeFormat.__setDefaultTimeZone(require('expo-localization').timezone);
   }
-} // this line is only needed if you don't use an .android.js file
+}
+registerTranslation('en', en);
+/**
+ * --------------------------------------------------------
+ */
 
 export default function RootLayout() {
   // apply a theme to the app depending on the device's theme
