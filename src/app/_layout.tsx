@@ -36,6 +36,10 @@ export default function RootLayout() {
             options={{ headerTitle: 'Example Charity' }}
           />
           <Stack.Screen
+            name="pages/scheduleDropoffPage"
+            options={{ headerTitle: 'Example Charity' }}
+          />
+          <Stack.Screen
             name="pages/yourDonationPage"
             options={{ headerTitle: 'Example Charity' }}
           />

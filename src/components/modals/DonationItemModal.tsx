@@ -1,6 +1,6 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Portal, Text, useTheme, Modal, TextInput } from 'react-native-paper';
 
 import ActionButton from '../buttons/ActionButton';
@@ -20,6 +20,9 @@ export default function DonationItemModal(props: DonationItemModalProps) {
   const [notes, setNotes] = useState(item?.notes);
   const theme = useTheme();
 
+  const { height } = useWindowDimensions();
+  const buttonPos = height - 164;
+
   const handleTextChange = (text: string) => {
     // Remove any non-numeric characters using a regular expression
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -28,15 +31,17 @@ export default function DonationItemModal(props: DonationItemModalProps) {
 
   if (item) {
     return (
-      <View>
-        <Portal>
-          <Modal
-            visible={props.isVisible}
-            onDismiss={() => props.setIsVisible(false)}
-            contentContainerStyle={{
-              ...styles.container,
-              backgroundColor: theme.colors.background,
-            }}>
+      <Portal>
+        <Modal
+          visible={props.isVisible}
+          onDismiss={() => props.setIsVisible(false)}
+          style={{ marginTop: 0, marginBottom: 0, flex: 1 }}
+          contentContainerStyle={{
+            ...styles.container,
+            backgroundColor: theme.colors.background,
+            minHeight: buttonPos,
+          }}>
+          <View>
             <View style={{ flexDirection: 'row-reverse' }}>
               <Feather
                 onPress={() => props.setIsVisible(false)}
@@ -54,7 +59,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                 </Text>
               </View>
               <View style={styles.QuantityContainer}>
-                <View style={styles.QuantityNumberContainer}>
+                <View>
                   <Text variant="labelLarge">Number</Text>
                   <TextInput
                     value={quantity}
@@ -76,6 +81,11 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                 <TextInput value={notes} />
               </View>
             </View>
+          </View>
+
+          <View style={{ flex: 1 }} />
+
+          <View>
             <View style={styles.buttonContainer}>
               <View style={{ flex: 1 }} />
               <ActionButton
@@ -83,32 +93,30 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                 onPress={() => props.onAddDonationPress(item)}
               />
             </View>
-          </Modal>
-        </Portal>
-      </View>
+          </View>
+        </Modal>
+      </Portal>
     );
   }
-
   return <></>;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100,
-    justifyContent: 'flex-start',
+    marginTop: 64,
+    justifyContent: 'space-between',
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
+    shadowOpacity: 0,
   },
   modalContent: {
-    flex: 1,
     marginHorizontal: 20,
     gap: 12,
   },
   QuantityContainer: {
     flexDirection: 'row',
   },
-  QuantityNumberContainer: {},
   QuantityUnitContainer: {
     marginLeft: 40,
   },
@@ -117,5 +125,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
+    margin: 20,
+    marginBottom: 40,
   },
 });

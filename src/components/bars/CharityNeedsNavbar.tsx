@@ -18,10 +18,8 @@ export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
   const renderNumSelected = (): JSX.Element => {
     if (props.inSelectStage) {
       return (
-        <Pressable onPress={() => router.push('pages/yourDonationPage')}>
-          <Text variant="titleLarge" style={styles.text}>
-            {props.donations.length} items selected
-          </Text>
+        <Pressable onPress={() => router.push('/pages/yourDonationPage')}>
+          <Text variant="titleLarge">{props.donations.length} items selected</Text>
         </Pressable>
       );
     }
@@ -34,14 +32,14 @@ export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
         {renderNumSelected()}
         <ActionButton
           label="Next"
-          onPress={() => console.log('redirect to Schedule Dropoff Page')}
+          onPress={() => router.push('/pages/scheduleDropoffPage')}
           disabled={props.donations.length === 0}
         />
       </View>
     );
   }
   return (
-    <View>
+    <View style={{ margin: 20, marginBottom: 32 }}>
       <ActionButton label="Start your Donation" onPress={props.onStartDonation} />
     </View>
   );
@@ -52,8 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  text: {
-    marginLeft: 30,
+    margin: 20,
+    marginBottom: 32,
   },
 });

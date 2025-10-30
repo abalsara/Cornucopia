@@ -13,7 +13,6 @@ export default function ActionButton(props: ActionButtonProps) {
       mode="contained"
       onPress={props.onPress}
       disabled={props.disabled}
-      style={styles.button}
       labelStyle={styles.buttonText}
       contentStyle={styles.buttonContent}>
       {props.label}
@@ -22,9 +21,6 @@ export default function ActionButton(props: ActionButtonProps) {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 30,
-  },
   buttonText: {
     fontSize: 20,
     fontWeight: 'light',

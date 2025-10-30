@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Divider, Portal, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
@@ -38,23 +38,28 @@ export default function CharityNeedsPage() {
 
   return (
     <ThemedView>
-      <DonationItemModal
-        item={selectedItem}
-        isVisible={modalIsVisible}
-        setIsVisible={setModalIsVisible}
-        onAddDonationPress={handleAddDonationPress}
-      />
-      <ScrollView style={{ marginHorizontal: 20 }}>
-        <Text variant="titleLarge">Needs</Text>
-        <CharityNeedsList items={items} onCardPress={inSelectStage ? handleCardPress : undefined} />
-      </ScrollView>
-      <Divider />
+      <Portal.Host>
+        <DonationItemModal
+          item={selectedItem}
+          isVisible={modalIsVisible}
+          setIsVisible={setModalIsVisible}
+          onAddDonationPress={handleAddDonationPress}
+        />
+        <ScrollView style={{ marginHorizontal: 20 }}>
+          <Text variant="titleLarge">Needs</Text>
+          <CharityNeedsList
+            items={items}
+            onCardPress={inSelectStage ? handleCardPress : undefined}
+          />
+        </ScrollView>
+        <Divider />
 
-      <CharityNeedsNavbar
-        inSelectStage={inSelectStage}
-        onStartDonation={handleStartDonationPress}
-        donations={donations}
-      />
+        <CharityNeedsNavbar
+          inSelectStage={inSelectStage}
+          onStartDonation={handleStartDonationPress}
+          donations={donations}
+        />
+      </Portal.Host>
     </ThemedView>
   );
 }
