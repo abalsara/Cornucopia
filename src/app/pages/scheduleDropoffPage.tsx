@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
@@ -6,11 +7,15 @@ import ThemedView from '@/src/components/ThemedView';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import DatePicker from '@/src/components/modals/DatePicker';
 import TimePicker from '@/src/components/modals/TimePicker';
+import { setSavedSchedule } from '@/src/stores/savedSchedule';
+import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
 export default function ScheduleDropoffPage() {
   const theme = useTheme();
+  const router = useRouter();
+
   // date state
-  const [date, setDate] = useState<number | undefined>(undefined);
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [dateVisible, setDateVisible] = useState(false);
 
   // time state
@@ -18,30 +23,38 @@ export default function ScheduleDropoffPage() {
   const [minutes, setMinutes] = useState<number | undefined>();
   const [timeVisible, setTimeVisible] = useState(false);
 
-  const handleConfirmDate = (milliseconds?: number): void => {
-    setDate(milliseconds);
+  const handleConfirmDate = (date?: Date): void => {
+    setDate(date);
     setDateVisible(false);
   };
 
   const handleConfirmTime = (hours: number, minutes: number): void => {
-    setHours(hours);
-    setMinutes(minutes);
-    setTimeVisible(false);
-  };
-
-  const getDate = (): string => {
     if (date) {
-      const newDate = new Date(date);
-      return newDate.toISOString();
+      setHours(hours);
+      setMinutes(minutes);
+
+      const newDate = date;
+      newDate.setHours(hours, minutes);
+      setDate(newDate);
+      setTimeVisible(false);
     }
-    return 'no date selected';
   };
 
-  const getTime = (): string => {
-    if (hours !== undefined && minutes !== undefined) {
-      return `${hours} hours and ${minutes} minutes`;
+  const getFormattedTime = (): string => {
+    if (date !== undefined && hours !== undefined && minutes !== undefined) {
+      return formatTime(date);
     }
     return 'no time selected';
+  };
+
+  const handleNextButtonPress = (): void => {
+    if (!date) throw new Error('invalid date');
+    setSavedSchedule(date);
+    router.push('/pages/reviewAndConfirmPage');
+  };
+
+  const handleSelectTimePress = (): void => {
+    setTimeVisible(true);
   };
 
   return (
@@ -55,11 +68,20 @@ export default function ScheduleDropoffPage() {
             Pick a date & time that works best to drop off your donation at Example charity, in
             city, state.
           </Text>
-          <Button onPress={() => setDateVisible(true)}>Select Date</Button>
-          <Text>Selected date: {getDate()}</Text>
 
-          <Button onPress={() => setTimeVisible(true)}>Select Time</Button>
-          <Text>Selected time: {getTime()}</Text>
+          <View style={styles.dateTimeContainer}>
+            <Text variant="bodyLarge">Date: {date ? formatDate(date) : 'no date selected'}</Text>
+            <Button onPress={() => setDateVisible(true)} mode="contained">
+              Select Date
+            </Button>
+          </View>
+
+          <View style={styles.dateTimeContainer}>
+            <Text variant="bodyLarge">Time: {getFormattedTime()}</Text>
+            <Button onPress={handleSelectTimePress} mode="contained" disabled={date === undefined}>
+              Select Time
+            </Button>
+          </View>
         </View>
         <DatePicker
           onConfirm={handleConfirmDate}
@@ -73,7 +95,11 @@ export default function ScheduleDropoffPage() {
         />
         <View style={styles.buttonContainer}>
           <View style={{ flex: 1 }} />
-          <ActionButton label="Next" onPress={() => console.log('go to confirm page')} />
+          <ActionButton
+            label="Next"
+            onPress={handleNextButtonPress}
+            disabled={date === undefined || hours === undefined || minutes === undefined}
+          />
         </View>
       </View>
     </ThemedView>
@@ -91,5 +117,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     marginBottom: 32,
+  },
+  dateTimeContainer: {
+    marginTop: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

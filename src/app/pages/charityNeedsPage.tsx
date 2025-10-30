@@ -8,7 +8,7 @@ import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
 import DonationItemModal from '@/src/components/modals/DonationItemModal';
 import { getCharityNeeds } from '@/src/lib/needs';
-import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/charityNeeds';
+import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/savedDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 
 export default function CharityNeedsPage() {

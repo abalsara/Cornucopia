@@ -16,7 +16,7 @@ const DONATION_ITEMS: DonationItem[] = [
   },
   {
     category: 'animalCareSupplies',
-    itemName: 'Cat foot',
+    itemName: 'Cat food',
     notes: 'Canned cat food',
     quantity: 20,
     unit: 'cans',

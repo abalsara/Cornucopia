@@ -86,6 +86,14 @@ export default function RootLayout() {
             name="pages/yourDonationPage"
             options={{ headerTitle: 'Example Charity' }}
           />
+          <Stack.Screen
+            name="pages/reviewAndConfirmPage"
+            options={{ headerTitle: 'Example Charity' }}
+          />
+          <Stack.Screen
+            name="pages/donationConfirmedPage"
+            options={{ headerTitle: 'Example Charity' }}
+          />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
         </Stack>
       </ThemedView>

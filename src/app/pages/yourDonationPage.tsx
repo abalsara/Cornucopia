@@ -3,7 +3,7 @@ import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
-import { getSavedDonations } from '@/src/stores/charityNeeds';
+import { getSavedDonations } from '@/src/stores/savedDonations';
 
 export default function YourDonationPage() {
   return (
