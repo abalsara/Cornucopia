@@ -17,6 +17,7 @@ export default function FindCharityScreen() {
     // Replace with backend or public charity API call
     // const response = await fetch(`https://api.example.com/charities?lat=${lat}&lon=${lon}`);
     // const results = await response.json();
+
   };
 
   const handleSearchPress = () => {
@@ -48,6 +49,7 @@ export default function FindCharityScreen() {
               setUseLocation(true);
               // Call charity search logic here
               // await searchNearbyCharities(latitude, longitude);
+              router.push('/pages/charityResults');
             } catch (error) {
               console.error("Error getting location:", error);
               Alert.alert("Error", "Failed to retrieve your location.");
@@ -70,6 +72,7 @@ export default function FindCharityScreen() {
     } else {
       // city
     }
+    router.push('/pages/charityResults');
     console.log("Searching for:", searchText);
   };
 
