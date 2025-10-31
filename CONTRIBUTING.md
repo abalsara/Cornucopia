@@ -71,9 +71,11 @@ Below is an overview of the key directories and files:
    `npx expo run:android`
 
 ### Android configuration
-   This section describes how to set the Android SDK environment variables, which is required for building the Android app locally.
-   
+
+This section describes how to set the Android SDK environment variables, which is required for building the Android app locally.
+
 #### Windows:
+
 1. In the Windows search bar, search for and click on “**Edit environment variables for your account**” and click **New** to create a new ANDROID_HOME user variable. **Or** go to **Windows Control Panel** > **User Accounts** > **User Accounts** (again) > **Change my environment variables** and click **New** to create a new ANDROID_HOME user variable.
 
 2. Set the variable name to **ANDROID_HOME** and the value to the path of the Android SDK folder. By default it is **%LOCALAPPDATA%\Android\Sdk**
@@ -83,11 +85,12 @@ Below is an overview of the key directories and files:
 4. Restart your computer
 
 #### Linux/MacOS
+
 1. Add the following lines to your /.zprofile or ~/.zshrc (if you are using bash, then ~/.bash_profile or ~/.bashrc) config file:
 
 ```sh
-export ANDROID_HOME=$HOME/Library/Android/sdk && export 
-PATH=$PATH:$ANDROID_HOME/emulator && export 
+export ANDROID_HOME=$HOME/Library/Android/sdk && export
+PATH=$PATH:$ANDROID_HOME/emulator && export
 PATH=$PATH:$ANDROID_HOME/platform-tools
 ```
 
