@@ -55,18 +55,50 @@ Below is an overview of the key directories and files:
    `brew install cocoapods`
 
 6. Build and launch the app
-   `npm run ios`
+   `npx expo run:ios`
 
 ### Android
 
 1. Complete all the steps under [General prerequisites](#general-prerequisites)
 
-2. Install a JDK (e.g., [openjdk 21](https://openjdk.org/install/))
+2. Install a JDK (e.g., [Oracle JDK 21](https://www.oracle.com/java/technologies/downloads/#java21))
 
-3. Install [Android Studio](https://developer.android.com/studio)
+3. Install [Android Studio](https://developer.android.com/studio) using the default installation options. This will additionally install the Android SDK and an emulator.
 
-4. Build and launch the app
-   `npm run android`
+4. Configure the Android environment variables by following the instructions under [Android configuration](#android-configuration):
+
+5. Build and launch the app
+   `npx expo run:android`
+
+### Android configuration
+   This section describes how to set the Android SDK environment variables, which is required for building the Android app locally.
+   
+#### Windows:
+1. In the Windows search bar, search for and click on “**Edit environment variables for your account**” and click **New** to create a new ANDROID_HOME user variable. **Or** go to **Windows Control Panel** > **User Accounts** > **User Accounts** (again) > **Change my environment variables** and click **New** to create a new ANDROID_HOME user variable.
+
+2. Set the variable name to **ANDROID_HOME** and the value to the path of the Android SDK folder. By default it is **%LOCALAPPDATA%\Android\Sdk**
+
+3. Add a new Path environment variable by clicking on **Path** > **Edit…** > **New** > Then add the path of the Android platform-tools folder. By default it is **%LOCALAPPDATA%\Android\Sdk\platform-tools**
+
+4. Restart your computer
+
+#### Linux/MacOS
+1. Add the following lines to your /.zprofile or ~/.zshrc (if you are using bash, then ~/.bash_profile or ~/.bashrc) config file:
+
+```sh
+export ANDROID_HOME=$HOME/Library/Android/sdk && export 
+PATH=$PATH:$ANDROID_HOME/emulator && export 
+PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+2. Reload the path environment variables in your current shell:
+
+```sh
+# for .zsh
+source $HOME/.zshrc
+# for bash
+source $HOME/.bashrc
+```
 
 ## How to add and run tests
 
