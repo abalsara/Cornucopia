@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { DatePickerModal } from 'react-native-paper-dates';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type DatePickerProps = {
   onConfirm: (date?: Date) => void;
@@ -10,7 +10,7 @@ type DatePickerProps = {
 
 export default function DatePicker(props: DatePickerProps) {
   return (
-    <SafeAreaProvider>
+    <SafeAreaView>
       <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
         <DatePickerModal
           locale="en"
@@ -21,6 +21,6 @@ export default function DatePicker(props: DatePickerProps) {
           onConfirm={(params) => props.onConfirm(params.date)}
         />
       </View>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 }

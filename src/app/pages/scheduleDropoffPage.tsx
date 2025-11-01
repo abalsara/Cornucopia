@@ -83,6 +83,7 @@ export default function ScheduleDropoffPage() {
             </Button>
           </View>
         </View>
+
         <DatePicker
           onConfirm={handleConfirmDate}
           onDismiss={() => setDateVisible(false)}
@@ -93,6 +94,7 @@ export default function ScheduleDropoffPage() {
           onDismiss={() => setTimeVisible(false)}
           visible={timeVisible}
         />
+
         <View style={styles.buttonContainer}>
           <View style={{ flex: 1 }} />
           <ActionButton
