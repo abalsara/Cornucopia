@@ -6,6 +6,10 @@ import Navbar from '@/src/components/bars/Navbar';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
 import { getSavedDonations } from '@/src/stores/savedDonations';
 
+/**
+ * Renders a list of the donor's saved donation items as part of the
+ * schedule a donation user flow
+ */
 export default function YourDonationPage() {
   return (
     <ThemedView>

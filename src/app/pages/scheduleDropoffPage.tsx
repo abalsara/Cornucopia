@@ -11,6 +11,9 @@ import TimePicker from '@/src/components/modals/TimePicker';
 import { setSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
+/**
+ * This page allows the donor to pick a date and time to drop off their donation
+ */
 export default function ScheduleDropoffPage() {
   const theme = useTheme();
   const router = useRouter();
@@ -71,6 +74,7 @@ export default function ScheduleDropoffPage() {
             city, state.
           </Text>
 
+          {/* Date selection */}
           <View style={styles.dateTimeContainer}>
             <Text variant="bodyLarge">Date: {date ? formatDate(date) : 'no date selected'}</Text>
             <Button onPress={() => setDateVisible(true)} mode="contained">
@@ -78,6 +82,7 @@ export default function ScheduleDropoffPage() {
             </Button>
           </View>
 
+          {/* Time selection */}
           <View style={styles.dateTimeContainer}>
             <Text variant="bodyLarge">Time: {getFormattedTime()}</Text>
             <Button onPress={handleSelectTimePress} mode="contained" disabled={date === undefined}>

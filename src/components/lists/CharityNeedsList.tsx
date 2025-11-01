@@ -13,7 +13,7 @@ type DonationListProps = {
 
 /**
  * A list of items that the charity is requesting, grouped into sections by category,
- * @param items - List of DonationItems the charity is requesting
+ * @param props.items - List of DonationItems the charity is requesting
  * @returns a title and list of cards representing each item for each item category
  */
 export default function DonationList(props: DonationListProps) {

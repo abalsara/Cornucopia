@@ -10,6 +10,10 @@ import { getSavedDonations } from '@/src/stores/savedDonations';
 import { getSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
+/**
+ * This page is shown to the donor after selecting a donation drop off time,
+ * but has not yet been confirmed
+ */
 export default function ReviewAndConfirmPage() {
   const router = useRouter();
   const donationItems = getSavedDonations();

@@ -7,6 +7,12 @@ type ActionButtonProps = {
   disabled?: boolean;
 };
 
+/**
+ * Renders a themed button that is used to handle primary user actions
+ * @param props.label - The text that is shown within the button
+ * @param props.onPress - Callback function for the button press event
+ * @param props.disabled - expression that causes the button to be disabled
+ */
 export default function ActionButton(props: ActionButtonProps) {
   return (
     <Button

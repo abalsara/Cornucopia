@@ -1,9 +1,16 @@
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
-export const getCharityNeeds = (cid: string): DonationItem[] => {
+/**
+ * This function currently returns dummy data
+ * Gets the donation items that the charity needs
+ * @param cid The charity ID of the charity that needs items
+ * @returns an array of DonationItems that the charity needs
+ */
+export const getCharityNeedsDummy = (cid: string): DonationItem[] => {
   return DONATION_ITEMS;
 };
 
+// dummy data
 const DONATION_ITEMS: DonationItem[] = [
   {
     category: 'animalCareSupplies',

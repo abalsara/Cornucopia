@@ -8,6 +8,9 @@ import ActionButton from '@/src/components/buttons/ActionButton';
 import { getSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
+/**
+ * This page is shown to the donor after successfully confirming a donation drop off time
+ */
 export default function DonationConfirmedPage() {
   const router = useRouter();
 

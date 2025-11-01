@@ -8,6 +8,9 @@ type TimePickerProps = {
   visible: boolean;
 };
 
+/**
+ * clock modal that allows the user to select a time
+ */
 export default function TimePicker(props: TimePickerProps) {
   return (
     <SafeAreaProvider>

@@ -7,6 +7,9 @@ type DonationItemCardListProps = {
   onCardPress?: (item: DonationItem) => void;
 };
 
+/**
+ * Renders a list of cards given an array of DonationItems
+ */
 export default function DonationItemCardList(props: DonationItemCardListProps) {
   return (
     <>

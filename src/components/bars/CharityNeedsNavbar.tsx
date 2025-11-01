@@ -13,6 +13,10 @@ type CharityNeedsNavbarProps = {
   donations: DonationItem[];
 };
 
+/**
+ * renders a bottom navbar that allows the donor to transition between the
+ * charityNeedsPage and the scheduleDropoffPage
+ */
 export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
   const router = useRouter();
   const renderNumSelected = (): JSX.Element => {

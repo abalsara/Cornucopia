@@ -14,6 +14,10 @@ type DonationItemModalProps = {
   onAddDonationPress: (item: DonationItem) => void;
 };
 
+/**
+ * Renders a modal that contains a DonationItem's properties.
+ * Shown when pressing a card on the charityNeedsPage.
+ */
 export default function DonationItemModal(props: DonationItemModalProps) {
   const item = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');

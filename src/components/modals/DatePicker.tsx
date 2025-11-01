@@ -8,6 +8,9 @@ type DatePickerProps = {
   visible: boolean;
 };
 
+/**
+ * Calendar modal that allows a user to select a date
+ */
 export default function DatePicker(props: DatePickerProps) {
   return (
     <SafeAreaView>
