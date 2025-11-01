@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
+import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import DatePicker from '@/src/components/modals/DatePicker';
 import TimePicker from '@/src/components/modals/TimePicker';
@@ -59,6 +60,7 @@ export default function ScheduleDropoffPage() {
 
   return (
     <ThemedView>
+      <Navbar title="Example Charity" />
       <View style={styles.container}>
         <View style={{ flex: 1 }}>
           <Text variant="headlineMedium">Schedule Dropoff</Text>

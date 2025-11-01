@@ -5,6 +5,7 @@ import { Divider, Portal, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
+import Navbar from '@/src/components/bars/Navbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
 import DonationItemModal from '@/src/components/modals/DonationItemModal';
 import { getCharityNeeds } from '@/src/lib/needs';
@@ -39,6 +40,7 @@ export default function CharityNeedsPage() {
   return (
     <ThemedView>
       <Portal.Host>
+        <Navbar title="Example Charity" />
         <DonationItemModal
           item={selectedItem}
           isVisible={modalIsVisible}

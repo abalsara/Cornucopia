@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
+import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import { getSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
@@ -23,6 +24,7 @@ export default function DonationConfirmedPage() {
 
   return (
     <ThemedView>
+      <Navbar title="Example Charity" backButtonShown={false} />
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Text variant="headlineMedium">Congrats</Text>

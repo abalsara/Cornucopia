@@ -15,15 +15,15 @@ type DonationItemModalProps = {
 };
 
 export default function DonationItemModal(props: DonationItemModalProps) {
-  const item = props.item;
+  const item = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');
-  const [notes, setNotes] = useState(item?.notes);
+  const [notes, setNotes] = useState(item?.notes ?? '');
   const theme = useTheme();
 
   const { height } = useWindowDimensions();
   const buttonPos = height - 164;
 
-  const handleTextChange = (text: string) => {
+  const handleQuantityChange = (text: string) => {
     // Remove any non-numeric characters using a regular expression
     const numericValue = text.replace(/[^0-9]/g, '');
     setQuantity(numericValue);
@@ -63,7 +63,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                   <Text variant="labelLarge">Number</Text>
                   <TextInput
                     value={quantity}
-                    onChangeText={handleTextChange}
+                    onChangeText={handleQuantityChange}
                     placeholder={String(item.quantity)}
                     keyboardType="numeric"
                     style={{ width: 140 }}
@@ -78,7 +78,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
               </View>
               <View style={styles.mt20}>
                 <Text variant="titleLarge">Notes</Text>
-                <TextInput value={notes} />
+                <TextInput value={notes} onChangeText={(text) => setNotes(text)} />
               </View>
             </View>
           </View>

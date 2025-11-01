@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
@@ -14,9 +15,9 @@ import { darkTheme, lightTheme } from '../styles/themes';
  * --------------------------------------------------------
  */
 const isAndroid = require('react-native').Platform.OS === 'android';
-const isHermesEnabled = !!global.HermesInternal;
+// const isHermesEnabled = !!global.HermesInternal;
 
-if (isHermesEnabled || isAndroid) {
+if (isAndroid) {
   require('@formatjs/intl-getcanonicallocales/polyfill');
   require('@formatjs/intl-locale/polyfill');
 
@@ -42,7 +43,7 @@ if (isHermesEnabled || isAndroid) {
 
   // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
   if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-    Intl.DateTimeFormat.__setDefaultTimeZone(require('expo-localization').timezone);
+    (Intl.DateTimeFormat as any).__setDefaultTimeZone(require('expo-localization').timezone);
   }
 }
 registerTranslation('en', en);
@@ -65,36 +66,21 @@ export default function RootLayout() {
       <ThemedView>
         <Stack
           screenOptions={{
-            headerStyle: {
-              backgroundColor: paperTheme.colors.background,
-            },
-            headerShadowVisible: false,
+            headerShown: false,
             headerTintColor: paperTheme.colors.onBackground,
             presentation: 'transparentModal',
           }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="pages/donationInfo" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="pages/donationInfo" />
           <Stack.Screen
             name="pages/charityNeedsPage"
             options={{ headerTitle: 'Example Charity' }}
           />
-          <Stack.Screen
-            name="pages/scheduleDropoffPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen
-            name="pages/yourDonationPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen
-            name="pages/reviewAndConfirmPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen
-            name="pages/donationConfirmedPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="pages/scheduleDropoffPage" />
+          <Stack.Screen name="pages/yourDonationPage" />
+          <Stack.Screen name="pages/reviewAndConfirmPage" />
+          <Stack.Screen name="pages/donationConfirmedPage" />
+          <Stack.Screen name="auth" />
         </Stack>
       </ThemedView>
 
