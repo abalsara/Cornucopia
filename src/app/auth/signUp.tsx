@@ -5,6 +5,7 @@ import { Button, TextInput } from 'react-native-paper';
 import ThemedView from '../../components/ThemedView';
 import { supabase } from '../../lib/supabase';
 
+import Navbar from '@/src/components/bars/Navbar';
 import { emailIsValid, validatePassword } from '@/src/util/auth';
 
 export default function SignUp() {
@@ -64,6 +65,7 @@ export default function SignUp() {
 
   return (
     <ThemedView>
+      <Navbar title="Create an Account" />
       <View style={styles.container}>
         <View style={[styles.verticallySpaced, styles.inline]}>
           <TextInput
