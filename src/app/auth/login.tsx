@@ -6,6 +6,8 @@ import { Button, TextInput } from 'react-native-paper';
 import ThemedView from '../../components/ThemedView';
 import { supabase } from '../../lib/supabase';
 
+import Navbar from '@/src/components/bars/Navbar';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +32,7 @@ export default function Login() {
 
   return (
     <ThemedView>
+      <Navbar title="Login" />
       <View style={styles.container}>
         <View style={[styles.verticallySpaced, styles.mt20]}>
           <TextInput
