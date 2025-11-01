@@ -1,0 +1,29 @@
+import { View } from 'react-native';
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+type DatePickerProps = {
+  onConfirm: (date?: Date) => void;
+  onDismiss: () => void;
+  visible: boolean;
+};
+
+/**
+ * Calendar modal that allows a user to select a date
+ */
+export default function DatePicker(props: DatePickerProps) {
+  return (
+    <SafeAreaView>
+      <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+        <DatePickerModal
+          locale="en"
+          mode="single"
+          visible={props.visible}
+          onDismiss={props.onDismiss}
+          date={undefined}
+          onConfirm={(params) => props.onConfirm(params.date)}
+        />
+      </View>
+    </SafeAreaView>
+  );
+}
