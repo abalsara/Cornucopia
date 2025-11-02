@@ -48,6 +48,7 @@ export default function FindCharityScreen() {
               setUseLocation(true);
               // Call charity search logic here
               // await searchNearbyCharities(latitude, longitude);
+              router.push('/pages/charityResults');
             } catch (error) {
               console.error('Error getting location:', error);
               Alert.alert('Error', 'Failed to retrieve your location.');
@@ -70,6 +71,7 @@ export default function FindCharityScreen() {
     } else {
       // city
     }
+    router.push('/pages/charityResults');
     console.log('Searching for:', searchText);
   };
 
