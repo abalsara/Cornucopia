@@ -11,6 +11,7 @@ import {
   SportsEquipmentSubtype,
 } from './DonationItemSubtypes.types';
 
+// The set of possible kinds of donations
 export type DonationItem =
   | AnimalCareSuppliesItem
   | ClothingItem
@@ -34,6 +35,7 @@ export type BaseDonationItem = {
   category: Category;
 };
 
+// each donation item type has a unique Category
 export type Category =
   | 'food'
   | 'clothing'
