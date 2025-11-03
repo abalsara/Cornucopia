@@ -1,4 +1,4 @@
-import { useRouter, Router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Avatar, useTheme } from 'react-native-paper';

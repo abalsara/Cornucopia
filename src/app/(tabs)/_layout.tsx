@@ -1,4 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Tabs } from 'expo-router';
 import { useTheme } from 'react-native-paper';
 
@@ -20,10 +21,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
+          title: 'My Donations',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="gift" color={color} />,
         }}
       />
+
       <Tabs.Screen
         name="donate"
         options={{
@@ -31,20 +33,15 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="heart" color={color} />,
         }}
       />
+
       <Tabs.Screen
-        name="charities"
+        name="messages"
         options={{
-          title: 'Charities',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="map-marker" color={color} />,
+          title: 'Messages',
+          tabBarIcon: ({ color }) => <FontAwesome6 name="message" size={24} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="myDonations"
-        options={{
-          title: 'My Donations',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="gift" color={color} />,
-        }}
-      />
+
       <Tabs.Screen
         name="profile"
         options={{

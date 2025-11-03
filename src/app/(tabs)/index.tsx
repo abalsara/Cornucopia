@@ -1,8 +1,8 @@
 import { Session } from '@supabase/supabase-js';
-import { Redirect, router } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import { supabase } from '@/src/lib/supabase';
@@ -41,10 +41,7 @@ export default function Index() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text>Edit app/index.tsx to edit this screen.</Text>
-        <Button onPress={() => router.push('/pages/charityNeedsPage?cid=testcid')}>
-          Go to charity needs page
-        </Button>
+        <Text>Donations</Text>
       </View>
     </ThemedView>
   );

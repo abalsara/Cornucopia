@@ -22,7 +22,7 @@ export default function DonationConfirmedPage() {
 
   const handleButtonPress = (): void => {
     router.dismissAll();
-    router.replace('/(tabs)/myDonations');
+    router.replace('/(tabs)');
   };
 
   return (
