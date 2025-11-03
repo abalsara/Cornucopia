@@ -1,13 +1,13 @@
-import { StyleSheet, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 
-export default function myDonations() {
+export default function Messages() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text>Donations</Text>
+        <Text>Messages</Text>
       </View>
     </ThemedView>
   );

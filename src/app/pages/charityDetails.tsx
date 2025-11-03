@@ -92,7 +92,7 @@ export default function CharityDetails() {
       <View style={styles.bottomBar}>
         <Button
           mode="contained"
-          // onPress={() => router.push(() => {})} COME BACK TO THIS WITH CHARITY NEEDS PAGE
+          onPress={() => router.push('/pages/charityNeedsPage')}
           style={styles.bottomButton}>
           Browse {name}’s Needs
         </Button>

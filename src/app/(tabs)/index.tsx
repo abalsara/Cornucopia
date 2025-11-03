@@ -41,10 +41,7 @@ export default function Index() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text>Edit app/index.tsx to edit this screen.</Text>
-        <Button onPress={() => router.push('/pages/charityNeedsPage?cid=testcid')}>
-          Go to charity needs page
-        </Button>
+        <Text>Donations</Text>
       </View>
     </ThemedView>
   );
