@@ -1,8 +1,8 @@
 import { Session } from '@supabase/supabase-js';
-import { Redirect, router } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import { supabase } from '@/src/lib/supabase';
