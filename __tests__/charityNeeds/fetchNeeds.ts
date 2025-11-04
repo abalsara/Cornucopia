@@ -29,7 +29,9 @@ describe('fetchAllCharityNeeds', () => {
 
     const result = await fetchAllCharityNeeds('test-cid');
 
-    expect(mockInvoke).toHaveBeenCalledWith('hello', { body: { cid: 'test-cid' } });
+    expect(mockInvoke).toHaveBeenCalledWith('get-all-charity-needs-flat', {
+      body: { cid: 'test-cid' },
+    });
     expect(result).toEqual(mockNeeds);
   });
 
