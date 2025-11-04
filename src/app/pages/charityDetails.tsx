@@ -1,10 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
+import { Button, Card, Divider, IconButton, Text } from 'react-native-paper';
 
 export default function CharityDetails() {
-  const theme = useTheme();
   const { name, location, typesServed, rating, mission, reviews } = useLocalSearchParams<{
     name: string;
     location: string;
@@ -92,7 +91,7 @@ export default function CharityDetails() {
       <View style={styles.bottomBar}>
         <Button
           mode="contained"
-          // onPress={() => router.push(() => {})} COME BACK TO THIS WITH CHARITY NEEDS PAGE
+          onPress={() => router.push('/pages/charityNeedsPage')}
           style={styles.bottomButton}>
           Browse {name}’s Needs
         </Button>
