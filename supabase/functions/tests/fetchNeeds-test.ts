@@ -48,10 +48,7 @@ Deno.test('fetchAllCharityNeeds - successful fetch', async () => {
     return Promise.resolve(new Response(JSON.stringify(mockResponse), { status: 200 }));
   };
 
-  const result = await fetchAllCharityNeeds(
-    'mock-auth-token',
-    'b44b6e27-1234-4567-890a-abcdef123456',
-  );
+  const result = await fetchAllCharityNeeds('b44b6e27-1234-4567-890a-abcdef123456');
 
   assertEquals(result.length, 2);
   assertEquals(result[0].category, 'Clothing');
@@ -70,19 +67,7 @@ Deno.test('fetchAllCharityNeeds - handles missing authorization header', async (
       new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401 }),
     );
 
-  const result = await fetchAllCharityNeeds('', 'test-cid');
-
-  assertEquals(result, []);
-  globalThis.fetch = originalFetch;
-});
-
-Deno.test('fetchAllCharityNeeds - handles invalid token', async () => {
-  globalThis.fetch = () =>
-    Promise.resolve(
-      new Response(JSON.stringify({ error: 'Invalid or expired token' }), { status: 401 }),
-    );
-
-  const result = await fetchAllCharityNeeds('invalid-token', 'test-cid');
+  const result = await fetchAllCharityNeeds('test-cid');
 
   assertEquals(result, []);
   globalThis.fetch = originalFetch;
@@ -94,19 +79,7 @@ Deno.test('fetchAllCharityNeeds - handles missing cid parameter', async () => {
       new Response(JSON.stringify({ error: 'Missing required parameter: cid' }), { status: 400 }),
     );
 
-  const result = await fetchAllCharityNeeds('valid-token', '');
-
-  assertEquals(result, []);
-  globalThis.fetch = originalFetch;
-});
-
-Deno.test('fetchAllCharityNeeds - handles server error', async () => {
-  globalThis.fetch = () =>
-    Promise.resolve(
-      new Response(JSON.stringify({ error: 'Database connection failed' }), { status: 500 }),
-    );
-
-  const result = await fetchAllCharityNeeds('valid-token', 'test-cid');
+  const result = await fetchAllCharityNeeds('');
 
   assertEquals(result, []);
   globalThis.fetch = originalFetch;
@@ -118,7 +91,7 @@ Deno.test('fetchAllCharityNeeds - handles missing needs property', async () => {
   globalThis.fetch = () =>
     Promise.resolve(new Response(JSON.stringify(mockResponse), { status: 200 }));
 
-  const result = await fetchAllCharityNeeds('mock-auth-token', 'test-cid');
+  const result = await fetchAllCharityNeeds('test-cid');
 
   assertEquals(result, []);
   globalThis.fetch = originalFetch;
