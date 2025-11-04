@@ -20,10 +20,6 @@
     }
   },
   "workspace": {
-    "dependencies": [
-      "jsr:@std/assert@1",
-      "jsr:@std/dotenv@~0.225.5"
-    ],
     "packageJson": {
       "dependencies": [
         "npm:@expo/vector-icons@^15.0.3",
@@ -59,8 +55,8 @@
         "npm:expo-status-bar@~3.0.8",
         "npm:expo-symbols@~1.0.7",
         "npm:expo-system-ui@~6.0.8",
-        "npm:expo-web-browser@~15.0.8",
-        "npm:expo@54.0.21",
+        "npm:expo-web-browser@~15.0.9",
+        "npm:expo@54.0.22",
         "npm:husky@^9.1.7",
         "npm:jest-expo@~54.0.13",
         "npm:jest@29.7",
