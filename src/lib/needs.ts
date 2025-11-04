@@ -1,8 +1,25 @@
+import { supabase } from './supabase';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
 export const getCharityNeeds = (cid: string): DonationItem[] => {
   return DONATION_ITEMS;
 };
+
+/**
+ * Fetch all charity needs.
+ * @param cid Charity ID
+ * @returns Array of charity needs
+ */
+export async function fetchAllCharityNeeds(cid: string) {
+  const { data, error } = await supabase.functions.invoke('hello', { body: { cid } });
+
+  if (error) {
+    console.error('Error fetching charity needs:', error);
+    return [];
+  }
+
+  return data.needs ?? [];
+}
 
 const DONATION_ITEMS: DonationItem[] = [
   {
