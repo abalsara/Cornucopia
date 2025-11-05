@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { Divider, Portal, Text } from 'react-native-paper';
 
@@ -8,7 +8,8 @@ import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
 import Navbar from '@/src/components/bars/Navbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
 import DonationItemModal from '@/src/components/modals/DonationItemModal';
-import { getCharityNeeds } from '@/src/lib/needs';
+import { getCharityNeedsDummy } from '@/src/lib/donationItems';
+import { getCharity } from '@/src/stores/charities';
 import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/savedDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 
@@ -17,7 +18,10 @@ import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
  */
 export default function CharityNeedsPage() {
   const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
-  const [items, setItems] = useState<DonationItem[]>([]);
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [items, setItems] = useState<DonationItem[]>(getCharityNeedsDummy(cid));
 
   // only allow user to select items after clicking the 'start your donation' button
   const [inSelectStage, setInSelectStage] = useState(false);
@@ -26,11 +30,12 @@ export default function CharityNeedsPage() {
   const [donations, setDonations] = useState<DonationItem[]>([]);
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  useEffect(() => {
-    if (cid) {
-      getCharityNeeds(cid).then(setItems);
-    }
-  }, [cid]);
+  // not working
+  // useEffect(() => {
+  //   if (cid) {
+  //     getCharityNeeds(cid).then(setItems);
+  //   }
+  // }, [cid]);
 
   const handleStartDonationPress = (): void => {
     resetSavedDonations();
@@ -51,7 +56,7 @@ export default function CharityNeedsPage() {
   return (
     <ThemedView>
       <Portal.Host>
-        <Navbar title="Example Charity" />
+        <Navbar title={charity.c_name} />
         <DonationItemModal
           item={selectedItem}
           isVisible={modalIsVisible}
@@ -68,6 +73,7 @@ export default function CharityNeedsPage() {
         <Divider />
 
         <CharityNeedsNavbar
+          cid={cid}
           inSelectStage={inSelectStage}
           onStartDonation={handleStartDonationPress}
           donations={donations}

@@ -1,21 +1,26 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Divider, IconButton, Text } from 'react-native-paper';
+import { Button, Card, IconButton, Text } from 'react-native-paper';
+
+import { getCharity } from '@/src/stores/charities';
 
 export default function CharityDetails() {
-  const { name, location, typesServed, rating, mission, reviews } = useLocalSearchParams<{
-    name: string;
-    location: string;
-    typesServed?: string; // can serialize array as JSON string
-    rating?: string;
-    mission?: string;
-    reviews?: string;
+  const { cid } = useLocalSearchParams<{
+    cid: string;
+    // location: string;
+    // typesServed?: string; // can serialize array as JSON string
+    // rating?: string;
+    // mission?: string;
+    // reviews?: string;
   }>();
 
-  const parsedTypesServed: string[] = typesServed ? JSON.parse(typesServed) : [];
-  const parsedRating = rating ? parseFloat(rating) : 0;
-  const parsedReviews = reviews ? parseInt(reviews, 10) : 0;
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`charity with cid: ${cid} does not exist`);
+
+  // const parsedTypesServed: string[] = typesServed ? JSON.parse(typesServed) : [];
+  // const parsedRating = rating ? parseFloat(rating) : 0;
+  // const parsedReviews = reviews ? parseInt(reviews, 10) : 0;
 
   return (
     <View style={styles.container}>
@@ -29,21 +34,21 @@ export default function CharityDetails() {
         {/* Name & Info */}
         <View style={styles.nameSection}>
           <Text variant="headlineSmall" style={styles.charityName}>
-            {name}
+            {charity?.c_name}
           </Text>
-          <Text variant="bodyMedium" style={styles.charityTags}>
+          {/* <Text variant="bodyMedium" style={styles.charityTags}>
             {parsedTypesServed?.join(' • ')}
-          </Text>
+          </Text> */}
 
-          <View style={styles.ratingRow}>
+          {/* <View style={styles.ratingRow}>
             <Text variant="titleMedium">⭐ {parsedRating}</Text>
             <Divider style={styles.dividerVertical} />
             <Text variant="bodyMedium">{parsedReviews ?? 0} Reviews</Text>
-          </View>
+          </View> */}
         </View>
 
         {/* Mission Section */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Mission
           </Text>
@@ -54,7 +59,7 @@ export default function CharityDetails() {
               </Text>
             </Card.Content>
           </Card>
-        </View>
+        </View> */}
 
         {/* Location & Logistics */}
         <View style={styles.section}>
@@ -64,7 +69,7 @@ export default function CharityDetails() {
           <Card style={styles.infoCard}>
             <Card.Content>
               <Text variant="bodyMedium" style={styles.address}>
-                📍 {location}
+                📍 {charity.city}, {charity.state}
               </Text>
               <Text variant="bodySmall" style={styles.paragraph}>
                 Description of drop-off hours and rules.
@@ -91,9 +96,9 @@ export default function CharityDetails() {
       <View style={styles.bottomBar}>
         <Button
           mode="contained"
-          onPress={() => router.push('/pages/charityNeedsPage')}
+          onPress={() => router.push(`/pages/charityNeedsPage?cid=${cid}`)}
           style={styles.bottomButton}>
-          Browse {name}’s Needs
+          Browse {charity.c_name}’s Needs
         </Button>
       </View>
     </View>

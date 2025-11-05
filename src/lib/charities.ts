@@ -18,7 +18,7 @@ export async function createCharity(user: User, c_name: string): Promise<Charity
   };
 
   const { data, error } = await supabase
-    .from('charities')
+    .from('Charities')
     .upsert([charity], { onConflict: 'admin' })
     .select()
     .single();
@@ -30,7 +30,7 @@ export async function createCharity(user: User, c_name: string): Promise<Charity
 }
 
 /**
- * Retrieves a charity from the `charities` table in the database.
+ * Retrieves a charity from the `Charities` table in the database.
  *
  * @param adminId - The unique user ID associated with the charity.
  * @returns A Promise that resolves to a Charity object.
@@ -40,13 +40,27 @@ export async function getCharityByAdmin(adminId: string): Promise<Charity> {
   if (!adminId) throw new Error('adminId is required');
 
   const { data, error } = await supabase
-    .from('charities')
+    .from('Charities')
     .select('*')
     .eq('admin', adminId)
     .single();
 
   if (error) throw error;
   if (!data) throw new Error('Charity not found');
+
+  return data;
+}
+
+/**
+ * Retrieves all charities from the `Charities` table in the database.
+ *
+ * @returns A Promise that resolves to a Charity object.
+ * @throws If a database error occurs.
+ */
+export async function fetchAllCharities(): Promise<Charity[]> {
+  const { data, error } = await supabase.from('Charities').select('*');
+
+  if (error) throw error;
 
   return data;
 }
