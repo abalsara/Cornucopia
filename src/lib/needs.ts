@@ -1,6 +1,11 @@
 import { supabase } from './supabase';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
+/**
+ * Get the charity needs for a given charity ID.
+ * @param cid The charity ID
+ * @returns Array of charity needs
+ */
 export async function getCharityNeeds(cid: string): Promise<DonationItem[]> {
   try {
     const needs = await fetchAllCharityNeeds(cid);
@@ -12,9 +17,9 @@ export async function getCharityNeeds(cid: string): Promise<DonationItem[]> {
 }
 
 /**
- * Fetch all charity needs.
+ * Fetch all charity needs in JSON format from Supabase function.
  * @param cid Charity ID
- * @returns Array of charity needs
+ * @returns Array of JSON charity needs with detailed needs information
  */
 export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
   const { data, error } = await supabase.functions.invoke('get-all-charity-needs-flat', {
@@ -29,6 +34,33 @@ export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
   return data.needs ?? [];
 }
 
+/**
+ * Creates a new need entry in the specified table for the given charity ID (cid).
+ * @param authToken - The authorization token for the request.
+ * @param cid - The charity ID for which the need is being created.
+ * @param table - The table in which to create the need.
+ * @param body - The body of the request containing need details.
+ * @returns The response data from the Supabase function, what was inserted.
+ * @throws An error if the request fails.
+ */
+export async function createNeed(cid: string, table: string, body: JSON) {
+  const { data, error } = await supabase.functions.invoke('insert-need', {
+    body: { cid, table, body },
+    method: 'POST',
+  });
+
+  if (error) {
+    console.error('Error inserting charity need:', error);
+  }
+
+  return data;
+}
+
+/**
+ * Parse charity needs into DonationItem objects.
+ * @param needs Array of charity needs returned from fetchAllCharityNeeds
+ * @returns Array of DonationItem objects
+ */
 function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
   const parsedDonations: DonationItem[] = [];
 
