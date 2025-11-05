@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Divider, IconButton, Text } from 'react-native-paper';
+import { Button, Card, IconButton, Text } from 'react-native-paper';
 
 import { getCharity } from '@/src/stores/charities';
 

@@ -8,7 +8,7 @@ import ActionButton from '@/src/components/buttons/ActionButton';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
 import { getCharity } from '@/src/stores/charities';
 import { getSavedDonations } from '@/src/stores/savedDonations';
-import { getSavedSchedule, setSavedSchedule } from '@/src/stores/savedSchedule';
+import { getSavedSchedule } from '@/src/stores/savedSchedule';
 import { setScheduledDonation } from '@/src/stores/scheduledDonations';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
