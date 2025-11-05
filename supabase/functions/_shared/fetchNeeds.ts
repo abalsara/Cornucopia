@@ -1,10 +1,5 @@
-import {
-  FunctionsHttpError,
-  FunctionsRelayError,
-  FunctionsFetchError,
-} from 'npm:@supabase/supabase-js@2.76.1';
-
-import { supabase } from '../../../src/lib/supabase.ts';
+const NEEDS_ENDPOINT =
+  'https://ifawtxdthbiyhmpzjuwf.supabase.co/functions/v1/get-all-charity-needs-flat';
 
 /**
  * Fetch all charity needs.
@@ -12,21 +7,22 @@ import { supabase } from '../../../src/lib/supabase.ts';
  * @param cid Charity ID
  * @returns Array of charity needs
  */
-export async function fetchAllCharityNeeds(cid: string) {
+export async function fetchAllCharityNeeds(authToken: string, cid: string) {
   try {
-    const { data, error } = await supabase.functions.invoke('get-all-charity-needs-flat', {
-      body: { cid },
+    const response = await fetch(`${NEEDS_ENDPOINT}?cid=${cid}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
     });
 
-    if (error instanceof FunctionsHttpError) {
-      const errorMessage = await error.context.json();
-      console.log('Function returned an error', errorMessage);
-    } else if (error instanceof FunctionsRelayError) {
-      console.log('Relay error:', error.message);
-    } else if (error instanceof FunctionsFetchError) {
-      console.log('Fetch error:', error.message);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.error || 'Failed to fetch charity needs');
     }
 
+    const data = await response.json();
     // data format: { needs: [...], cid: ... }
     return data.needs ?? [];
   } catch (err) {
