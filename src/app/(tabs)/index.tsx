@@ -5,8 +5,11 @@ import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
+import Navbar from '@/src/components/bars/Navbar';
+import ScheduledDonationCard from '@/src/components/cards/ScheduledDonationCard';
 import { supabase } from '@/src/lib/supabase';
 import 'react-native-url-polyfill/auto';
+import { getScheduledDonations } from '@/src/stores/scheduledDonations';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -38,10 +41,20 @@ export default function Index() {
       </ThemedView>
     );
   }
+
+  const scheduledDonations = getScheduledDonations();
   return (
     <ThemedView>
+      <Navbar title="My Donations" backButtonShown={false} />
       <View style={styles.container}>
-        <Text>Donations</Text>
+        <Text>Upcoming</Text>
+        {scheduledDonations.map((scheduledDonation) => (
+          <ScheduledDonationCard
+            cid={scheduledDonation.cid}
+            schedule={scheduledDonation.scheduledDate}
+            key={`${scheduledDonation.cid}${scheduledDonation.scheduledDate}`}
+          />
+        ))}
       </View>
     </ThemedView>
   );
@@ -49,8 +62,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginHorizontal: 20,
+    gap: 12,
   },
 });
