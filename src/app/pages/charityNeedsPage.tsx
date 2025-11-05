@@ -9,6 +9,7 @@ import Navbar from '@/src/components/bars/Navbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
 import DonationItemModal from '@/src/components/modals/DonationItemModal';
 import { getCharityNeeds } from '@/src/lib/needs';
+import { getCharity } from '@/src/stores/charities';
 import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/savedDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 
@@ -17,6 +18,8 @@ import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
  */
 export default function CharityNeedsPage() {
   const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
   const [items, setItems] = useState<DonationItem[]>([]);
 
   // only allow user to select items after clicking the 'start your donation' button
@@ -51,7 +54,7 @@ export default function CharityNeedsPage() {
   return (
     <ThemedView>
       <Portal.Host>
-        <Navbar title="Example Charity" />
+        <Navbar title={charity.c_name} />
         <DonationItemModal
           item={selectedItem}
           isVisible={modalIsVisible}
@@ -68,6 +71,7 @@ export default function CharityNeedsPage() {
         <Divider />
 
         <CharityNeedsNavbar
+          cid={cid}
           inSelectStage={inSelectStage}
           onStartDonation={handleStartDonationPress}
           donations={donations}
