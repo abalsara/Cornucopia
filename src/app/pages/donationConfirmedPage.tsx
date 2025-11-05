@@ -1,10 +1,11 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
+import { getCharity } from '@/src/stores/charities';
 import { getSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
@@ -12,12 +13,15 @@ import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
  * This page is shown to the donor after successfully confirming a donation drop off time
  */
 export default function DonationConfirmedPage() {
+  const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
   const router = useRouter();
 
   const getConfirmationString = (): string => {
     const date = getSavedSchedule();
     if (!date) throw new Error('date is undefined');
-    return `You have successfully scheduled your donation with Charity Name on ${formatDate(date)} at ${formatTime(date)}`;
+    return `You have successfully scheduled your donation with ${charity.c_name} on ${formatDate(date)} at ${formatTime(date)}`;
   };
 
   const handleButtonPress = (): void => {
@@ -27,7 +31,7 @@ export default function DonationConfirmedPage() {
 
   return (
     <ThemedView>
-      <Navbar title="Example Charity" backButtonShown={false} />
+      <Navbar title={charity.c_name} backButtonShown={false} />
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Text variant="headlineMedium">Congrats</Text>

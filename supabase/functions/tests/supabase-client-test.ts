@@ -1,10 +1,10 @@
 // Import required libraries and modules
 import { assertEquals } from 'jsr:@std/assert@1';
+// deno-lint-ignore no-unversioned-import
 import { load } from 'jsr:@std/dotenv';
 import { SupabaseClient } from 'npm:@supabase/supabase-js@2.76.1';
 
 // Will load the .env file to Deno.env
-// deno-lint-ignore no-unversioned-import
 import testSupabaseClient from '../_shared/supabaseClient.ts';
 
 await load({
