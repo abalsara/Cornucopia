@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -6,8 +6,10 @@ import ThemedView from '@/src/components/ThemedView';
 import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
+import { getCharity } from '@/src/stores/charities';
 import { getSavedDonations } from '@/src/stores/savedDonations';
-import { getSavedSchedule } from '@/src/stores/savedSchedule';
+import { getSavedSchedule, setSavedSchedule } from '@/src/stores/savedSchedule';
+import { setScheduledDonation } from '@/src/stores/scheduledDonations';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
 /**
@@ -15,6 +17,10 @@ import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
  * but has not yet been confirmed
  */
 export default function ReviewAndConfirmPage() {
+  const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
+
   const router = useRouter();
   const donationItems = getSavedDonations();
   const date = getSavedSchedule();
@@ -26,12 +32,13 @@ export default function ReviewAndConfirmPage() {
 
   const handleConfirmPress = (): void => {
     // TODO: insert date into db
-    router.push('/pages/donationConfirmedPage');
+    setScheduledDonation(cid, donationItems, date);
+    router.push(`/pages/donationConfirmedPage?cid=${cid}`);
   };
 
   return (
     <ThemedView>
-      <Navbar title="Example Charity" />
+      <Navbar title={charity.c_name} />
       <View style={styles.container}>
         <Text variant="headlineMedium">Review & Confirm</Text>
         <View style={styles.contentContainer}>
@@ -51,8 +58,11 @@ export default function ReviewAndConfirmPage() {
 
           <View style={styles.contentContainer}>
             <Text variant="titleMedium">Location</Text>
-            <Text variant="bodyLarge">Example charity</Text>
-            <Text variant="bodyLarge">Address</Text>
+            <Text variant="bodyLarge">{charity.c_name}</Text>
+            <Text variant="bodyLarge">{charity.address}</Text>
+            <Text variant="bodyLarge">
+              {charity.city}, {charity.state} {charity.zip_code}
+            </Text>
           </View>
         </View>
 

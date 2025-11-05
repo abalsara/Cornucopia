@@ -33,41 +33,138 @@ export type Database = {
   };
   public: {
     Tables: {
+      admin: {
+        Row: {
+          cid: string | null;
+          created_at: string;
+          uid: string;
+        };
+        Insert: {
+          cid?: string | null;
+          created_at?: string;
+          uid: string;
+        };
+        Update: {
+          cid?: string | null;
+          created_at?: string;
+          uid?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'admin_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'admin_uid_fkey';
+            columns: ['uid'];
+            isOneToOne: true;
+            referencedRelation: 'Profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      AnimalCareSupplies: {
+        Row: {
+          animal: Database['public']['Enums']['AnimalTypeT'] | null;
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['AnimalNeedT'];
+        };
+        Insert: {
+          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['AnimalNeedT'];
+        };
+        Update: {
+          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['AnimalNeedT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'AnimalCareSupplies_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
       Charities: {
         Row: {
           address: string;
-          admin: string;
-          c_name: string | null;
+          c_name: string;
           cid: string;
           city: string;
           created_at: string;
           email: string | null;
+          phone_num: string | null;
           state: string;
           zip_code: string;
         };
         Insert: {
           address: string;
-          admin: string;
-          c_name?: string | null;
+          c_name: string;
           cid?: string;
           city: string;
           created_at?: string;
           email?: string | null;
+          phone_num?: string | null;
           state: string;
           zip_code: string;
         };
         Update: {
           address?: string;
-          admin?: string;
-          c_name?: string | null;
+          c_name?: string;
           cid?: string;
           city?: string;
           created_at?: string;
           email?: string | null;
+          phone_num?: string | null;
           state?: string;
           zip_code?: string;
         };
         Relationships: [];
+      };
+      Clothing: {
+        Row: {
+          age_group: Database['public']['Enums']['AgeGroupT'] | null;
+          cid: string;
+          created_at: string;
+          gender: Database['public']['Enums']['GenderT'] | null;
+          item_id: string;
+        };
+        Insert: {
+          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
+          cid: string;
+          created_at?: string;
+          gender?: Database['public']['Enums']['GenderT'] | null;
+          item_id?: string;
+        };
+        Update: {
+          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
+          cid?: string;
+          created_at?: string;
+          gender?: Database['public']['Enums']['GenderT'] | null;
+          item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Clothing_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
       };
       Donation: {
         Row: {
@@ -109,18 +206,182 @@ export type Database = {
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'Donation_item_id_fkey';
-            columns: ['item_id'];
-            isOneToOne: false;
-            referencedRelation: 'Request';
-            referencedColumns: ['item_id'];
-          },
-          {
             foreignKeyName: 'Donation_pid_fkey';
             columns: ['pid'];
             isOneToOne: false;
             referencedRelation: 'Profiles';
             referencedColumns: ['id'];
+          },
+        ];
+      };
+      Electronics: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['ElectronicsTypeT'];
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['ElectronicsTypeT'];
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['ElectronicsTypeT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Electronics_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      Food: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+          storage_reqs: Database['public']['Enums']['StorageRequirementT'];
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          storage_reqs?: Database['public']['Enums']['StorageRequirementT'];
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          storage_reqs?: Database['public']['Enums']['StorageRequirementT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Food_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      Furniture: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['FurnitureTypeT'];
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['FurnitureTypeT'];
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['FurnitureTypeT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Furniture_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      HouseholdGoods: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['HouseholdGoodsTypeT'];
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['HouseholdGoodsTypeT'];
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['HouseholdGoodsTypeT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'HouseholdGoods_cid_fkey1';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      HygieneProduct: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'HygieneProduct_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      MedicalSupplies: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['MedicalSuppliesTypeT'];
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['MedicalSuppliesTypeT'];
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['MedicalSuppliesTypeT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'MedicalSupplies_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
           },
         ];
       };
@@ -151,36 +412,78 @@ export type Database = {
         };
         Relationships: [];
       };
-      Request: {
+      Ratings: {
         Row: {
           cid: string | null;
           created_at: string;
-          item_id: string;
-          item_name: string | null;
-          post_id: string;
-          quantitiy_requested: number | null;
-          quantity_fulfilled: number | null;
-          urgency: number | null;
+          desc: string | null;
+          pid: string;
+          star: number | null;
         };
         Insert: {
           cid?: string | null;
           created_at?: string;
-          item_id?: string;
-          item_name?: string | null;
-          post_id?: string;
-          quantitiy_requested?: number | null;
-          quantity_fulfilled?: number | null;
-          urgency?: number | null;
+          desc?: string | null;
+          pid: string;
+          star?: number | null;
         };
         Update: {
           cid?: string | null;
           created_at?: string;
-          item_id?: string;
-          item_name?: string | null;
-          post_id?: string;
-          quantitiy_requested?: number | null;
-          quantity_fulfilled?: number | null;
-          urgency?: number | null;
+          desc?: string | null;
+          pid?: string;
+          star?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Ratings_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Ratings_pid_fkey';
+            columns: ['pid'];
+            isOneToOne: true;
+            referencedRelation: 'Profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      Request: {
+        Row: {
+          category: Database['public']['Enums']['RequestTypeT'];
+          cid: string;
+          created_at: string;
+          item_name: string;
+          notes: string | null;
+          quantitiy: number;
+          quantity_fulfilled: number;
+          request_id: string;
+          unit: string;
+        };
+        Insert: {
+          category?: Database['public']['Enums']['RequestTypeT'];
+          cid: string;
+          created_at?: string;
+          item_name: string;
+          notes?: string | null;
+          quantitiy?: number;
+          quantity_fulfilled?: number;
+          request_id?: string;
+          unit?: string;
+        };
+        Update: {
+          category?: Database['public']['Enums']['RequestTypeT'];
+          cid?: string;
+          created_at?: string;
+          item_name?: string;
+          notes?: string | null;
+          quantitiy?: number;
+          quantity_fulfilled?: number;
+          request_id?: string;
+          unit?: string;
         };
         Relationships: [
           {
@@ -190,43 +493,114 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
-          {
-            foreignKeyName: 'Request_post_id_fkey';
-            columns: ['post_id'];
-            isOneToOne: false;
-            referencedRelation: 'RequestPost';
-            referencedColumns: ['post_id'];
-          },
         ];
       };
-      RequestPost: {
+      SchoolOfficeSupplies: {
         Row: {
-          cid: string | null;
+          cid: string;
           created_at: string;
-          dropoff_details: string | null;
-          is_active: boolean | null;
-          post_id: string;
-          post_title: string | null;
+          item_id: string;
         };
         Insert: {
-          cid?: string | null;
+          cid: string;
           created_at?: string;
-          dropoff_details?: string | null;
-          is_active?: boolean | null;
-          post_id?: string;
-          post_title?: string | null;
+          item_id?: string;
         };
         Update: {
-          cid?: string | null;
+          cid?: string;
           created_at?: string;
-          dropoff_details?: string | null;
-          is_active?: boolean | null;
-          post_id?: string;
-          post_title?: string | null;
+          item_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'RequestPost_cid_fkey';
+            foreignKeyName: 'SchoolOfficeSupplies_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      SportsEquipment: {
+        Row: {
+          age_group: Database['public']['Enums']['AgeGroupT'];
+          cid: string;
+          created_at: string;
+          item_id: string;
+          type: Database['public']['Enums']['SportsEquipmentTypeT'];
+        };
+        Insert: {
+          age_group?: Database['public']['Enums']['AgeGroupT'];
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['SportsEquipmentTypeT'];
+        };
+        Update: {
+          age_group?: Database['public']['Enums']['AgeGroupT'];
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+          type?: Database['public']['Enums']['SportsEquipmentTypeT'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'SportsEquipment_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      ToysGames: {
+        Row: {
+          age_group: Database['public']['Enums']['AgeGroupT'] | null;
+          cid: string;
+          created_at: string;
+          item_id: string;
+        };
+        Insert: {
+          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Update: {
+          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'ToysGames_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
+      Uncatergorized: {
+        Row: {
+          cid: string;
+          created_at: string;
+          item_id: string;
+        };
+        Insert: {
+          cid: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Update: {
+          cid?: string;
+          created_at?: string;
+          item_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Uncatergorized_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
@@ -242,7 +616,56 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      AgeGroupT: 'Baby' | 'Kids' | 'Teenager' | 'Adult' | 'All Ages';
+      AnimalNeedT:
+        | 'Food'
+        | 'Bedding'
+        | 'Crates'
+        | 'Toys'
+        | 'Grooming'
+        | 'Bowls & Feeders'
+        | 'Health & Wellness'
+        | 'Accessories'
+        | 'Other';
+      AnimalTypeT: 'Dogs' | 'Cats' | 'Small Animals' | 'Birds' | 'Reptiles';
+      ElectronicsTypeT:
+        | 'Computers/Tablets'
+        | 'Phones/Mobile Devices'
+        | 'TVs & Monitors'
+        | 'Appliances'
+        | 'Accessories & Cables'
+        | 'Other';
+      FurnitureTypeT: 'Seating' | 'Tables' | 'Bedroom' | 'Storage' | 'Outdoor Furniture' | 'Other';
+      GenderT: 'Male' | 'Female' | 'Unisex' | 'Other';
+      HouseholdGoodsTypeT:
+        | 'Kitchen Items'
+        | 'Bedding & Linens'
+        | 'Cleaning Supplies'
+        | 'Small Appliances'
+        | 'Storage & Organization'
+        | 'Decor & Lighting'
+        | 'Other';
+      MedicalSuppliesTypeT: 'First Aid' | 'Mobility Aids' | 'OTC Medications/Supplements' | 'Other';
+      RequestTypeT:
+        | 'Food'
+        | 'Clothing'
+        | 'Hygiene Products'
+        | 'Household Goods'
+        | 'Furniture'
+        | 'Toys & Games'
+        | 'Medical Supplies'
+        | 'School & Office Supplies'
+        | 'Animal Care Supplies'
+        | 'Electronics'
+        | 'Sports Equipment'
+        | 'Uncategorized';
+      SportsEquipmentTypeT:
+        | 'Team Sports'
+        | 'Winter Sports'
+        | 'Fitness Equipment'
+        | 'Bikes & Recreation'
+        | 'Other';
+      StorageRequirementT: 'Fridge' | 'Freezer' | 'Shelf Stable';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -370,6 +793,62 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      AgeGroupT: ['Baby', 'Kids', 'Teenager', 'Adult', 'All Ages'],
+      AnimalNeedT: [
+        'Food',
+        'Bedding',
+        'Crates',
+        'Toys',
+        'Grooming',
+        'Bowls & Feeders',
+        'Health & Wellness',
+        'Accessories',
+        'Other',
+      ],
+      AnimalTypeT: ['Dogs', 'Cats', 'Small Animals', 'Birds', 'Reptiles'],
+      ElectronicsTypeT: [
+        'Computers/Tablets',
+        'Phones/Mobile Devices',
+        'TVs & Monitors',
+        'Appliances',
+        'Accessories & Cables',
+        'Other',
+      ],
+      FurnitureTypeT: ['Seating', 'Tables', 'Bedroom', 'Storage', 'Outdoor Furniture', 'Other'],
+      GenderT: ['Male', 'Female', 'Unisex', 'Other'],
+      HouseholdGoodsTypeT: [
+        'Kitchen Items',
+        'Bedding & Linens',
+        'Cleaning Supplies',
+        'Small Appliances',
+        'Storage & Organization',
+        'Decor & Lighting',
+        'Other',
+      ],
+      MedicalSuppliesTypeT: ['First Aid', 'Mobility Aids', 'OTC Medications/Supplements', 'Other'],
+      RequestTypeT: [
+        'Food',
+        'Clothing',
+        'Hygiene Products',
+        'Household Goods',
+        'Furniture',
+        'Toys & Games',
+        'Medical Supplies',
+        'School & Office Supplies',
+        'Animal Care Supplies',
+        'Electronics',
+        'Sports Equipment',
+        'Uncategorized',
+      ],
+      SportsEquipmentTypeT: [
+        'Team Sports',
+        'Winter Sports',
+        'Fitness Equipment',
+        'Bikes & Recreation',
+        'Other',
+      ],
+      StorageRequirementT: ['Fridge', 'Freezer', 'Shelf Stable'],
+    },
   },
 } as const;

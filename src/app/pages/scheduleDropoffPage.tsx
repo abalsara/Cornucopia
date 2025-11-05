@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
@@ -8,6 +8,7 @@ import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import DatePicker from '@/src/components/modals/DatePicker';
 import TimePicker from '@/src/components/modals/TimePicker';
+import { getCharity } from '@/src/stores/charities';
 import { setSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
@@ -15,6 +16,10 @@ import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
  * This page allows the donor to pick a date and time to drop off their donation
  */
 export default function ScheduleDropoffPage() {
+  const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
+
   const theme = useTheme();
   const router = useRouter();
 
@@ -54,7 +59,7 @@ export default function ScheduleDropoffPage() {
   const handleNextButtonPress = (): void => {
     if (!date) throw new Error('invalid date');
     setSavedSchedule(date);
-    router.push('/pages/reviewAndConfirmPage');
+    router.push(`/pages/reviewAndConfirmPage?cid=${cid}`);
   };
 
   const handleSelectTimePress = (): void => {
@@ -70,8 +75,8 @@ export default function ScheduleDropoffPage() {
           <Text
             style={{ ...styles.text, color: theme.colors.onSurfaceVariant }}
             variant="bodyLarge">
-            Pick a date & time that works best to drop off your donation at Example charity, in
-            city, state.
+            Pick a date & time that works best to drop off your donation at {charity.c_name}, in
+            {charity.city}, {charity.state}.
           </Text>
 
           {/* Date selection */}

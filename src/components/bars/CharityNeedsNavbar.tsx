@@ -8,6 +8,7 @@ import ActionButton from '../buttons/ActionButton';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 
 type CharityNeedsNavbarProps = {
+  cid: string;
   inSelectStage: boolean;
   onStartDonation: () => void;
   donations: DonationItem[];
@@ -36,7 +37,7 @@ export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
         {renderNumSelected()}
         <ActionButton
           label="Next"
-          onPress={() => router.push('/pages/scheduleDropoffPage')}
+          onPress={() => router.push(`/pages/scheduleDropoffPage?cid=${props.cid}`)}
           disabled={props.donations.length === 0}
         />
       </View>
