@@ -1,0 +1,175 @@
+INSERT INTO "public"."Charities" ("cid", "c_name", "email", "address", "zip_code", "city", "state", "phone_num")
+VALUES (
+  'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  'Helping Hands Shelter',
+  'contact@helpinghands.org',
+  '123 Main Street',
+  '94103',
+  'San Francisco',
+  'CA',
+  '415-555-1212'
+)
+
+-- Insert into Request first
+INSERT INTO "public"."Request" ("request_id", "cid", "description")
+VALUES
+  ('11111111-1111-1111-1111-111111111111', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Warm clothing for winter'),
+  ('22222222-2222-2222-2222-222222222222', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'New laptops for students'),
+  ('33333333-3333-3333-3333-333333333333', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Non-perishable food items'),
+  ('44444444-4444-4444-4444-444444444444', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Furniture for new families'),
+  ('55555555-5555-5555-5555-555555555555', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Household supplies'),
+  ('66666666-6666-6666-6666-666666666666', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Hygiene essentials'),
+  ('77777777-7777-7777-7777-777777777777', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Medical supplies'),
+  ('88888888-8888-8888-8888-888888888888', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'School and office supplies'),
+  ('99999999-9999-9999-9999-999999999999', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Sports gear'),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Toys and games for children'),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Miscellaneous needs');
+
+
+
+-- ✅ Insert test requests for charity aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+INSERT INTO "public"."Request" (
+  "request_id",
+  "cid",
+  "item_name",
+  "quantity_fulfilled",
+  "category",
+  "notes",
+  "quantitiy",
+  "unit"
+)
+VALUES
+  (
+    '11111111-1111-1111-1111-111111111111',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Winter Jackets',
+    0,
+    'Clothing',
+    'Need warm outerwear for adults and children.',
+    20,
+    'Ea.'
+  ),
+  (
+    '22222222-2222-2222-2222-222222222222',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Laptops',
+    0,
+    'Electronics',
+    'Refurbished laptops for students in after-school programs.',
+    10,
+    'Ea.'
+  ),
+  (
+    '33333333-3333-3333-3333-333333333333',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Canned Goods',
+    0,
+    'Food',
+    'Non-perishable food for local food drive.',
+    100,
+    'Cans'
+  ),
+  (
+    '44444444-4444-4444-4444-444444444444',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Beds and Mattresses',
+    0,
+    'Furniture',
+    'Furniture for recently relocated families.',
+    5,
+    'Sets'
+  ),
+  (
+    '55555555-5555-5555-5555-555555555555',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Cleaning Supplies',
+    0,
+    'Household Goods',
+    'Multipurpose cleaners and mops for shelter upkeep.',
+    30,
+    'Kits'
+  ),
+  (
+    '66666666-6666-6666-6666-666666666666',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Hygiene Kits',
+    0,
+    'Hygiene Products',
+    'Soap, shampoo, and toothbrushes for distribution.',
+    50,
+    'Kits'
+  ),
+  (
+    '77777777-7777-7777-7777-777777777777',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'First Aid Supplies',
+    0,
+    'Medical Supplies',
+    'Basic medical kits for emergency response.',
+    25,
+    'Kits'
+  ),
+  (
+    '88888888-8888-8888-8888-888888888888',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'School Supplies',
+    0,
+    'School & Office Supplies',
+    'Notebooks, pens, and backpacks for school children.',
+    40,
+    'Sets'
+  ),
+  (
+    '99999999-9999-9999-9999-999999999999',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Sports Equipment',
+    0,
+    'Sports Equipment',
+    'Soccer balls, nets, and cones for community youth program.',
+    15,
+    'Ea.'
+  ),
+  (
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'Toys and Games',
+    0,
+    'Toys & Games',
+    'Educational toys for children’s center.',
+    25,
+    'Ea.'
+  );
+
+
+INSERT INTO "public"."Clothing" ("item_id", "cid", "age_group", "gender")
+VALUES ('11111111-1111-1111-1111-111111111111', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Adult', 'Unisex');
+
+INSERT INTO "public"."Electronics" ("item_id", "cid", "type")
+VALUES ('22222222-2222-2222-2222-222222222222', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."Food" ("item_id", "cid", "storage_reqs")
+-- VALUES ('33333333-3333-3333-3333-333333333333', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."Furniture" ("item_id", "cid", "type")
+-- VALUES ('44444444-4444-4444-4444-444444444444', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."HouseholdGoods" ("item_id", "cid", "type")
+-- VALUES ('55555555-5555-5555-5555-555555555555', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Cleaning Supplies');
+
+-- INSERT INTO "public"."HygieneProduct" ("item_id", "cid")
+-- VALUES ('66666666-6666-6666-6666-666666666666', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+
+-- INSERT INTO "public"."MedicalSupplies" ("item_id", "cid", "type")
+-- VALUES ('77777777-7777-7777-7777-777777777777', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."SchoolOfficeSupplies" ("item_id", "cid", "type")
+-- VALUES ('88888888-8888-8888-8888-888888888888', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."SportsEquipment" ("item_id", "cid", "type")
+-- VALUES ('99999999-9999-9999-9999-999999999999', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."ToysGames" ("item_id", "cid", "type")
+-- VALUES ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Other');
+
+-- INSERT INTO "public"."Uncatergorized" ("item_id", "cid")
+-- VALUES ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
