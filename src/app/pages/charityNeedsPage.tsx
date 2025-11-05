@@ -30,11 +30,12 @@ export default function CharityNeedsPage() {
   const [donations, setDonations] = useState<DonationItem[]>([]);
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  useEffect(() => {
-    if (cid) {
-      getCharityNeeds(cid).then(setItems);
-    }
-  }, [cid]);
+  // not working
+  // useEffect(() => {
+  //   if (cid) {
+  //     getCharityNeeds(cid).then(setItems);
+  //   }
+  // }, [cid]);
 
   const handleStartDonationPress = (): void => {
     resetSavedDonations();
