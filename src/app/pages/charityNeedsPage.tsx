@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { Divider, Portal, Text } from 'react-native-paper';
 
@@ -8,7 +8,7 @@ import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
 import Navbar from '@/src/components/bars/Navbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
 import DonationItemModal from '@/src/components/modals/DonationItemModal';
-import { getCharityNeedsDummy } from '@/src/lib/donationItems';
+import { getCharityNeeds } from '@/src/lib/needs';
 import { getCharity } from '@/src/stores/charities';
 import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/savedDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
@@ -20,8 +20,8 @@ export default function CharityNeedsPage() {
   const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
   const charity = getCharity(cid);
   if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [items, setItems] = useState<DonationItem[]>(getCharityNeedsDummy(cid));
+
+  const [items, setItems] = useState<DonationItem[]>([]);
 
   // only allow user to select items after clicking the 'start your donation' button
   const [inSelectStage, setInSelectStage] = useState(false);
