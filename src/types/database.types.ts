@@ -98,71 +98,6 @@ export type Database = {
           },
         ];
       };
-      admin: {
-        Row: {
-          cid: string | null;
-          created_at: string;
-          uid: string;
-        };
-        Insert: {
-          cid?: string | null;
-          created_at?: string;
-          uid: string;
-        };
-        Update: {
-          cid?: string | null;
-          created_at?: string;
-          uid?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'admin_cid_fkey';
-            columns: ['cid'];
-            isOneToOne: false;
-            referencedRelation: 'Charities';
-            referencedColumns: ['cid'];
-          },
-          {
-            foreignKeyName: 'admin_uid_fkey';
-            columns: ['uid'];
-            isOneToOne: true;
-            referencedRelation: 'Profiles';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      AnimalCareSupplies: {
-        Row: {
-          animal: Database['public']['Enums']['AnimalTypeT'] | null;
-          cid: string;
-          created_at: string;
-          item_id: string;
-          type: Database['public']['Enums']['AnimalNeedT'];
-        };
-        Insert: {
-          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
-          cid: string;
-          created_at?: string;
-          item_id?: string;
-          type?: Database['public']['Enums']['AnimalNeedT'];
-        };
-        Update: {
-          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
-          cid?: string;
-          created_at?: string;
-          item_id?: string;
-          type?: Database['public']['Enums']['AnimalNeedT'];
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'AnimalCareSupplies_cid_fkey';
-            columns: ['cid'];
-            isOneToOne: false;
-            referencedRelation: 'Charities';
-            referencedColumns: ['cid'];
-          },
-        ];
-      };
       Charities: {
         Row: {
           address: string;
@@ -171,7 +106,6 @@ export type Database = {
           city: string;
           created_at: string;
           email: string | null;
-          phone_num: string | null;
           phone_num: string | null;
           state: string;
           zip_code: string;
@@ -183,7 +117,6 @@ export type Database = {
           city: string;
           created_at?: string;
           email?: string | null;
-          phone_num?: string | null;
           phone_num?: string | null;
           state: string;
           zip_code: string;
@@ -196,43 +129,10 @@ export type Database = {
           created_at?: string;
           email?: string | null;
           phone_num?: string | null;
-          phone_num?: string | null;
           state?: string;
           zip_code?: string;
         };
         Relationships: [];
-      };
-      Clothing: {
-        Row: {
-          age_group: Database['public']['Enums']['AgeGroupT'] | null;
-          cid: string;
-          created_at: string;
-          gender: Database['public']['Enums']['GenderT'] | null;
-          item_id: string;
-        };
-        Insert: {
-          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
-          cid: string;
-          created_at?: string;
-          gender?: Database['public']['Enums']['GenderT'] | null;
-          item_id?: string;
-        };
-        Update: {
-          age_group?: Database['public']['Enums']['AgeGroupT'] | null;
-          cid?: string;
-          created_at?: string;
-          gender?: Database['public']['Enums']['GenderT'] | null;
-          item_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'Clothing_cid_fkey';
-            columns: ['cid'];
-            isOneToOne: false;
-            referencedRelation: 'Charities';
-            referencedColumns: ['cid'];
-          },
-        ];
       };
       Clothing: {
         Row: {
