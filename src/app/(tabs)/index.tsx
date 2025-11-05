@@ -8,6 +8,8 @@ import ThemedView from '@/src/components/ThemedView';
 import ScheduledDonationCardList from '@/src/components/lists/ScheduledDonationCardList';
 import { supabase } from '@/src/lib/supabase';
 import 'react-native-url-polyfill/auto';
+import { fetchAllCharities } from '@/src/lib/charities';
+import { initCharitiesStore } from '@/src/stores/charities';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -23,6 +25,9 @@ export default function Index() {
       setSession(session);
       setLoading(false);
     });
+
+    // initialize global state
+    fetchAllCharities().then((charities) => initCharitiesStore(charities));
   }, []);
 
   if (loading) {

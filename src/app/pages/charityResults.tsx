@@ -3,40 +3,44 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Avatar, useTheme } from 'react-native-paper';
 
-export type Charity = {
-  name: string;
-  typesServed: string[];
-  location: string;
-  mission?: string;
-  reviews?: number;
-  rating: number;
-};
+import { getCharities } from '@/src/stores/charities';
 
-const charities: Charity[] = [
-  // PLACEHOLDER CHARITIES
-  {
-    name: 'Charity Name',
-    typesServed: ['Veterans', 'Homelessness'],
-    location: 'Location',
-    rating: 4.7,
-  },
-  {
-    name: 'Friends of Youth',
-    typesServed: ['Youth', 'Homelessness'],
-    location: 'Bellevue, WA',
-    rating: 4.2,
-  },
-  {
-    name: 'Timberlake Church',
-    typesServed: ['Church', 'Families'],
-    location: 'Redmond, WA',
-    rating: 4.7,
-  },
-];
+// export type Charity = {
+//   name: string;
+//   typesServed: string[];
+//   location: string;
+//   mission?: string;
+//   reviews?: number;
+//   rating: number;
+// };
+
+// const charities: Charity[] = [
+//   // PLACEHOLDER CHARITIES
+//   {
+//     name: 'Charity Name',
+//     typesServed: ['Veterans', 'Homelessness'],
+//     location: 'Location',
+//     rating: 4.7,
+//   },
+//   {
+//     name: 'Friends of Youth',
+//     typesServed: ['Youth', 'Homelessness'],
+//     location: 'Bellevue, WA',
+//     rating: 4.2,
+//   },
+//   {
+//     name: 'Timberlake Church',
+//     typesServed: ['Church', 'Families'],
+//     location: 'Redmond, WA',
+//     rating: 4.7,
+//   },
+// ];
 
 export default function CharityResults() {
   const theme = useTheme();
   const router = useRouter();
+
+  const charities = getCharities();
 
   return (
     <View style={styles.container}>
@@ -64,20 +68,15 @@ export default function CharityResults() {
       {/* Charity List */}
       <FlatList
         data={charities}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
+        keyExtractor={(charity) => charity.cid}
+        renderItem={({ item: charity }) => (
           <Card
             style={styles.card}
             onPress={() =>
               router.push({
                 pathname: '/pages/charityDetails',
                 params: {
-                  name: item.name,
-                  typesServed: JSON.stringify(item.typesServed),
-                  location: item.location,
-                  mission: item.mission ?? '',
-                  reviews: item.reviews ?? 0,
-                  rating: item.rating,
+                  cid: charity.cid,
                 },
               })
             }>
@@ -85,20 +84,20 @@ export default function CharityResults() {
               <Avatar.Icon icon="home-heart" size={48} style={styles.avatar} />
               <View style={styles.charityInfo}>
                 <Text variant="titleMedium" style={styles.charityName}>
-                  {item.name}
+                  {charity.c_name}
                 </Text>
-                <Text variant="bodySmall" style={styles.charityTags}>
-                  {item.typesServed.join(' • ')}
-                </Text>
+                {/* <Text variant="bodySmall" style={styles.charityTags}>
+                  {charity.typesServed.join(' • ')}
+                </Text> */}
                 <Text
                   variant="bodySmall"
                   style={[styles.charityLocation, { color: theme.colors.onSurfaceVariant }]}>
-                  {item.location}
+                  {charity.city}, {charity.state}
                 </Text>
               </View>
-              <View style={styles.ratingContainer}>
-                <Text variant="titleMedium">⭐ {item.rating}</Text>
-              </View>
+              {/* <View style={styles.ratingContainer}>
+                <Text variant="titleMedium">⭐ {charity.rating}</Text>
+              </View> */}
             </View>
           </Card>
         )}

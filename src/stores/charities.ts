@@ -1,9 +1,19 @@
 import { Charity } from '../lib/charities';
 
 /**
- * In-memory store of charities.
+ * In-memory store of charities. Maps cid to a Charity object
  */
-const charities: Map<string, Charity> = new Map();
+const charitiesStore: Map<string, Charity> = new Map();
+
+export const initCharitiesStore = (charities: Charity[]): void => {
+  for (const charity of charities) {
+    charitiesStore.set(charity.cid, charity);
+  }
+};
+
+export const getCharities = (): Charity[] => {
+  return Array.from(charitiesStore.values());
+};
 
 /**
  * Retrieve a charity from the in-memory store by its ID.
@@ -12,7 +22,7 @@ const charities: Map<string, Charity> = new Map();
  * @returns {Charity | undefined} The matching `Charity` object, or `undefined` if not found.
  */
 export const getCharity = (cid: string): Charity | undefined => {
-  return charities.get(cid);
+  return charitiesStore.get(cid);
 };
 
 /**
@@ -23,5 +33,5 @@ export const getCharity = (cid: string): Charity | undefined => {
  * @returns {void}
  */
 export const setCharity = (cid: string, charity: Charity): void => {
-  charities.set(cid, charity);
+  charitiesStore.set(cid, charity);
 };
