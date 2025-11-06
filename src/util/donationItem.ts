@@ -1,36 +1,4 @@
-import { Category, DonationItem } from '../types/DonationItem/DonationItem.types';
-
-/**
- * returns a user-friendly string representation of a given Category
- */
-export const formatDonationItemCategory = (category: Category): string => {
-  switch (category) {
-    case 'food':
-      return 'Food';
-    case 'clothing':
-      return 'Clothing';
-    case 'furniture':
-      return 'Furniture';
-    case 'electronics':
-      return 'Electronics';
-    case 'hygiene':
-      return 'Hygiene';
-    case 'medical':
-      return 'Medical supplies';
-    case 'sports':
-      return 'Sports equipment';
-    case 'toysAndGames':
-      return 'Toys & Games';
-    case 'schoolAndOffice':
-      return 'School & Office Supplies';
-    case 'animalCareSupplies':
-      return 'Animal Care Supplies';
-    case 'householdGoods':
-      return 'Household Goods';
-    case 'uncategorized':
-      return 'Uncategorized';
-  }
-};
+import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
 /**
  * returns a description of a given DoantionItem for use on a DonationCard component
@@ -38,29 +6,29 @@ export const formatDonationItemCategory = (category: Category): string => {
 export const getDonationCardSubtitle = (item: DonationItem): string => {
   const notes = item.notes;
   switch (item.category) {
-    case 'animalCareSupplies':
+    case 'Animal Care Supplies':
       return `${notes}\n${item.animal} — ${item.type}`;
-    case 'clothing':
+    case 'Clothing':
       return `${notes}\n${item.ageGroup} — ${item.gender}`;
-    case 'electronics':
+    case 'Electronics':
       return `${notes}\n${item.type}`;
-    case 'food':
+    case 'Food':
       return `${notes}\nStorage: ${item.storageRequirement}`;
-    case 'furniture':
+    case 'Furniture':
       return `${notes}\n${item.type}`;
-    case 'householdGoods':
+    case 'Household Goods':
       return `${notes}\n${item.type}`;
-    case 'hygiene':
+    case 'Hygiene Products':
       return notes;
-    case 'medical':
+    case 'Medical Supplies':
       return `${notes}\n${item.type}`;
-    case 'schoolAndOffice':
+    case 'School & Office Supplies':
       return notes;
-    case 'sports':
+    case 'Sports Equipment':
       return `${notes}\n${item.type}`;
-    case 'toysAndGames':
+    case 'Toys & Games':
       return `${notes}\nAge group: ${item.ageGroup}`;
-    case 'uncategorized':
+    case 'Uncategorized':
       return notes;
     default:
       return notes;

@@ -4,7 +4,6 @@ import { Text } from 'react-native-paper';
 import DonationItemCardList from './DonationItemCardList';
 
 import { Category, DonationItem } from '@/src/types/DonationItem/DonationItem.types';
-import { formatDonationItemCategory } from '@/src/util/donationItem';
 
 type DonationListProps = {
   items: DonationItem[];
@@ -36,7 +35,7 @@ export default function DonationList(props: DonationListProps) {
       {[...grouped.entries()].map(([category, categoryItems]) => (
         <View key={category} style={{ marginBottom: 16 }}>
           <Text key={category} variant="titleMedium" style={{ marginTop: 10 }}>
-            {formatDonationItemCategory(category)}
+            {category}
           </Text>
 
           <DonationItemCardList items={categoryItems} onCardPress={props.onCardPress} />
