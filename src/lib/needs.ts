@@ -65,7 +65,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
   const parsedDonations: DonationItem[] = [];
 
   for (const need of needs) {
-    const category = need.category?.toLowerCase();
+    const category = need.category;
     const request = need.Request ?? {};
 
     // Merge shared fields from both sources
@@ -80,7 +80,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
     let donationItem: DonationItem;
 
     switch (category) {
-      case 'animalcaresupplies':
+      case 'Animal Care Supplies':
         donationItem = {
           ...base,
           animal: need.animal ?? 'Dogs',
@@ -88,7 +88,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
         };
         break;
 
-      case 'clothing':
+      case 'Clothing':
         donationItem = {
           ...base,
           ageGroup: need.age_group ?? 'All Ages',
@@ -96,68 +96,68 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
         };
         break;
 
-      case 'electronics':
+      case 'Electronics':
         donationItem = {
           ...base,
           type: need.type ?? 'Other',
         };
         break;
 
-      case 'food':
+      case 'Food':
         donationItem = {
           ...base,
           storageRequirement: need.storage_reqs ?? 'Shelf Stable',
         };
         break;
 
-      case 'furniture':
+      case 'Furniture':
         donationItem = {
           ...base,
           type: need.type ?? 'Other',
         };
         break;
 
-      case 'householdgoods':
+      case 'Household Goods':
         donationItem = {
           ...base,
           type: need.type ?? 'Other',
         };
         break;
 
-      case 'hygieneproduct':
+      case 'Hygiene Products':
         donationItem = {
           ...base,
         };
         break;
 
-      case 'medicalsupplies':
-        donationItem = {
-          ...base,
-          type: need.type ?? 'Other',
-        };
-        break;
-
-      case 'schoolofficesupplies':
-        donationItem = {
-          ...base,
-        };
-        break;
-
-      case 'sportsequipment':
+      case 'Medical Supplies':
         donationItem = {
           ...base,
           type: need.type ?? 'Other',
         };
         break;
 
-      case 'toysgames':
+      case 'School & Office Supplies':
+        donationItem = {
+          ...base,
+        };
+        break;
+
+      case 'Sports Equipment':
+        donationItem = {
+          ...base,
+          type: need.type ?? 'Other',
+        };
+        break;
+
+      case 'Toys & Games':
         donationItem = {
           ...base,
           ageGroup: need.age_group ?? 'All Ages',
         };
         break;
 
-      case 'uncatergorized':
+      case 'Uncategorized':
         donationItem = {
           ...base,
         };

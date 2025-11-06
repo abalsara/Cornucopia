@@ -96,7 +96,7 @@ Deno.serve(async (req) => {
           return [];
         }
         return (data ?? []).map((item) => ({
-          category: table,
+          category: item.Request.category ?? table,
           ...item,
         }));
       }),

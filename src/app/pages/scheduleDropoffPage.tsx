@@ -68,14 +68,14 @@ export default function ScheduleDropoffPage() {
 
   return (
     <ThemedView>
-      <Navbar title="Example Charity" />
+      <Navbar title={charity.c_name} />
       <View style={styles.container}>
         <View style={{ flex: 1 }}>
           <Text variant="headlineMedium">Schedule Dropoff</Text>
           <Text
             style={{ ...styles.text, color: theme.colors.onSurfaceVariant }}
             variant="bodyLarge">
-            Pick a date & time that works best to drop off your donation at {charity.c_name}, in
+            Pick a date & time that works best to drop off your donation at {charity.c_name}, in{' '}
             {charity.city}, {charity.state}.
           </Text>
 

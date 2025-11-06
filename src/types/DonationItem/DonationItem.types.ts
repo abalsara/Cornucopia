@@ -37,44 +37,44 @@ export type BaseDonationItem = {
 
 // each donation item type has a unique Category
 export type Category =
-  | 'food'
-  | 'clothing'
-  | 'furniture'
-  | 'electronics'
-  | 'hygiene'
-  | 'medical'
-  | 'sports'
-  | 'toysAndGames'
-  | 'schoolAndOffice'
-  | 'animalCareSupplies'
-  | 'householdGoods'
-  | 'uncategorized';
+  | 'Food'
+  | 'Clothing'
+  | 'Furniture'
+  | 'Electronics'
+  | 'Hygiene Products'
+  | 'Medical Supplies'
+  | 'Sports Equipment'
+  | 'Toys & Games'
+  | 'School & Office Supplies'
+  | 'Animal Care Supplies'
+  | 'Household Goods'
+  | 'Uncategorized';
 
 export type AnimalCareSuppliesItem = BaseDonationItem &
   Animal &
-  AnimalCareSuppliesType & { category: 'animalCareSupplies' };
+  AnimalCareSuppliesType & { category: 'Animal Care Supplies' };
 
-export type ClothingItem = BaseDonationItem & AgeGroup & Gender & { category: 'clothing' };
+export type ClothingItem = BaseDonationItem & AgeGroup & Gender & { category: 'Clothing' };
 
-export type ElectronicsItem = BaseDonationItem & ElectronicsSubtype & { category: 'electronics' };
+export type ElectronicsItem = BaseDonationItem & ElectronicsSubtype & { category: 'Electronics' };
 
-export type FoodItem = BaseDonationItem & StorageRequirement & { category: 'food' };
+export type FoodItem = BaseDonationItem & StorageRequirement & { category: 'Food' };
 
-export type FurnitureItem = BaseDonationItem & FurnitureSubtype & { category: 'furniture' };
+export type FurnitureItem = BaseDonationItem & FurnitureSubtype & { category: 'Furniture' };
 
 export type HouseholdGoodsItem = BaseDonationItem &
-  HouseholdGoodsSubtype & { category: 'householdGoods' };
+  HouseholdGoodsSubtype & { category: 'Household Goods' };
 
-export type HygieneItem = BaseDonationItem & { category: 'hygiene' };
+export type HygieneItem = BaseDonationItem & { category: 'Hygiene Products' };
 
 export type MedicalSuppliesItem = BaseDonationItem &
-  MedicalSuppliesSubtype & { category: 'medical' };
+  MedicalSuppliesSubtype & { category: 'Medical Supplies' };
 
-export type SchoolAndOfficeSupplies = BaseDonationItem & { category: 'schoolAndOffice' };
+export type SchoolAndOfficeSupplies = BaseDonationItem & { category: 'School & Office Supplies' };
 
 export type SportsEquipmentItem = BaseDonationItem &
-  SportsEquipmentSubtype & { category: 'sports' };
+  SportsEquipmentSubtype & { category: 'Sports Equipment' };
 
-export type ToysAndGames = BaseDonationItem & AgeGroup & { category: 'toysAndGames' };
+export type ToysAndGames = BaseDonationItem & AgeGroup & { category: 'Toys & Games' };
 
-export type UncategorizedItem = BaseDonationItem & { category: 'uncategorized' };
+export type UncategorizedItem = BaseDonationItem & { category: 'Uncategorized' };

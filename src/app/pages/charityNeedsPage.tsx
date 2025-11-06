@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { Divider, Portal, Text } from 'react-native-paper';
+import { ActivityIndicator, Divider, Portal, Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
@@ -29,13 +29,18 @@ export default function CharityNeedsPage() {
   const [selectedItem, setSelecteditem] = useState<DonationItem | undefined>(undefined);
   const [donations, setDonations] = useState<DonationItem[]>([]);
   const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // not working
-  // useEffect(() => {
-  //   if (cid) {
-  //     getCharityNeeds(cid).then(setItems);
-  //   }
-  // }, [cid]);
+  useEffect(() => {
+    getCharityNeeds(cid)
+      .then((fetchedItems) => {
+        setItems(fetchedItems);
+        setLoading(false);
+      })
+      .catch((error) => {
+        throw new Error(`An unexpected error occured at getCharityNeeds: ${error}`);
+      });
+  }, [cid]);
 
   const handleStartDonationPress = (): void => {
     resetSavedDonations();
@@ -52,6 +57,14 @@ export default function CharityNeedsPage() {
     setDonations(getSavedDonations());
     setModalIsVisible(false);
   };
+
+  if (loading) {
+    return (
+      <ThemedView>
+        <ActivityIndicator style={{ marginVertical: 'auto' }} />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView>
