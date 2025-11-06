@@ -3,6 +3,8 @@ import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 
+import ThemedView from '@/src/components/ThemedView';
+
 export default function HowDonationWorksScreen() {
   const router = useRouter();
 
@@ -11,47 +13,54 @@ export default function HowDonationWorksScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Back Button */}
-      <IconButton icon="arrow-left" size={28} onPress={handleBackPress} style={styles.backButton} />
+    <ThemedView>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Back Button */}
+        <IconButton
+          icon="arrow-left"
+          size={28}
+          onPress={handleBackPress}
+          style={styles.backButton}
+        />
 
-      {/* Title */}
-      <Text style={styles.title}>How Donation Works</Text>
+        {/* Title */}
+        <Text style={styles.title}>How Donation Works</Text>
 
-      {/* Step 1 */}
-      <View style={styles.step}>
-        <Text style={styles.stepNumber}>1</Text>
-        <View style={styles.stepContent}>
-          <Text style={styles.stepTitle}>Find a charity</Text>
-          <Text style={styles.stepDescription}>
-            Browse local charities & filter by cause, location or reviews.
-          </Text>
+        {/* Step 1 */}
+        <View style={styles.step}>
+          <Text style={styles.stepNumber}>1</Text>
+          <View style={styles.stepContent}>
+            <Text style={styles.stepTitle}>Find a charity</Text>
+            <Text style={styles.stepDescription}>
+              Browse local charities & filter by cause, location or reviews.
+            </Text>
+          </View>
+          <IconButton icon="home-heart" size={28} />
         </View>
-        <IconButton icon="home-heart" size={28} />
-      </View>
 
-      {/* Step 2 */}
-      <View style={styles.step}>
-        <Text style={styles.stepNumber}>2</Text>
-        <View style={styles.stepContent}>
-          <Text style={styles.stepTitle}>Select items to donate</Text>
-          <Text style={styles.stepDescription}>Choose from their current needs list.</Text>
+        {/* Step 2 */}
+        <View style={styles.step}>
+          <Text style={styles.stepNumber}>2</Text>
+          <View style={styles.stepContent}>
+            <Text style={styles.stepTitle}>Select items to donate</Text>
+            <Text style={styles.stepDescription}>Choose from their current needs list.</Text>
+          </View>
+          <IconButton icon="hand-pointing-up" size={28} />
         </View>
-        <IconButton icon="hand-pointing-up" size={28} />
-      </View>
 
-      {/* Step 3 */}
-      <View style={styles.step}>
-        <Text style={styles.stepNumber}>3</Text>
-        <View style={styles.stepContent}>
-          <Text style={styles.stepTitle}>Schedule drop off</Text>
-          <Text style={styles.stepDescription}>
-            Pick a convenient time slot to deliver your donation.
-          </Text>
+        {/* Step 3 */}
+        <View style={styles.step}>
+          <Text style={styles.stepNumber}>3</Text>
+          <View style={styles.stepContent}>
+            <Text style={styles.stepTitle}>Schedule drop off</Text>
+            <Text style={styles.stepDescription}>
+              Pick a convenient time slot to deliver your donation.
+            </Text>
+          </View>
+          <IconButton icon="calendar" size={28} />
         </View>
-        <IconButton icon="calendar" size={28} />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
@@ -59,7 +68,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     marginTop: 20,
-    backgroundColor: '#fff',
     flexGrow: 1,
   },
   backButton: {
