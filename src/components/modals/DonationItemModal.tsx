@@ -76,7 +76,7 @@ export default function DonationItemModal(props: DonationItemModalProps) {
                 <View style={styles.QuantityUnitContainer}>
                   <Text variant="labelLarge">Unit</Text>
                   <Text variant="titleMedium" style={{ marginTop: 20 }}>
-                    Cans
+                    {item.unit}
                   </Text>
                 </View>
               </View>

@@ -68,6 +68,8 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
     const category = need.category?.toLowerCase();
     const request = need.Request ?? {};
 
+    console.log(`category: ${category}`);
+
     // Merge shared fields from both sources
     const base = {
       category,
