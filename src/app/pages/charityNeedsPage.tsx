@@ -61,7 +61,7 @@ export default function CharityNeedsPage() {
   if (loading) {
     return (
       <ThemedView>
-        <ActivityIndicator />
+        <ActivityIndicator style={{ marginVertical: 'auto' }} />
       </ThemedView>
     );
   }
