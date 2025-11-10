@@ -79,6 +79,8 @@ export default function RootLayout() {
           <Stack.Screen name="pages/yourDonationPage" />
           <Stack.Screen name="pages/reviewAndConfirmPage" />
           <Stack.Screen name="pages/donationConfirmedPage" />
+          <Stack.Screen name="pages/donationDetailsPage" />
+          <Stack.Screen name="pages/howDropoffWorksPage" />
           <Stack.Screen name="auth" />
         </Stack>
       </ThemedView>

@@ -100,34 +100,36 @@ export default function FindCharityScreen() {
 
   return (
     <ThemedView>
-      <View style={styles.headerRow}>
-        <Text variant="headlineMedium" style={styles.title}>
-          Find a Charity
+      <View style={{ marginHorizontal: 20 }}>
+        <View style={styles.headerRow}>
+          <Text variant="headlineMedium" style={styles.title}>
+            Find a Charity
+          </Text>
+          <IconButton icon="information-outline" onPress={handleInfoPress} />
+        </View>
+
+        <Text variant="bodyMedium" style={styles.subtitle}>
+          Search by zip code, city, or use your own location.
         </Text>
-        <IconButton icon="information-outline" onPress={handleInfoPress} />
+
+        {!searchVisible ? (
+          <Button
+            mode="outlined"
+            icon="magnify"
+            style={styles.searchButton}
+            onPress={handleSearchPress}>
+            Search by location
+          </Button>
+        ) : (
+          <TextInput
+            mode="outlined"
+            label="Search by city or zip"
+            value={searchText}
+            onChangeText={setSearchText}
+            right={<TextInput.Icon icon="magnify" onPress={handleSubmitSearch} />}
+          />
+        )}
       </View>
-
-      <Text variant="bodyMedium" style={styles.subtitle}>
-        Search by zip code, city, or use your own location.
-      </Text>
-
-      {!searchVisible ? (
-        <Button
-          mode="outlined"
-          icon="magnify"
-          style={styles.searchButton}
-          onPress={handleSearchPress}>
-          Search by location
-        </Button>
-      ) : (
-        <TextInput
-          mode="outlined"
-          label="Search by city or zip"
-          value={searchText}
-          onChangeText={setSearchText}
-          right={<TextInput.Icon icon="magnify" onPress={handleSubmitSearch} />}
-        />
-      )}
     </ThemedView>
   );
 }

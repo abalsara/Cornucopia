@@ -7,7 +7,7 @@ import ThemedView from '@/src/components/ThemedView';
 import CharityNeedsNavbar from '@/src/components/bars/CharityNeedsNavbar';
 import Navbar from '@/src/components/bars/Navbar';
 import CharityNeedsList from '@/src/components/lists/CharityNeedsList';
-import DonationItemModal from '@/src/components/modals/DonationItemModal';
+import DonationItemModalEdit from '@/src/components/modals/DonationItemModalEdit';
 import { getCharityNeeds } from '@/src/lib/needs';
 import { getCharity } from '@/src/stores/charities';
 import { saveDonation, resetSavedDonations, getSavedDonations } from '@/src/stores/savedDonations';
@@ -70,12 +70,16 @@ export default function CharityNeedsPage() {
     <ThemedView>
       <Portal.Host>
         <Navbar title={charity.c_name} />
-        <DonationItemModal
-          item={selectedItem}
-          isVisible={modalIsVisible}
-          setIsVisible={setModalIsVisible}
-          onAddDonationPress={handleAddDonationPress}
-        />
+        <Portal>
+          <DonationItemModalEdit
+            item={selectedItem}
+            isVisible={modalIsVisible}
+            setIsVisible={setModalIsVisible}
+            onAddDonationPress={handleAddDonationPress}
+            key={selectedItem?.itemName ?? ''}
+          />
+        </Portal>
+
         <ScrollView style={{ marginHorizontal: 20 }}>
           <Text variant="titleLarge">Needs</Text>
           <CharityNeedsList
