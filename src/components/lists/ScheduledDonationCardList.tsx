@@ -3,10 +3,10 @@ import { Text } from 'react-native-paper';
 import ScheduledDonationCard from '../cards/ScheduledDonationCard';
 
 import { getScheduledDonations } from '@/src/stores/scheduledDonations';
-import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
+import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
 type ScheduledDonationCardListProps = {
-  onCardPress?: (item: DonationItem) => void;
+  onCardPress?: (item: ScheduledDonation) => void;
 };
 
 export default function ScheduledDonationCardList(props: ScheduledDonationCardListProps) {
@@ -18,8 +18,8 @@ export default function ScheduledDonationCardList(props: ScheduledDonationCardLi
     <>
       {scheduledDonations.map((scheduledDonation) => (
         <ScheduledDonationCard
-          cid={scheduledDonation.cid}
-          schedule={scheduledDonation.scheduledDate}
+          scheudledDonation={scheduledDonation}
+          onPress={props.onCardPress}
           key={`${scheduledDonation.cid}${scheduledDonation.scheduledDate}`}
         />
       ))}

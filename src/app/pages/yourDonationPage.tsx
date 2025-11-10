@@ -1,9 +1,11 @@
+import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import Navbar from '@/src/components/bars/Navbar';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
+import { getCharity } from '@/src/stores/charities';
 import { getSavedDonations } from '@/src/stores/savedDonations';
 
 /**
@@ -11,9 +13,12 @@ import { getSavedDonations } from '@/src/stores/savedDonations';
  * schedule a donation user flow
  */
 export default function YourDonationPage() {
+  const { cid } = useLocalSearchParams<{ cid: string }>(); // the charity ID
+  const charity = getCharity(cid);
+  if (!charity) throw new Error(`Charity with cid: ${cid} does not exist`);
   return (
     <ThemedView>
-      <Navbar title="Example Charity" />
+      <Navbar title={charity.c_name} />
       <View style={styles.container}>
         <Text variant="headlineMedium">Your Donation</Text>
         <DonationItemCardList items={getSavedDonations()} />
