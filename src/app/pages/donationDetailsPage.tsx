@@ -14,6 +14,10 @@ import { getScheduledDonation, removeScheduledDonation } from '@/src/stores/sche
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 
+/**
+ * This page renders information about a scheduled donation including
+ * the charity name, location, list of DonationItems, and scheduled dropoff time
+ */
 export default function DonationDetailsPage() {
   const { cid, date } = useLocalSearchParams<{ cid: string; date: string }>();
   const scheduledDate = new Date(date);
@@ -22,6 +26,8 @@ export default function DonationDetailsPage() {
     throw new Error(`scheduledDonation with cid '${cid}' and date '${date}' is undefined`);
 
   const charity = getCharity(scheduledDonation.cid);
+  if (!charity) throw new Error(`Charity with id '${scheduledDonation.cid}' is undefined`);
+
   const [selectedItem, setSelecteditem] = useState<DonationItem | undefined>(undefined);
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const router = useRouter();
@@ -37,7 +43,6 @@ export default function DonationDetailsPage() {
     router.dismissAll();
   };
 
-  if (!charity) throw new Error(`Charity with id '${scheduledDonation.cid}' is undefined`);
   return (
     <Portal.Host>
       <Appbar.Header>

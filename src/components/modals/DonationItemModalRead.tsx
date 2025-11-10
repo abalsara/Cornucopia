@@ -11,8 +11,8 @@ type DonationItemModalReadProps = {
 };
 
 /**
- * Renders a modal that contains a DonationItem's properties.
- * Shown when pressing a card on the charityNeedsPage.
+ * Renders a read-only modal that contains a DonationItem's properties.
+ * Shown when pressing a card on the My Donations tab.
  */
 export default function DonationItemModalRead(props: DonationItemModalReadProps) {
   const item = props.item;
