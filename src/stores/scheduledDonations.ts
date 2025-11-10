@@ -13,6 +13,10 @@ export const getScheduledDonations = (): ScheduledDonation[] => {
   return Array.from(scheduledDonations.values());
 };
 
+export const getScheduledDonation = (cid: string, date: Date): ScheduledDonation | undefined => {
+  return scheduledDonations.get(hashSchedule(cid, date));
+};
+
 /**
  * Remove a scheduled donation for a given charity and date.
  *

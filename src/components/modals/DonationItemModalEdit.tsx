@@ -7,7 +7,7 @@ import ActionButton from '../buttons/ActionButton';
 
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 
-type DonationItemModalProps = {
+type DonationItemModalEditProps = {
   isVisible: boolean;
   setIsVisible: (status: boolean) => void;
   item?: DonationItem;
@@ -18,10 +18,10 @@ type DonationItemModalProps = {
  * Renders a modal that contains a DonationItem's properties.
  * Shown when pressing a card on the charityNeedsPage.
  */
-export default function DonationItemModal(props: DonationItemModalProps) {
+export default function DonationItemModalEdit(props: DonationItemModalEditProps) {
   const item = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');
-  const [notes, setNotes] = useState(item?.notes ?? '');
+  const [notes, setNotes] = useState(item?.notes);
   const theme = useTheme();
 
   const { height } = useWindowDimensions();
@@ -82,7 +82,11 @@ export default function DonationItemModal(props: DonationItemModalProps) {
               </View>
               <View style={styles.mt20}>
                 <Text variant="titleLarge">Notes</Text>
-                <TextInput value={notes} onChangeText={(text) => setNotes(text)} />
+                <TextInput
+                  autoCorrect={false}
+                  value={notes}
+                  onChangeText={(text) => setNotes(text)}
+                />
               </View>
             </View>
           </View>

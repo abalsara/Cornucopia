@@ -23,7 +23,7 @@ export default function CharityNeedsNavbar(props: CharityNeedsNavbarProps) {
   const renderNumSelected = (): JSX.Element => {
     if (props.inSelectStage) {
       return (
-        <Pressable onPress={() => router.push('/pages/yourDonationPage')}>
+        <Pressable onPress={() => router.push(`/pages/yourDonationPage?cid=${props.cid}`)}>
           <Text variant="titleLarge">{props.donations.length} items selected</Text>
         </Pressable>
       );
