@@ -3,16 +3,8 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Avatar, useTheme } from 'react-native-paper';
 
+import { Charity } from '@/src/lib/charities';
 import { getCharities } from '@/src/stores/charities';
-
-// export type Charity = {
-//   name: string;
-//   typesServed: string[];
-//   location: string;
-//   mission?: string;
-//   reviews?: number;
-//   rating: number;
-// };
 
 // const charities: Charity[] = [
 //   // PLACEHOLDER CHARITIES

@@ -13,11 +13,26 @@ export default function FindCharityScreen() {
   const [useLocation, setUseLocation] = useState(false);
   const router = useRouter();
 
-  const searchNearbyCharities = async (lat: number, lon: number) => {
-    console.log(`Searching for charities near (${lat}, ${lon})...`);
-    // Replace with backend or public charity API call
-    // const response = await fetch(`https://api.example.com/charities?lat=${lat}&lon=${lon}`);
-    // const results = await response.json();
+  // const searchNearbyCharities = async (lat: number, lon: number) => {
+  //   console.log(`Searching for charities near (${lat}, ${lon})...`);
+  //   // Replace with backend or public charity API call
+  //   // const response = await fetch(`https://api.example.com/charities?lat=${lat}&lon=${lon}`);
+  //   // const results = await response.json();
+  // };
+
+  // Calculates the distance between two coordinates using the curvature of the Earth
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 3959; // Earth's radius in miles
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   };
 
   const handleSearchPress = () => {
@@ -47,7 +62,7 @@ export default function FindCharityScreen() {
               const { latitude, longitude } = location.coords;
               setUseLocation(true);
               // Call charity search logic here
-              // await searchNearbyCharities(latitude, longitude);
+
               router.push('/pages/charityResults');
             } catch (error) {
               console.error('Error getting location:', error);
