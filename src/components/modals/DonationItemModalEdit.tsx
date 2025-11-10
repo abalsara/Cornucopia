@@ -1,7 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Portal, Text, useTheme, Modal, TextInput } from 'react-native-paper';
+import { Text, useTheme, Modal, TextInput } from 'react-native-paper';
 
 import ActionButton from '../buttons/ActionButton';
 
@@ -21,7 +21,7 @@ type DonationItemModalEditProps = {
 export default function DonationItemModalEdit(props: DonationItemModalEditProps) {
   const item = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');
-  const [notes, setNotes] = useState(item?.notes);
+  const [notes, setNotes] = useState(props.item?.notes ?? '');
   const theme = useTheme();
 
   const { height } = useWindowDimensions();
@@ -33,77 +33,83 @@ export default function DonationItemModalEdit(props: DonationItemModalEditProps)
     setQuantity(numericValue);
   };
 
+  const handleAddDonationPress = (): void => {
+    if (!item) throw new Error('item is undefined');
+    item.quantity = Number(quantity);
+    item.notes = notes;
+    props.onAddDonationPress(item);
+  };
+
   if (item) {
     return (
-      <Portal>
-        <Modal
-          visible={props.isVisible}
-          onDismiss={() => props.setIsVisible(false)}
-          style={{ marginTop: 0, marginBottom: 0, flex: 1 }}
-          contentContainerStyle={{
-            ...styles.container,
-            backgroundColor: theme.colors.background,
-            minHeight: buttonPos,
-          }}>
-          <View>
-            <View style={{ flexDirection: 'row-reverse' }}>
-              <Feather
-                onPress={() => props.setIsVisible(false)}
-                style={{ padding: 15 }}
-                name="x"
-                size={36}
-                color={theme.colors.onBackground}
-              />
+      <Modal
+        visible={props.isVisible}
+        onDismiss={() => props.setIsVisible(false)}
+        style={{ marginTop: 0, marginBottom: 0, flex: 1 }}
+        contentContainerStyle={{
+          ...styles.container,
+          backgroundColor: theme.colors.background,
+          minHeight: buttonPos,
+        }}>
+        <View>
+          <View style={{ flexDirection: 'row-reverse' }}>
+            <Feather
+              onPress={() => props.setIsVisible(false)}
+              style={{ padding: 15 }}
+              name="x"
+              size={36}
+              color={theme.colors.onBackground}
+            />
+          </View>
+          <View style={styles.modalContent}>
+            <View>
+              <Text variant="headlineMedium">{item.itemName}</Text>
+              <Text variant="titleLarge" style={styles.mt20}>
+                Quantity
+              </Text>
             </View>
-            <View style={styles.modalContent}>
+            <View style={styles.QuantityContainer}>
               <View>
-                <Text variant="headlineMedium">{item.itemName}</Text>
-                <Text variant="titleLarge" style={styles.mt20}>
-                  Quantity
-                </Text>
-              </View>
-              <View style={styles.QuantityContainer}>
-                <View>
-                  <Text variant="labelLarge">Number</Text>
-                  <TextInput
-                    value={quantity}
-                    onChangeText={handleQuantityChange}
-                    placeholder={String(item.quantity)}
-                    keyboardType="numeric"
-                    style={{ width: 140 }}
-                  />
-                </View>
-                <View style={styles.QuantityUnitContainer}>
-                  <Text variant="labelLarge">Unit</Text>
-                  <Text variant="titleMedium" style={{ marginTop: 20 }}>
-                    {item.unit}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.mt20}>
-                <Text variant="titleLarge">Notes</Text>
+                <Text variant="labelLarge">Number</Text>
                 <TextInput
-                  autoCorrect={false}
-                  value={notes}
-                  onChangeText={(text) => setNotes(text)}
+                  value={quantity}
+                  onChangeText={handleQuantityChange}
+                  placeholder="0"
+                  keyboardType="numeric"
+                  style={{ width: 140 }}
                 />
               </View>
+              <View style={styles.QuantityUnitContainer}>
+                <Text variant="labelLarge">Unit</Text>
+                <Text variant="titleMedium" style={styles.mt20}>
+                  {item.unit}
+                </Text>
+              </View>
             </View>
-          </View>
-
-          <View style={{ flex: 1 }} />
-
-          <View>
-            <View style={styles.buttonContainer}>
-              <View style={{ flex: 1 }} />
-              <ActionButton
-                label="Add to Donation"
-                onPress={() => props.onAddDonationPress(item)}
+            <View style={styles.mt20}>
+              <Text variant="titleLarge">Notes</Text>
+              <TextInput
+                autoCorrect={false}
+                value={notes}
+                onChangeText={(text) => setNotes(text)}
               />
             </View>
           </View>
-        </Modal>
-      </Portal>
+        </View>
+
+        <View style={{ flex: 1 }} />
+
+        <View>
+          <View style={styles.buttonContainer}>
+            <View style={{ flex: 1 }} />
+            <ActionButton
+              label="Add to Donation"
+              onPress={handleAddDonationPress}
+              disabled={Number(quantity) === 0}
+            />
+          </View>
+        </View>
+      </Modal>
     );
   }
   return <></>;

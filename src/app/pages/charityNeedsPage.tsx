@@ -70,12 +70,16 @@ export default function CharityNeedsPage() {
     <ThemedView>
       <Portal.Host>
         <Navbar title={charity.c_name} />
-        <DonationItemModalEdit
-          item={selectedItem}
-          isVisible={modalIsVisible}
-          setIsVisible={setModalIsVisible}
-          onAddDonationPress={handleAddDonationPress}
-        />
+        <Portal>
+          <DonationItemModalEdit
+            item={selectedItem}
+            isVisible={modalIsVisible}
+            setIsVisible={setModalIsVisible}
+            onAddDonationPress={handleAddDonationPress}
+            key={selectedItem?.itemName ?? ''}
+          />
+        </Portal>
+
         <ScrollView style={{ marginHorizontal: 20 }}>
           <Text variant="titleLarge">Needs</Text>
           <CharityNeedsList
