@@ -93,7 +93,7 @@ export default function RootLayout() {
   }
 
   const isLoggedIn = session !== null && session.user !== undefined;
-  const isDonor = true;
+  const isDonor = false;
   return (
     <PaperProvider theme={paperTheme}>
       <ThemedView>
@@ -121,6 +121,10 @@ export default function RootLayout() {
               <Stack.Screen name="pages/donationConfirmedPage" />
               <Stack.Screen name="pages/donationDetailsPage" />
               <Stack.Screen name="pages/howDropoffWorksPage" />
+            </Stack.Protected>
+
+            <Stack.Protected guard={!isDonor}>
+              <Stack.Screen name="charity" />
             </Stack.Protected>
           </Stack.Protected>
         </Stack>
