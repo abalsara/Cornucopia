@@ -1,11 +1,16 @@
+import { Session } from '@supabase/supabase-js';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
+import { useState, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { en, registerTranslation } from 'react-native-paper-dates';
 
 import ThemedView from '../components/ThemedView';
+import { fetchAllCharities } from '../lib/charities';
+import { supabase } from '../lib/supabase';
+import { initCharitiesStore } from '../stores/charities';
 import { darkTheme, lightTheme } from '../styles/themes';
 
 /**
@@ -51,6 +56,9 @@ registerTranslation('en', en);
  */
 
 export default function RootLayout() {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+
   // apply a theme to the app depending on the device's theme
   const colorScheme = useColorScheme();
   const paperTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
@@ -60,6 +68,32 @@ export default function RootLayout() {
     SystemUI.setBackgroundColorAsync('black');
   }
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    // initialize global state
+    fetchAllCharities().then((charities) => initCharitiesStore(charities));
+  }, []);
+
+  if (loading) {
+    return (
+      <PaperProvider theme={paperTheme}>
+        <ThemedView>
+          <ActivityIndicator />
+        </ThemedView>
+      </PaperProvider>
+    );
+  }
+
+  const isLoggedIn = session !== null && session.user !== undefined;
+  const isDonor = true;
   return (
     <PaperProvider theme={paperTheme}>
       <ThemedView>
@@ -69,19 +103,26 @@ export default function RootLayout() {
             headerTintColor: paperTheme.colors.onBackground,
             presentation: 'transparentModal',
           }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="pages/donationInfo" />
-          <Stack.Screen
-            name="pages/charityNeedsPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen name="pages/scheduleDropoffPage" />
-          <Stack.Screen name="pages/yourDonationPage" />
-          <Stack.Screen name="pages/reviewAndConfirmPage" />
-          <Stack.Screen name="pages/donationConfirmedPage" />
-          <Stack.Screen name="pages/donationDetailsPage" />
-          <Stack.Screen name="pages/howDropoffWorksPage" />
-          <Stack.Screen name="auth" />
+          <Stack.Protected guard={!isLoggedIn}>
+            <Stack.Screen name="auth" />
+          </Stack.Protected>
+
+          <Stack.Protected guard={isLoggedIn}>
+            <Stack.Protected guard={isDonor}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="pages/donationInfo" />
+              <Stack.Screen
+                name="pages/charityNeedsPage"
+                options={{ headerTitle: 'Example Charity' }}
+              />
+              <Stack.Screen name="pages/scheduleDropoffPage" />
+              <Stack.Screen name="pages/yourDonationPage" />
+              <Stack.Screen name="pages/reviewAndConfirmPage" />
+              <Stack.Screen name="pages/donationConfirmedPage" />
+              <Stack.Screen name="pages/donationDetailsPage" />
+              <Stack.Screen name="pages/howDropoffWorksPage" />
+            </Stack.Protected>
+          </Stack.Protected>
         </Stack>
       </ThemedView>
 
