@@ -134,7 +134,7 @@ export default function CharityFilter(props: CharityFilterProps) {
   };
 
   const handleClear = () => {
-    const charities = getCharities();
+    const charities: Charity[] = getCharities();
     setDistance(40);
     setSelectedCauses([]);
     setMinRating(4);
