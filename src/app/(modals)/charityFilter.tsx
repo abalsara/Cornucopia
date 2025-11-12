@@ -1,5 +1,5 @@
 import Slider from '@react-native-community/slider';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
