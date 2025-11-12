@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Text,
@@ -10,11 +10,14 @@ import {
   Divider,
   useTheme,
   ActivityIndicator,
+  Modal,
 } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import { Charity, fetchAllCharities } from '@/src/lib/charities';
+import { Rating, fetchRatingsByCid } from '@/src/lib/ratings';
 import { supabase } from '@/src/lib/supabase'; // Adjust path as needed
+import { getCharities } from '@/src/stores/charities';
 
 // type Charity = {
 //   cid: string;
@@ -27,9 +30,16 @@ import { supabase } from '@/src/lib/supabase'; // Adjust path as needed
 //   rating?: number;
 // };
 
+type CharityFilterProps = {
+  isVisible: boolean;
+  setIsVisible: Dispatch<SetStateAction<boolean>>;
+  userLocation: { lat: number; lon: number };
+  onApply: (charities: Charity[]) => void;
+};
+
 const CAUSES = ['Shelter & Housing', 'Youth', 'Families', 'Education', 'Animals', 'Veterans'];
 
-export default function CharityFilter() {
+export default function CharityFilter(props: CharityFilterProps) {
   const theme = useTheme();
   const router = useRouter();
 
@@ -40,12 +50,12 @@ export default function CharityFilter() {
   const [filteredCount, setFilteredCount] = useState(0);
 
   // User location (you might want to get this from a location service)
-  const userLocation = {
-    city: 'Seattle',
-    state: 'WA',
-    latitude: 47.6062,
-    longitude: -122.3321,
-  };
+  //   const userLocation = {
+  //     city: 'Seattle',
+  //     state: 'WA',
+  //     latitude: 47.6062,
+  //     longitude: -122.3321,
+  //   };
 
   const toggleCause = (cause: string) => {
     setSelectedCauses((prev) =>
@@ -57,22 +67,31 @@ export default function CharityFilter() {
   let fullyFiltered = [];
   const fetchFilteredCharities = async () => {
     setLoading(true);
-    const charities = fetchAllCharities();
+    const charities = await fetchAllCharities();
     const filteredByRating =
-      (await charities).filter((charity) => charity.rating >= minRating) || [];
+      charities.filter(async (charity) => {
+        const ratingArr: Rating[] = await fetchRatingsByCid(charity.cid);
+        let totalRating: number = 0;
+        ratingArr.forEach((rating) => (totalRating += rating.star || 0));
+        const avg = totalRating / ratingArr.length;
+        return avg >= minRating;
+      }) || [];
     const filteredByDistance =
       filteredByRating.filter((charity) => {
         const dist = calculateDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          charity.latitude,
-          charity.longitude,
+          props.userLocation.lat,
+          props.userLocation.lon,
+          charity.latitude || 0,
+          charity.longitude || 0,
         );
         return dist <= distance;
       }) || [];
 
     const filteredByCause = filteredByDistance.filter((charity) => {
       let b: boolean = false;
+      if (charity.causes == null) {
+        return false;
+      }
       charity.causes.forEach((cause) => {
         if (!b) {
           b = selectedCauses.includes(cause);
@@ -110,30 +129,21 @@ export default function CharityFilter() {
 
   const handleApply = async () => {
     const filtered = await fetchFilteredCharities();
-    router.push({
-      pathname: '/pages/charityResults',
-      params: {
-        filters: JSON.stringify({
-          distance,
-          causes: selectedCauses,
-          minRating,
-        }),
-      },
-    });
+    props.setIsVisible(false);
+    props.onApply(filtered);
   };
 
   const handleClear = () => {
+    const charities = getCharities();
     setDistance(40);
     setSelectedCauses([]);
     setMinRating(4);
-    router.push({
-      pathname: '/pages/charityResults',
-      params: { filters: null },
-    });
+    props.setIsVisible(false);
+    props.onApply(charities);
   };
 
   return (
-    <ThemedView>
+    <Modal visible={props.isVisible}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text variant="headlineMedium" style={styles.title}>
@@ -149,7 +159,7 @@ export default function CharityFilter() {
         <Text style={styles.subText}>
           Showing charities within{' '}
           <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>{distance} miles</Text>{' '}
-          of {userLocation.city}, {userLocation.state}
+          of user
         </Text>
         <Slider
           style={{ width: '100%', height: 40 }}
@@ -240,7 +250,7 @@ export default function CharityFilter() {
           </Button>
         </View>
       </ScrollView>
-    </ThemedView>
+    </Modal>
   );
 }
 

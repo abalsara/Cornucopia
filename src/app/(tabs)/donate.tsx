@@ -63,7 +63,7 @@ export default function FindCharityScreen() {
               setUseLocation(true);
               // Call charity search logic here
 
-              router.push('/pages/charityResults');
+              router.push(`/pages/charityResults?lat=${latitude}&lon${longitude}`);
             } catch (error) {
               console.error('Error getting location:', error);
               Alert.alert('Error', 'Failed to retrieve your location.');

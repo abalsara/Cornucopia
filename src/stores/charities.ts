@@ -35,3 +35,5 @@ export const getCharity = (cid: string): Charity | undefined => {
 export const setCharity = (cid: string, charity: Charity): void => {
   charitiesStore.set(cid, charity);
 };
+
+export { Charity };

@@ -1,11 +1,12 @@
-import { useRouter } from 'expo-router';
-import React from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { Text, Card, IconButton, Avatar, useTheme } from 'react-native-paper';
+import { Text, Card, IconButton, Avatar, useTheme, Portal } from 'react-native-paper';
+
+import CharityFilter from '../(modals)/charityFilter';
 
 import ThemedView from '@/src/components/ThemedView';
-import { getCharities } from '@/src/stores/charities';
-import { Charity } from '@/src/stores/charities';
+import { getCharities, Charity } from '@/src/stores/charities';
 
 // const charities: Charity[] = [
 //   // PLACEHOLDER CHARITIES
@@ -33,71 +34,86 @@ export default function CharityResults() {
   const theme = useTheme();
   const router = useRouter();
 
-  const charities = getCharities();
+  const { lat, lon } = useLocalSearchParams<{ lat: string; lon: string }>();
+  const userLat = parseFloat(lat);
+  const userLon = parseFloat(lon);
+
+  // const charities = getCharities();
+  const [charities, setCharities] = useState<Charity[]>(getCharities());
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  const handleApply = (filtered: Charity[]): void => {
+    setCharities(filtered);
+  };
 
   return (
-    <ThemedView>
-      <View style={styles.container}>
-        {/* Header Section */}
-        <View style={styles.headerContainer}>
-          <IconButton icon="arrow-left" size={24} onPress={() => router.back()} />
-          <View style={styles.headerTextContainer}>
-            <Text variant="titleLarge" style={styles.headerTitle}>
-              Charities Near Seattle
-            </Text>
-            <Text variant="labelMedium" style={styles.headerSubtitle}>
-              within 50 miles
-            </Text>
+    <Portal.Host>
+      <ThemedView>
+        <Portal>
+          <CharityFilter
+            isVisible={modalIsVisible}
+            setIsVisible={setModalIsVisible}
+            userLocation={{ lat: userLat, lon: userLon }}
+            onApply={handleApply}
+          />
+        </Portal>
+        <View style={styles.container}>
+          {/* Header Section */}
+          <View style={styles.headerContainer}>
+            <IconButton icon="arrow-left" size={24} onPress={() => router.back()} />
+            <View style={styles.headerTextContainer}>
+              <Text variant="titleLarge" style={styles.headerTitle}>
+                Charities Near Seattle
+              </Text>
+              <Text variant="labelMedium" style={styles.headerSubtitle}>
+                within 50 miles
+              </Text>
+            </View>
+            <IconButton icon="filter-variant" size={24} onPress={() => setModalIsVisible(true)} />
           </View>
-          <IconButton
-            icon="filter-variant"
-            size={24}
-            onPress={() => {} /* Include filtering function here */}
+          {/* Results Count */}
+          <Text style={styles.resultsText}>{charities.length} Charities Found</Text>
+
+          {/* Charity List */}
+          <FlatList
+            data={charities}
+            keyExtractor={(charity) => charity.cid}
+            renderItem={({ item: charity }) => (
+              <Card
+                style={styles.card}
+                onPress={() =>
+                  router.push({
+                    pathname: '/pages/charityDetails',
+                    params: {
+                      cid: charity.cid,
+                    },
+                  })
+                }>
+                <View style={styles.cardContent}>
+                  <Avatar.Icon icon="home-heart" size={48} style={styles.avatar} />
+                  <View style={styles.charityInfo}>
+                    <Text variant="titleMedium" style={styles.charityName}>
+                      {charity.c_name}
+                    </Text>
+                    {/* <Text variant="bodySmall" style={styles.charityTags}>
+                    {charity.typesServed.join(' • ')}
+                  </Text> */}
+                    <Text
+                      variant="bodySmall"
+                      style={[styles.charityLocation, { color: theme.colors.onSurfaceVariant }]}>
+                      {charity.city}, {charity.state}
+                    </Text>
+                  </View>
+                  {/* <View style={styles.ratingContainer}>
+                  <Text variant="titleMedium">⭐ {charity.rating}</Text>
+                </View> */}
+                </View>
+              </Card>
+            )}
           />
         </View>
-
-        {/* Results Count */}
-        <Text style={styles.resultsText}>{charities.length} Charities Found</Text>
-
-        {/* Charity List */}
-        <FlatList
-          data={charities}
-          keyExtractor={(charity) => charity.cid}
-          renderItem={({ item: charity }) => (
-            <Card
-              style={styles.card}
-              onPress={() =>
-                router.push({
-                  pathname: '/pages/charityDetails',
-                  params: {
-                    cid: charity.cid,
-                  },
-                })
-              }>
-              <View style={styles.cardContent}>
-                <Avatar.Icon icon="home-heart" size={48} style={styles.avatar} />
-                <View style={styles.charityInfo}>
-                  <Text variant="titleMedium" style={styles.charityName}>
-                    {charity.c_name}
-                  </Text>
-                  {/* <Text variant="bodySmall" style={styles.charityTags}>
-                  {charity.typesServed.join(' • ')}
-                </Text> */}
-                  <Text
-                    variant="bodySmall"
-                    style={[styles.charityLocation, { color: theme.colors.onSurfaceVariant }]}>
-                    {charity.city}, {charity.state}
-                  </Text>
-                </View>
-                {/* <View style={styles.ratingContainer}>
-                <Text variant="titleMedium">⭐ {charity.rating}</Text>
-              </View> */}
-              </View>
-            </Card>
-          )}
-        />
-      </View>
-    </ThemedView>
+      </ThemedView>
+    </Portal.Host>
   );
 }
 
