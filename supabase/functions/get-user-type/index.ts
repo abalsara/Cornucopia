@@ -29,9 +29,7 @@ Deno.serve(async (req: Request) => {
     );
 
     const row = await adminClient.from('admin').select().eq('uid', data.user.id).maybeSingle();
-    console.log(row);
     const userType = row.data ? 'admin' : 'donor';
-    console.log(userType);
 
     return new Response(JSON.stringify({ userType }), {
       headers: { 'Content-Type': 'application/json' },

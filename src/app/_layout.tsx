@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
 import { useState, useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { en, registerTranslation } from 'react-native-paper-dates';
 
@@ -56,8 +56,9 @@ registerTranslation('en', en);
  */
 
 export default function RootLayout() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [isDonor, setIsDonor] = useState<boolean | undefined>(undefined);
 
   // apply a theme to the app depending on the device's theme
   const colorScheme = useColorScheme();
@@ -68,32 +69,42 @@ export default function RootLayout() {
     SystemUI.setBackgroundColorAsync('black');
   }
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
+  const handleSessionChange = async (session: Session | null): Promise<void> => {
+    if (session) {
+      const { data, error } = await supabase.functions.invoke('get-user-type');
+      if (error)
+        throw new Error(`An unexpected error occurred while invoking get-user-type: ${error}`);
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+      setIsDonor(data.userType === 'donor');
+    } else {
+      setIsDonor(true);
+    }
+    setSession(session);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
+    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
   }, []);
 
-  if (loading) {
+  // check if isDonor is undefined to prevent prematurely showing the auth screen
+  if (loading || isDonor === undefined) {
     return (
       <PaperProvider theme={paperTheme}>
         <ThemedView>
-          <ActivityIndicator />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <ActivityIndicator />
+          </View>
         </ThemedView>
       </PaperProvider>
     );
   }
 
   const isLoggedIn = session !== null && session.user !== undefined;
-  const isDonor = false;
   return (
     <PaperProvider theme={paperTheme}>
       <ThemedView>
