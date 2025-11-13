@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'expo-router';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Text,
@@ -13,11 +13,11 @@ import {
   Modal,
 } from 'react-native-paper';
 
-import ThemedView from '@/src/components/ThemedView';
 import { Charity, fetchAllCharities } from '@/src/lib/charities';
 import { Rating, fetchRatingsByCid } from '@/src/lib/ratings';
-import { supabase } from '@/src/lib/supabase'; // Adjust path as needed
 import { getCharities } from '@/src/stores/charities';
+import { calculateDistance } from '@/src/util/distance';
+import { computeAvgRating } from '@/src/util/ratings';
 
 // type Charity = {
 //   cid: string;
@@ -63,7 +63,7 @@ export default function CharityFilter(props: CharityFilterProps) {
     );
   };
 
-  // Fetch filtered charities from Supabase
+  // filter by rating, distance, and cause
   let fullyFiltered = [];
   const fetchFilteredCharities = async () => {
     setLoading(true);
@@ -71,9 +71,7 @@ export default function CharityFilter(props: CharityFilterProps) {
     const filteredByRating =
       charities.filter(async (charity) => {
         const ratingArr: Rating[] = await fetchRatingsByCid(charity.cid);
-        let totalRating: number = 0;
-        ratingArr.forEach((rating) => (totalRating += rating.star || 0));
-        const avg = totalRating / ratingArr.length;
+        const avg = computeAvgRating(ratingArr);
         return avg >= minRating;
       }) || [];
     const filteredByDistance =
@@ -105,21 +103,6 @@ export default function CharityFilter(props: CharityFilterProps) {
     setFilteredCount(fullyFiltered.length);
     setLoading(false);
     return fullyFiltered;
-  };
-
-  // Calculate distance between two coordinates (Haversine formula)
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 3959; // Earth's radius in miles
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
   };
 
   // Update count when filters change

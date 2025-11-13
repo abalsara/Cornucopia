@@ -6,7 +6,8 @@ import { Text, Card, IconButton, Avatar, useTheme, Portal } from 'react-native-p
 import CharityFilter from '../(modals)/charityFilter';
 
 import ThemedView from '@/src/components/ThemedView';
-import { getCharities, Charity } from '@/src/stores/charities';
+import { Charity } from '@/src/lib/charities';
+import { getCharities } from '@/src/stores/charities';
 
 // const charities: Charity[] = [
 //   // PLACEHOLDER CHARITIES
