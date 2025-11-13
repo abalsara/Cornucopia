@@ -40,6 +40,8 @@ Below is an overview of the key directories and files:
 3. Install expo-dev-client:
    `npx expo install expo-dev-client`
 
+4. Email cbither@uw.edu to request the required environment variables to run this app (see [.env.example](/.env.example)).
+
 ### IOS
 
 1. Complete all the steps under [General prerequisites](#general-prerequisites)
