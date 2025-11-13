@@ -7,9 +7,11 @@ import { ActivityIndicator, Text } from 'react-native-paper';
 import ThemedView from '@/src/components/ThemedView';
 import ScheduledDonationCardList from '@/src/components/lists/ScheduledDonationCardList';
 import { fetchAllCharities } from '@/src/lib/charities';
+import { fetchAllRatings } from '@/src/lib/ratings';
 import { supabase } from '@/src/lib/supabase';
 import 'react-native-url-polyfill/auto';
 import { initCharitiesStore } from '@/src/stores/charities';
+import { initRatingsStore } from '@/src/stores/ratings';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
 export default function Index() {
@@ -36,6 +38,7 @@ export default function Index() {
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
+    fetchAllRatings().then((ratings) => initRatingsStore(ratings));
   }, []);
 
   if (loading) {
