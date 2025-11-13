@@ -89,7 +89,7 @@
     "jest-expo": "~54.0.13",
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
-    "supabase": "^2.53.6",
+    "supabase": "^2.58.5",
     "typescript": "~5.9.2"
   },
   "private": true
