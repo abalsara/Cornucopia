@@ -1,5 +1,4 @@
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
@@ -12,7 +11,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function signInWithEmail() {
     Keyboard.dismiss();
@@ -25,8 +23,6 @@ export default function Login() {
     if (error) {
       Alert.alert(error.message);
       setLoading(false);
-    } else {
-      router.push('/');
     }
   }
 

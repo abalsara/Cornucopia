@@ -1,11 +1,16 @@
+import { Session } from '@supabase/supabase-js';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
-import { useColorScheme } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
+import { useState, useEffect } from 'react';
+import { useColorScheme, View } from 'react-native';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { en, registerTranslation } from 'react-native-paper-dates';
 
 import ThemedView from '../components/ThemedView';
+import { fetchAllCharities } from '../lib/charities';
+import { supabase } from '../lib/supabase';
+import { initCharitiesStore } from '../stores/charities';
 import { darkTheme, lightTheme } from '../styles/themes';
 
 /**
@@ -51,6 +56,10 @@ registerTranslation('en', en);
  */
 
 export default function RootLayout() {
+  const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isDonor, setIsDonor] = useState<boolean | undefined>(undefined);
+
   // apply a theme to the app depending on the device's theme
   const colorScheme = useColorScheme();
   const paperTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
@@ -60,6 +69,42 @@ export default function RootLayout() {
     SystemUI.setBackgroundColorAsync('black');
   }
 
+  const handleSessionChange = async (session: Session | null): Promise<void> => {
+    if (session) {
+      const { data, error } = await supabase.functions.invoke('get-user-type');
+      if (error)
+        throw new Error(`An unexpected error occurred while invoking get-user-type: ${error}`);
+
+      setIsDonor(data.userType === 'donor');
+    } else {
+      setIsDonor(true);
+    }
+    setSession(session);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
+    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
+
+    // initialize global state
+    fetchAllCharities().then((charities) => initCharitiesStore(charities));
+  }, []);
+
+  // check if isDonor is undefined to prevent prematurely showing the auth screen
+  if (loading || isDonor === undefined) {
+    return (
+      <PaperProvider theme={paperTheme}>
+        <ThemedView>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        </ThemedView>
+      </PaperProvider>
+    );
+  }
+
+  const isLoggedIn = session !== null && session.user !== undefined;
   return (
     <PaperProvider theme={paperTheme}>
       <ThemedView>
@@ -69,19 +114,30 @@ export default function RootLayout() {
             headerTintColor: paperTheme.colors.onBackground,
             presentation: 'transparentModal',
           }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="pages/donationInfo" />
-          <Stack.Screen
-            name="pages/charityNeedsPage"
-            options={{ headerTitle: 'Example Charity' }}
-          />
-          <Stack.Screen name="pages/scheduleDropoffPage" />
-          <Stack.Screen name="pages/yourDonationPage" />
-          <Stack.Screen name="pages/reviewAndConfirmPage" />
-          <Stack.Screen name="pages/donationConfirmedPage" />
-          <Stack.Screen name="pages/donationDetailsPage" />
-          <Stack.Screen name="pages/howDropoffWorksPage" />
-          <Stack.Screen name="auth" />
+          <Stack.Protected guard={!isLoggedIn}>
+            <Stack.Screen name="auth" />
+          </Stack.Protected>
+
+          <Stack.Protected guard={isLoggedIn}>
+            <Stack.Protected guard={isDonor}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="pages/donationInfo" />
+              <Stack.Screen
+                name="pages/charityNeedsPage"
+                options={{ headerTitle: 'Example Charity' }}
+              />
+              <Stack.Screen name="pages/scheduleDropoffPage" />
+              <Stack.Screen name="pages/yourDonationPage" />
+              <Stack.Screen name="pages/reviewAndConfirmPage" />
+              <Stack.Screen name="pages/donationConfirmedPage" />
+              <Stack.Screen name="pages/donationDetailsPage" />
+              <Stack.Screen name="pages/howDropoffWorksPage" />
+            </Stack.Protected>
+
+            <Stack.Protected guard={!isDonor}>
+              <Stack.Screen name="charity" />
+            </Stack.Protected>
+          </Stack.Protected>
         </Stack>
       </ThemedView>
 

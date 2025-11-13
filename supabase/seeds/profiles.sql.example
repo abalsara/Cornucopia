@@ -1,0 +1,1 @@
+INSERT INTO "public"."Profiles" ("id", "first_name", "last_name", "email", "avatar_url", "created_at") VALUES ('09bb9526-b1fc-4636-b6d5-30b738769e8e', 'Charles', 'Bither', 'cbither@uw.edu', null, '2025-11-12 20:25:28.187361+00');
