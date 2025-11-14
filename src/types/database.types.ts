@@ -1,11 +1,6 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: '13.0.5';
-  };
   graphql_public: {
     Tables: {
       [_ in never]: never;
@@ -102,6 +97,44 @@ export type Database = {
             isOneToOne: true;
             referencedRelation: 'Request';
             referencedColumns: ['request_id'];
+          },
+        ];
+      };
+      Availability: {
+        Row: {
+          close_time: string | null;
+          created_at: string;
+          day_of_week: number;
+          id: string;
+          is_closed: boolean | null;
+          open_time: string | null;
+          period_index: number;
+        };
+        Insert: {
+          close_time?: string | null;
+          created_at?: string;
+          day_of_week: number;
+          id: string;
+          is_closed?: boolean | null;
+          open_time?: string | null;
+          period_index: number;
+        };
+        Update: {
+          close_time?: string | null;
+          created_at?: string;
+          day_of_week?: number;
+          id?: string;
+          is_closed?: boolean | null;
+          open_time?: string | null;
+          period_index?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Availability_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
           },
         ];
       };
