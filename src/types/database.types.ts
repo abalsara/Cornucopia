@@ -102,6 +102,7 @@ export type Database = {
       };
       Availability: {
         Row: {
+          cid: string;
           close_time: string | null;
           created_at: string;
           day_of_week: number;
@@ -111,6 +112,7 @@ export type Database = {
           period_index: number;
         };
         Insert: {
+          cid: string;
           close_time?: string | null;
           created_at?: string;
           day_of_week: number;
@@ -120,6 +122,7 @@ export type Database = {
           period_index: number;
         };
         Update: {
+          cid?: string;
           close_time?: string | null;
           created_at?: string;
           day_of_week?: number;
@@ -130,9 +133,9 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'Availability_id_fkey';
-            columns: ['id'];
-            isOneToOne: true;
+            foreignKeyName: 'Availability_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
