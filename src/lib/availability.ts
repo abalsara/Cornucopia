@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { Time } from '../types/Time';
 import { Tables } from '../types/database.types';
 
 export type Availability = Tables<'Availability'>;
@@ -23,4 +24,21 @@ export const fetchAvailabilityByCid = async (cid: string): Promise<Availability[
 
   const availability: Availability[] = data;
   return availability;
+};
+
+export const insertAvailability = async (
+  cid: string,
+  day_of_week: number,
+  open_time: Time,
+  closeTime: Time,
+  is_closed?: boolean,
+): Promise<void> => {
+  const { error } = await supabase.from('Availability').insert({
+    cid,
+    day_of_week,
+    open_time,
+    closeTime,
+    is_closed: is_closed ?? false,
+  });
+  if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
 };

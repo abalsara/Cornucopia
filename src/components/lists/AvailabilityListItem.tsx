@@ -8,6 +8,7 @@ import { formatTimeFromString } from '@/src/util/dateTimeFormatter';
 type AvailabilityListItemProps = {
   dayOfWeek: number;
   availabilityMap: Map<number, Availability[]>;
+  onPlusIconPress: () => void;
 };
 
 type IconName =
@@ -47,7 +48,9 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
         left={(leftProps) => (
           <MaterialCommunityIcons {...leftProps} name={iconNames[props.dayOfWeek]} size={40} />
         )}
-        right={(rightProps) => <AntDesign {...rightProps} name="plus-circle" size={24} />}
+        right={(rightProps) => (
+          <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
+        )}
       />
     );
   }
@@ -66,7 +69,9 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
         left={(leftProps) => (
           <MaterialCommunityIcons {...leftProps} name={iconNames[a.day_of_week]} size={40} />
         )}
-        right={(rightProps) => <AntDesign {...rightProps} name="plus-circle" size={24} />}
+        right={(rightProps) => (
+          <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
+        )}
       />
     );
 

@@ -5,9 +5,11 @@ import { Text } from 'react-native-paper';
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
-import { Availability, fetchAvailabilityByCid } from '@/src/lib/availability';
+import TimePicker from '@/src/components/modals/TimePicker';
+import { Availability, fetchAvailabilityByCid, insertAvailability } from '@/src/lib/availability';
 import { getAdmin } from '@/src/stores/admin';
 import { getCharity } from '@/src/stores/charities';
+import { Time } from '@/src/types/Time';
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
@@ -15,6 +17,11 @@ import { getCharity } from '@/src/stores/charities';
 export default function AvailabilityTab() {
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
+  const [openTime, setOpenTime] = useState<Time | undefined>(undefined);
+  const [closeTime, setCloseTime] = useState<Time | undefined>(undefined);
+  const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
+  const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
 
   const admin = getAdmin();
   if (!admin) throw new Error('admin is undefined');
@@ -32,7 +39,35 @@ export default function AvailabilityTab() {
           throw error;
         });
     }
-  }, []);
+  }, [cid]);
+
+  const handlePlusIconPress = (dayOfWeek: number): void => {
+    if (!cid) throw new Error('Error while calling handlePlusIconPress: cid is undefined');
+    setDayOfWeek(dayOfWeek);
+    setOpenTimeModalVisible(true);
+  };
+
+  const handleConfirmOpenTime = (hours: number, minutes: number): void => {
+    setOpenTime({ hours, minutes });
+    setOpenTimeModalVisible(false);
+    setCloseTimeModalVisible(true);
+  };
+
+  const handleConfirmCloseTime = async (hours: number, minutes: number): Promise<void> => {
+    setCloseTime({ hours, minutes });
+    if (cid === null || dayOfWeek === undefined || openTime === undefined) {
+      throw new Error(
+        `Invalid parameters: {cid: ${cid}, dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
+      );
+    }
+    try {
+      await insertAvailability(cid, dayOfWeek, openTime, { hours, minutes });
+      setAvailability(await fetchAvailabilityByCid(cid));
+      setCloseTimeModalVisible(false);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   if (loading) {
     return (
@@ -58,7 +93,20 @@ export default function AvailabilityTab() {
           Choose which days & times your organization can accept donations
         </Text>
         <Text variant="titleLarge">Weekly Hours</Text>
-        <AvailabilityList availability={availability} />
+        <AvailabilityList availability={availability} onPlusIconPress={handlePlusIconPress} />
+
+        <TimePicker
+          label="Select opening time"
+          visible={openTimeModalVisible}
+          onConfirm={handleConfirmOpenTime}
+          onDismiss={() => setOpenTimeModalVisible(false)}
+        />
+        <TimePicker
+          label="Select closing time"
+          visible={closeTimeModalVisible}
+          onConfirm={async (hours, minutes) => handleConfirmCloseTime(hours, minutes)}
+          onDismiss={() => setCloseTimeModalVisible(false)}
+        />
       </View>
     </ThemedView>
   );

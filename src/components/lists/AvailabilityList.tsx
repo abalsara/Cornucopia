@@ -6,6 +6,7 @@ import { Availability } from '@/src/lib/availability';
 
 type AvailabilityListProps = {
   availability: Availability[];
+  onPlusIconPress: (dayOfWeek: number) => void;
 };
 
 /**
@@ -35,13 +36,41 @@ export default function AvailabilityList(props: AvailabilityListProps) {
     <List.Section>
       <List.Subheader>Business Hours</List.Subheader>
 
-      <AvailabilityListItem dayOfWeek={0} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={1} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={2} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={3} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={4} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={5} availabilityMap={availabilityMap} />
-      <AvailabilityListItem dayOfWeek={6} availabilityMap={availabilityMap} />
+      <AvailabilityListItem
+        dayOfWeek={0}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(0)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={1}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(1)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={2}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(2)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={3}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(3)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={4}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(4)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={5}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(5)}
+      />
+      <AvailabilityListItem
+        dayOfWeek={6}
+        availabilityMap={availabilityMap}
+        onPlusIconPress={() => props.onPlusIconPress(6)}
+      />
     </List.Section>
   );
 }
