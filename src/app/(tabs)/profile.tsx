@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, IconButton, Text, useTheme } from 'react-native-paper';
 
@@ -13,11 +13,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const theme = useTheme();
 
-  useEffect(() => {
-    loadProfile();
-  }, []);
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
       const {
@@ -37,11 +33,16 @@ export default function ProfileScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+    }, [loadProfile]),
+  );
 
   const handleEditProfile = () => {
-    // Navigate to edit profile page
-    Alert.alert('Edit Profile', 'Edit profile functionality coming soon');
+    router.push('/pages/editProfile');
   };
 
   const handleNotifications = () => {
