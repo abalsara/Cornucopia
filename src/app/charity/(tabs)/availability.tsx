@@ -9,7 +9,6 @@ import TimePicker from '@/src/components/modals/TimePicker';
 import { Availability, fetchAvailabilityByCid, insertAvailability } from '@/src/lib/availability';
 import { getAdmin } from '@/src/stores/admin';
 import { getCharity } from '@/src/stores/charities';
-import { Time } from '@/src/types/Time';
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
@@ -18,8 +17,8 @@ export default function AvailabilityTab() {
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [loading, setLoading] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
-  const [openTime, setOpenTime] = useState<Time | undefined>(undefined);
-  const [closeTime, setCloseTime] = useState<Time | undefined>(undefined);
+  const [openTime, setOpenTime] = useState<Date | undefined>(undefined);
+  const [closeTime, setCloseTime] = useState<Date | undefined>(undefined);
   const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
   const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
 
@@ -48,22 +47,28 @@ export default function AvailabilityTab() {
   };
 
   const handleConfirmOpenTime = (hours: number, minutes: number): void => {
-    setOpenTime({ hours, minutes });
+    const date = new Date();
+    date.setHours(hours, minutes);
+    setOpenTime(date);
     setOpenTimeModalVisible(false);
     setCloseTimeModalVisible(true);
   };
 
   const handleConfirmCloseTime = async (hours: number, minutes: number): Promise<void> => {
-    setCloseTime({ hours, minutes });
+    const date = new Date();
+    date.setHours(hours, minutes);
+    setCloseTime(date);
     if (cid === null || dayOfWeek === undefined || openTime === undefined) {
       throw new Error(
         `Invalid parameters: {cid: ${cid}, dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
       );
     }
     try {
-      await insertAvailability(cid, dayOfWeek, openTime, { hours, minutes });
-      setAvailability(await fetchAvailabilityByCid(cid));
+      setLoading(true);
       setCloseTimeModalVisible(false);
+      await insertAvailability(cid, dayOfWeek, openTime, date);
+      setAvailability(await fetchAvailabilityByCid(cid));
+      setLoading(false);
     } catch (error) {
       throw error;
     }

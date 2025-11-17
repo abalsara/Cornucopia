@@ -1,6 +1,9 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { List } from 'react-native-paper';
+import { JSX } from 'react';
+import { View } from 'react-native';
+import { List, Text, useTheme } from 'react-native-paper';
 
 import { Availability } from '@/src/lib/availability';
 import { formatTimeFromString } from '@/src/util/dateTimeFormatter';
@@ -39,6 +42,7 @@ const iconNames: IconName[] = [
  * @param {Map<number, Availability[]>} props.availabilityMap - A map of dayOfWeek → availability entries for that day.
  */
 export default function AvailabilityListItem(props: AvailabilityListItemProps) {
+  const theme = useTheme();
   const availability = props.availabilityMap.get(props.dayOfWeek);
 
   if (!availability) {
@@ -55,17 +59,28 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
     );
   }
 
+  const renderTime = (openTime: string, closeTime: string): JSX.Element => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <Text>
+          {formatTimeFromString(openTime)} - {formatTimeFromString(closeTime)}
+        </Text>
+        <FontAwesome name="trash-o" size={24} color={theme.colors.error} />
+      </View>
+    );
+  };
+
   return availability.map((a) => {
     const closed = a.is_closed;
+
+    if (a.open_time === null || a.close_time === null) {
+      throw new Error('open or close time values are null');
+    }
 
     const item = (
       <List.Item
         key={a.id + '-' + a.period_index}
-        title={
-          closed
-            ? 'Closed'
-            : `${formatTimeFromString(a.open_time)} - ${formatTimeFromString(a.close_time)}`
-        }
+        title={closed ? 'Closed' : renderTime(a.open_time, a.close_time)}
         left={(leftProps) => (
           <MaterialCommunityIcons {...leftProps} name={iconNames[a.day_of_week]} size={40} />
         )}

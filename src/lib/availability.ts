@@ -29,15 +29,17 @@ export const fetchAvailabilityByCid = async (cid: string): Promise<Availability[
 export const insertAvailability = async (
   cid: string,
   day_of_week: number,
-  open_time: Time,
-  closeTime: Time,
+  open_time: Date,
+  close_time: Date,
   is_closed?: boolean,
 ): Promise<void> => {
+  console.log(`open: ${open_time.toTimeString().substring(0, 5)}`);
+
   const { error } = await supabase.from('Availability').insert({
     cid,
     day_of_week,
-    open_time,
-    closeTime,
+    open_time: open_time.toTimeString().substring(0, 5), // format HH:MM
+    close_time: close_time.toTimeString().substring(0, 5),
     is_closed: is_closed ?? false,
   });
   if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);

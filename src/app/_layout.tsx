@@ -23,7 +23,6 @@ import { darkTheme, lightTheme } from '../styles/themes';
  * --------------------------------------------------------
  */
 const isAndroid = require('react-native').Platform.OS === 'android';
-// const isHermesEnabled = !!global.HermesInternal;
 
 if (isAndroid) {
   require('@formatjs/intl-getcanonicallocales/polyfill');
@@ -92,9 +91,11 @@ export default function RootLayout() {
    * @throws {Error} Throws if fetching the admin record fails.
    */
   const handleSessionChange = async (session: Session | null): Promise<void> => {
+    console.log(`entered handleSessionChange`);
     if (session) {
       try {
         const admin = await fetchAdmin();
+        console.log(`admin: ${admin}`);
         setIsDonor(admin === undefined);
       } catch (error) {
         throw new Error(`Error while calling handleSessionChange: ${error}`);
@@ -108,7 +109,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
-    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
+    supabase.auth.onAuthStateChange((_event, session) => setSession(session));
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
@@ -117,7 +118,7 @@ export default function RootLayout() {
   }, []);
 
   // check if isDonor is undefined to prevent prematurely showing the auth screen
-  if (loading || isDonor === undefined) {
+  if (loading === true || isDonor === undefined) {
     return (
       <PaperProvider theme={paperTheme}>
         <ThemedView>
