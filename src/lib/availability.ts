@@ -1,5 +1,4 @@
 import { supabase } from './supabase';
-import { Time } from '../types/Time';
 import { Tables } from '../types/database.types';
 
 export type Availability = Tables<'Availability'>;
@@ -43,4 +42,9 @@ export const insertAvailability = async (
     is_closed: is_closed ?? false,
   });
   if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
+};
+
+export const deleteAvailability = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('Availability').delete().eq('id', id);
+  if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);
 };

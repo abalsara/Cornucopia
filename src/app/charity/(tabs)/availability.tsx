@@ -46,6 +46,17 @@ export default function AvailabilityTab() {
     setOpenTimeModalVisible(true);
   };
 
+  const handleTrashPress = async (): Promise<void> => {
+    if (!cid) {
+      throw new Error(`cid is null`);
+    }
+    try {
+      setAvailability(await fetchAvailabilityByCid(cid));
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const handleConfirmOpenTime = (hours: number, minutes: number): void => {
     const date = new Date();
     date.setHours(hours, minutes);
@@ -97,8 +108,14 @@ export default function AvailabilityTab() {
         <Text variant="bodyMedium">
           Choose which days & times your organization can accept donations
         </Text>
-        <Text variant="titleLarge">Weekly Hours</Text>
-        <AvailabilityList availability={availability} onPlusIconPress={handlePlusIconPress} />
+        <Text variant="titleLarge" style={{ marginTop: 20 }}>
+          Weekly Hours
+        </Text>
+        <AvailabilityList
+          availability={availability}
+          onPlusIconPress={handlePlusIconPress}
+          onTrashPress={handleTrashPress}
+        />
 
         <TimePicker
           label="Select opening time"

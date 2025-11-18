@@ -1,17 +1,19 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import { View } from 'react-native';
-import { List, Text, useTheme } from 'react-native-paper';
+import { ActivityIndicator, List, Text, useTheme } from 'react-native-paper';
+import { Style } from 'react-native-paper/lib/typescript/components/List/utils';
 
-import { Availability } from '@/src/lib/availability';
+import { Availability, deleteAvailability } from '@/src/lib/availability';
 import { formatTimeFromString } from '@/src/util/dateTimeFormatter';
 
 type AvailabilityListItemProps = {
   dayOfWeek: number;
   availabilityMap: Map<number, Availability[]>;
   onPlusIconPress: () => void;
+  onTrashPress: () => Promise<void>;
 };
 
 type IconName =
@@ -42,10 +44,11 @@ const iconNames: IconName[] = [
  * @param {Map<number, Availability[]>} props.availabilityMap - A map of dayOfWeek → availability entries for that day.
  */
 export default function AvailabilityListItem(props: AvailabilityListItemProps) {
+  const [pendingDeleteId, setPendingDeleteId] = useState(''); // track which items are being deleted for loading state
   const theme = useTheme();
-  const availability = props.availabilityMap.get(props.dayOfWeek);
+  const availabilityList = props.availabilityMap.get(props.dayOfWeek);
 
-  if (!availability) {
+  if (!availabilityList) {
     return (
       <List.Item
         title="Closed"
@@ -59,34 +62,72 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
     );
   }
 
-  const renderTime = (openTime: string, closeTime: string): JSX.Element => {
+  const handleTrashPress = async (availability: Availability): Promise<void> => {
+    setPendingDeleteId(availability.id);
+    try {
+      await deleteAvailability(availability.id);
+      await props.onTrashPress();
+      setPendingDeleteId('');
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const renderRightButtons = (
+    rightProps: { color: string; style?: Style },
+    availability: Availability,
+  ): JSX.Element => {
+    // replace the trash icon with an activity indicator if it is being deleted
+    if (pendingDeleteId === availability.id) {
+      return (
+        <View style={{ flexDirection: 'row' }}>
+          <ActivityIndicator color={theme.colors.error} />
+          <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
+        </View>
+      );
+    }
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Text>
-          {formatTimeFromString(openTime)} - {formatTimeFromString(closeTime)}
-        </Text>
-        <FontAwesome name="trash-o" size={24} color={theme.colors.error} />
+        <FontAwesome
+          {...rightProps}
+          name="trash-o"
+          size={24}
+          color={theme.colors.error}
+          onPress={async () => handleTrashPress(availability)}
+        />
+        <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
       </View>
     );
   };
 
-  return availability.map((a) => {
-    const closed = a.is_closed;
+  return availabilityList.map((availability) => {
+    const closed = availability.is_closed;
 
-    if (a.open_time === null || a.close_time === null) {
+    if (availability.open_time === null || availability.close_time === null) {
       throw new Error('open or close time values are null');
     }
 
     const item = (
       <List.Item
-        key={a.id + '-' + a.period_index}
-        title={closed ? 'Closed' : renderTime(a.open_time, a.close_time)}
+        key={availability.id + '-' + availability.period_index}
+        title={
+          closed ? (
+            'Closed'
+          ) : (
+            <Text style={{ marginLeft: 'auto' }}>
+              {formatTimeFromString(availability.open_time)} -{' '}
+              {formatTimeFromString(availability.close_time)}
+            </Text>
+          )
+        }
         left={(leftProps) => (
-          <MaterialCommunityIcons {...leftProps} name={iconNames[a.day_of_week]} size={40} />
+          <MaterialCommunityIcons
+            {...leftProps}
+            name={iconNames[availability.day_of_week]}
+            size={40}
+          />
         )}
-        right={(rightProps) => (
-          <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
-        )}
+        right={(rightProps) => renderRightButtons(rightProps, availability)}
       />
     );
 

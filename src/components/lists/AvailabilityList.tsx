@@ -7,6 +7,7 @@ import { Availability } from '@/src/lib/availability';
 type AvailabilityListProps = {
   availability: Availability[];
   onPlusIconPress: (dayOfWeek: number) => void;
+  onTrashPress: () => Promise<void>;
 };
 
 /**
@@ -34,42 +35,47 @@ export default function AvailabilityList(props: AvailabilityListProps) {
 
   return (
     <List.Section>
-      <List.Subheader>Business Hours</List.Subheader>
-
       <AvailabilityListItem
         dayOfWeek={0}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(0)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={1}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(1)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={2}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(2)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={3}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(3)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={4}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(4)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={5}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(5)}
+        onTrashPress={props.onTrashPress}
       />
       <AvailabilityListItem
         dayOfWeek={6}
         availabilityMap={availabilityMap}
         onPlusIconPress={() => props.onPlusIconPress(6)}
+        onTrashPress={props.onTrashPress}
       />
     </List.Section>
   );
