@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Button, IconButton, Text, TextInput } from 'react-native-paper';
 
@@ -12,13 +12,6 @@ export default function FindCharityScreen() {
   const [searchText, setSearchText] = useState('');
   const [useLocation, setUseLocation] = useState(false);
   const router = useRouter();
-
-  const searchNearbyCharities = async (lat: number, lon: number) => {
-    console.log(`Searching for charities near (${lat}, ${lon})...`);
-    // Replace with backend or public charity API call
-    // const response = await fetch(`https://api.example.com/charities?lat=${lat}&lon=${lon}`);
-    // const results = await response.json();
-  };
 
   const handleSearchPress = () => {
     Alert.alert(
@@ -47,8 +40,8 @@ export default function FindCharityScreen() {
               const { latitude, longitude } = location.coords;
               setUseLocation(true);
               // Call charity search logic here
-              // await searchNearbyCharities(latitude, longitude);
-              router.push('/pages/charityResults');
+
+              router.push(`/pages/charityResults?lat=${latitude}&lon${longitude}`);
             } catch (error) {
               console.error('Error getting location:', error);
               Alert.alert('Error', 'Failed to retrieve your location.');

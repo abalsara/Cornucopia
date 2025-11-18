@@ -96,16 +96,27 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'AnimalCareSupplies_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       Charities: {
         Row: {
           address: string;
           c_name: string;
+          causes: string[] | null;
           cid: string;
           city: string;
           created_at: string;
           email: string | null;
+          latitude: number | null;
+          longitude: number | null;
+          mission: string;
           phone_num: string | null;
           state: string;
           zip_code: string;
@@ -113,10 +124,14 @@ export type Database = {
         Insert: {
           address: string;
           c_name: string;
+          causes?: string[] | null;
           cid?: string;
           city: string;
           created_at?: string;
           email?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          mission?: string;
           phone_num?: string | null;
           state: string;
           zip_code: string;
@@ -124,10 +139,14 @@ export type Database = {
         Update: {
           address?: string;
           c_name?: string;
+          causes?: string[] | null;
           cid?: string;
           city?: string;
           created_at?: string;
           email?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          mission?: string;
           phone_num?: string | null;
           state?: string;
           zip_code?: string;
@@ -164,6 +183,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'Clothing_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       Donation: {
@@ -197,22 +223,7 @@ export type Database = {
           quantitiy_comitted?: number | null;
           scheduled_date?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'Donation_cid_fkey';
-            columns: ['cid'];
-            isOneToOne: false;
-            referencedRelation: 'Charities';
-            referencedColumns: ['cid'];
-          },
-          {
-            foreignKeyName: 'Donation_pid_fkey';
-            columns: ['pid'];
-            isOneToOne: false;
-            referencedRelation: 'Profiles';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       Electronics: {
         Row: {
@@ -240,6 +251,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Electronics_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
           },
         ];
       };
@@ -270,6 +288,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'Food_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       Furniture: {
@@ -298,6 +323,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Furniture_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
           },
         ];
       };
@@ -328,6 +360,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'HouseholdGoods_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       HygieneProduct: {
@@ -353,6 +392,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'HygieneProduct_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
           },
         ];
       };
@@ -382,6 +428,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'MedicalSupplies_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
           },
         ];
       };
@@ -519,6 +572,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'SchoolOfficeSupplies_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       SportsEquipment: {
@@ -551,6 +611,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'SportsEquipment_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       ToysGames: {
@@ -580,6 +647,13 @@ export type Database = {
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
+          {
+            foreignKeyName: 'ToysGames_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
         ];
       };
       Uncatergorized: {
@@ -605,6 +679,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Uncatergorized_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: true;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
           },
         ];
       };

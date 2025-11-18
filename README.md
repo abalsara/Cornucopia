@@ -5,7 +5,7 @@
 - Andras Marto (amarto)
 - Azita Balsara (azitab)
 - Charles Bither (cbither)
-- Eli Joshi (ejoshi)
+- Eli Joshi (elijoshi)
 - Spencer Johnson (spenj)
 
 ## Project Description
