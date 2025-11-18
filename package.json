@@ -80,7 +80,7 @@
   "devDependencies": {
     "@types/jest": "29.5.14",
     "@types/react": "~19.1.0",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-universe": "^15.0.3",
     "eslint-plugin-prettier": "^5.5.4",
@@ -89,7 +89,7 @@
     "jest-expo": "~54.0.13",
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
-    "supabase": "^2.53.6",
+    "supabase": "^2.58.5",
     "typescript": "~5.9.2"
   },
   "private": true
