@@ -31,3 +31,26 @@ export async function geocodeAddress(address: string): Promise<LatLng> {
   const errMsg = `Geocoding failed: status=${data.status}, error_message=${data.error_message || 'none'}`;
   throw new Error(errMsg);
 }
+
+/**
+ * Allows longitude/latitude lookup based on partial address information.
+ * At least one of city, state, or zip_code must be provided.
+ * Returns the best match or throws an error.
+ */
+export async function geocodePartialAddress(
+  city?: string,
+  state?: string,
+  zip_code?: string,
+): Promise<LatLng> {
+  const addressParts: string[] = [];
+  if (city) addressParts.push(city);
+  if (state) addressParts.push(state);
+  if (zip_code) addressParts.push(zip_code);
+
+  if (addressParts.length === 0) {
+    throw new Error('At least one of city, state, or zip_code must be provided for geocoding.');
+  }
+
+  const address = addressParts.join(',+');
+  return geocodeAddress(address);
+}
