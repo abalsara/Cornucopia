@@ -114,6 +114,19 @@ export async function updateCharity(
   updates: Partial<Omit<Charity, 'cid' | 'created_at'>>,
 ): Promise<Charity> {
   if (!cid) throw new Error('cid is required');
+  if (updates.address || updates.city || updates.state || updates.zip_code) {
+    // If any address component is being updated, re-geocode the full address
+    const address = updates.address || '';
+    const city = updates.city || '';
+    const state = updates.state || '';
+    const zip_code = updates.zip_code || '';
+
+    const fullAddress = `${address},+${city},+${state}+${zip_code}`;
+    const { lat, lng } = await geocodeAddress(fullAddress);
+
+    updates.latitude = lat;
+    updates.longitude = lng;
+  }
 
   const { data, error } = await supabase
     .from('Charities')
