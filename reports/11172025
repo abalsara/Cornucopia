@@ -1,0 +1,129 @@
+# Week 7 Status Report
+
+## Team Report
+
+---
+
+## Last Week’s Goals
+
+### Frontend
+- Implement availability tab  
+- Implement Needs tab and new need page (charity pages)
+
+### Backend
+- Properly integrate edge functions into front end components for proper data  
+- Add Google geocoding API to convert Charity address to lat/long for filtering and location data
+
+### Design
+- Schedule & complete usability testing  
+- Update designs based on usability testing findings
+
+---
+
+## Progress & Issues
+
+### Frontend
+- Implemented protected routes and applied different tab layouts to donors and charity admins  
+- Implemented availability tab
+
+### Backend
+- Added geocoding for full + partial addresses for search functionality
+
+### Design
+- Scheduled & completed usability testing  
+- Updated designs based on usability testing findings
+
+---
+
+## Next Week’s Plans & Goals
+
+### Frontend
+- Implement rest of charity-facing pages
+
+### Backend
+- Linking Donations to database and insert/upsert on additions/edits/deletions (P0)
+
+### Design
+- Consolidate usability testing findings into a report  
+- Update the User Manual
+
+---
+
+# Individual Contributions
+
+## Last Week’s Goals
+
+### Andras
+- Begin working on charity pages and flow, starting with the needs page and adding a new need  
+- Complete search functionality with city name and zip codes
+
+### Azita
+- Schedule & complete usability testing  
+- Update designs based on usability testing findings  
+- If extra time allows, help implement Charity UI components; otherwise next week
+
+### Charles
+- Implement protected routes and apply different tab layouts to donors and charity admins  
+- Implement availability tab  
+- Spend remaining time developing Needs tab and new need page (charity pages)
+
+### Eli
+- Charity-specific pages (frontend)  
+- Basic backend functions for charity pages if needed  
+- Finish all profile page functionality (donor)
+
+### Spencer
+- Properly integrate edge functions into front end components for proper data  
+- Add Google geocoding API to convert Charity address to lat/long for filtering and location data
+
+---
+
+## Progress & Issues
+
+### Andras
+- Began working on charity pages and flow, starting with the needs page and adding a new need  
+- Completed search functionality with city name and zip codes
+
+### Azita
+- Scheduled & completed usability testing  
+- Updated prototype based on usability testing findings  
+- Added documentation on when to use specific forms/modals/transitions/notifications  
+- Added in-app FAQ/information pages for donors and charities  
+- Added onboarding flow for donors, charity admins, and charity staff
+
+### Charles
+- Implemented protected routes and applied different tab layouts to donors and charity admins  
+- Implemented availability tab
+
+### Eli
+- Created charity-specific profile screen  
+- Implemented RLS policy to allow charities to modify their own information  
+- Implemented both user and charity-specific profile editing screens
+
+### Spencer
+- Added geocoding for full + partial addresses for search functionality
+
+---
+
+## Next Week’s Plans & Goals
+
+### Andras
+- Finish charity needs page including functionality to add a new need  
+- Help frontend team with anything else needed
+
+### Azita
+- Consolidate usability testing findings into a report  
+- Update the User Manual  
+- Help implement Charity UI components — may occur next week
+
+### Charles
+- Add validation to schedule a donation page so that donations are scheduled during the charity’s availability hours  
+- Add test suites for utility functions  
+- Refactor donor screens according to updated wireframes
+
+### Eli
+- Expand profile utilities into settings  
+- Work on charity account creation flow or charity-specific screens
+
+### Spencer
+- Linking Donations to database and insert/upsert on additions/edits/deletions (P0)
