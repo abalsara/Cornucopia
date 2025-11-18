@@ -121,7 +121,7 @@ export async function updateCharity(
     const state = updates.state || '';
     const zip_code = updates.zip_code || '';
 
-    const fullAddress = `${address},+${city},+${state}+${zip_code}`;
+    const fullAddress = `${address}, ${city}, ${state} ${zip_code}`;
     const { lat, lng } = await geocodeAddress(fullAddress);
 
     updates.latitude = lat;
