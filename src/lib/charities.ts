@@ -24,7 +24,7 @@ export async function createCharity(
 ): Promise<Charity> {
   if (!user || !user.id) throw new Error('User with a valid id is required');
 
-  const { lat, lng } = await geocodeAddress(`${address},+${city},+${state}+${zip_code}`);
+  const { lat, lng } = await geocodeAddress(`${address}, ${city}, ${state} ${zip_code}`);
 
   const charity = {
     admin: user.id,
