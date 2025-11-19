@@ -26,11 +26,11 @@ export default function AvailabilityTab() {
   if (!admin) throw new Error('admin is undefined');
   const cid = admin.cid;
 
+  // Synchronize availability state with database
   useEffect(() => {
     if (cid) {
       fetchAvailabilityByCid(cid)
         .then((val) => {
-          console.log(val.toString());
           setAvailability(val);
           setLoading(false);
         })
@@ -40,12 +40,14 @@ export default function AvailabilityTab() {
     }
   }, [cid]);
 
+  // Callback function that is executed when the plus icon is pressed in AvailabilityListItem
   const handlePlusIconPress = (dayOfWeek: number): void => {
     if (!cid) throw new Error('Error while calling handlePlusIconPress: cid is undefined');
     setDayOfWeek(dayOfWeek);
     setOpenTimeModalVisible(true);
   };
 
+  // Callback function that is executed when the trash icon is pressed in AvailabilityListItem
   const handleTrashPress = async (): Promise<void> => {
     if (!cid) {
       throw new Error(`cid is null`);
@@ -99,11 +101,10 @@ export default function AvailabilityTab() {
   }
 
   const charity = getCharity(cid);
-  if (!charity) throw new Error('charity is undefined');
+  if (!charity) throw new Error(`charity is undefined for cid ${cid}`);
 
   return (
     <ThemedView>
-      {/* <Navbar title="Drop-off Availability" backButtonShown={false} /> */}
       <View style={styles.container}>
         <Text variant="bodyMedium">
           Choose which days & times your organization can accept donations
@@ -122,12 +123,14 @@ export default function AvailabilityTab() {
           visible={openTimeModalVisible}
           onConfirm={handleConfirmOpenTime}
           onDismiss={() => setOpenTimeModalVisible(false)}
+          defaultInputType="keyboard"
         />
         <TimePicker
           label="Select closing time"
           visible={closeTimeModalVisible}
           onConfirm={async (hours, minutes) => handleConfirmCloseTime(hours, minutes)}
           onDismiss={() => setCloseTimeModalVisible(false)}
+          defaultInputType="keyboard"
         />
       </View>
     </ThemedView>

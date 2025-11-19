@@ -25,6 +25,19 @@ export const fetchAvailabilityByCid = async (cid: string): Promise<Availability[
   return availability;
 };
 
+/**
+ * Inserts a new availability entry for a given charity (`cid`) into the
+ * `Availability` table. Time values are converted to `"HH:MM"` format before
+ * being stored. If `is_closed` is not provided, it defaults to `false`.
+ *
+ * @param {string} cid - The charity ID associated with the availability record.
+ * @param {number} day_of_week - The day of the week (0–6) the availability applies to.
+ * @param {Date} open_time - The opening time as a JavaScript Date object.
+ * @param {Date} close_time - The closing time as a JavaScript Date object.
+ * @param {boolean} [is_closed=false] - Whether the charity is closed for the given day/period.
+ * @returns {Promise<void>} Resolves when the insert completes successfully.
+ * @throws {Error} If the Supabase insert operation fails.
+ */
 export const insertAvailability = async (
   cid: string,
   day_of_week: number,
@@ -44,6 +57,15 @@ export const insertAvailability = async (
   if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
 };
 
+/**
+ * Deletes an availability record by its unique ID.
+ *
+ * @async
+ * @function deleteAvailability
+ * @param {string} id - The primary key of the availability record to delete.
+ * @returns {Promise<void>} Resolves when the deletion is completed.
+ * @throws {Error} If the Supabase delete operation fails.
+ */
 export const deleteAvailability = async (id: string): Promise<void> => {
   const { error } = await supabase.from('Availability').delete().eq('id', id);
   if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);

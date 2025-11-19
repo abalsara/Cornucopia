@@ -91,11 +91,9 @@ export default function RootLayout() {
    * @throws {Error} Throws if fetching the admin record fails.
    */
   const handleSessionChange = async (session: Session | null): Promise<void> => {
-    console.log(`entered handleSessionChange`);
     if (session) {
       try {
         const admin = await fetchAdmin();
-        console.log(`admin: ${admin}`);
         setIsDonor(admin === undefined);
       } catch (error) {
         throw new Error(`Error while calling handleSessionChange: ${error}`);

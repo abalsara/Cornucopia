@@ -25,6 +25,7 @@ type AvailabilityListProps = {
  *   that describe open/close periods for various days of the week.
  */
 export default function AvailabilityList(props: AvailabilityListProps) {
+  // Map day of week to Availability
   const availabilityMap: Map<number, Availability[]> = new Map();
   for (const availability of props.availability) {
     if (!availabilityMap.has(availability.day_of_week)) {
