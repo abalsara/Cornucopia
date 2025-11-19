@@ -88,7 +88,7 @@ export default function RootLayout() {
    *
    * @throws {Error} Throws if fetching the admin record fails.
    */
-  const handleSessionChange = async (session: Session | null): Promise<void> => {
+  const handleAuthEvent = async (session: Session | null): Promise<void> => {
     if (session) {
       try {
         const admin = await fetchAdmin();
@@ -103,12 +103,19 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
-    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
+    supabase.auth.getSession().then(({ data: { session } }) => handleAuthEvent(session));
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      handleAuthEvent(session);
+    });
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
     fetchAllRatings().then((ratings) => initRatingsStore(ratings));
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // check if isDonor is undefined to prevent prematurely showing the auth screen
