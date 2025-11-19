@@ -1,7 +1,19 @@
+import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
 import { Tables } from '../types/database.types';
 
 export type Availability = Tables<'Availability'>;
+
+export const fetchAvailability = async (): Promise<Availability[]> => {
+  try {
+    const admin = await fetchAdmin();
+    if (admin === undefined || admin.cid === null) return [];
+
+    return await fetchAvailabilityByCid(admin.cid);
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  * Fetches all availability records associated with a specific charity.
@@ -30,7 +42,6 @@ export const fetchAvailabilityByCid = async (cid: string): Promise<Availability[
  * `Availability` table. Time values are converted to `"HH:MM"` format before
  * being stored. If `is_closed` is not provided, it defaults to `false`.
  *
- * @param {string} cid - The charity ID associated with the availability record.
  * @param {number} day_of_week - The day of the week (0–6) the availability applies to.
  * @param {Date} open_time - The opening time as a JavaScript Date object.
  * @param {Date} close_time - The closing time as a JavaScript Date object.

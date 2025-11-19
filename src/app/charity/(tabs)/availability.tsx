@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -6,8 +7,8 @@ import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicato
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
 import TimePicker from '@/src/components/modals/TimePicker';
-import { Admin, fetchAdmin } from '@/src/lib/admin';
-import { Availability, fetchAvailabilityByCid, insertAvailability } from '@/src/lib/availability';
+import { Availability, fetchAvailability, insertAvailability } from '@/src/lib/availability';
+import { getAvailabilityStore } from '@/src/stores/availability';
 import { getCharity } from '@/src/stores/charities';
 
 /**
@@ -23,49 +24,27 @@ export default function AvailabilityTab() {
   const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
   const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
 
-  // Synchronize availability and admin state with database
-  useEffect(() => {
-    const handleFetchAdmin = (adminResponse?: Admin): void => {
-      if (!adminResponse) throw new Error('admin is undefined');
-
-      if (adminResponse.cid) {
-        setCid(adminResponse.cid);
-        fetchAvailabilityByCid(adminResponse.cid)
-          .then(handleFetchAvailability)
-          .catch((error) => {
-            throw error;
-          });
-      } else {
-        setLoading(false);
-      }
-    };
-
-    const handleFetchAvailability = (availabilityResponse: Availability[]): void => {
-      setAvailability(availabilityResponse);
-      setLoading(false);
-    };
-
-    fetchAdmin()
-      .then(handleFetchAdmin)
-      .catch((error) => {
-        throw error;
-      });
-  }, [cid]);
+  // Synchronize availability with database
+  useFocusEffect(() => {
+    const availabilityStore = getAvailabilityStore();
+    if (!availabilityStore) {
+      throw new Error('availability store is undefined');
+    }
+    setCid(availabilityStore.cid);
+    setAvailability(availabilityStore.availability);
+    setLoading(false);
+  });
 
   // Callback function that is executed when the plus icon is pressed in AvailabilityListItem
   const handlePlusIconPress = (dayOfWeek: number): void => {
-    if (!cid) throw new Error('Error while calling handlePlusIconPress: cid is undefined');
     setDayOfWeek(dayOfWeek);
     setOpenTimeModalVisible(true);
   };
 
   // Callback function that is executed when the trash icon is pressed in AvailabilityListItem
   const handleTrashPress = async (): Promise<void> => {
-    if (!cid) {
-      throw new Error(`cid is null`);
-    }
     try {
-      setAvailability(await fetchAvailabilityByCid(cid));
+      setAvailability(await fetchAvailability());
     } catch (error) {
       throw error;
     }
@@ -99,14 +78,14 @@ export default function AvailabilityTab() {
     setCloseTime(date);
     if (cid === null || dayOfWeek === undefined || openTime === undefined) {
       throw new Error(
-        `Invalid parameters: {cid: ${cid}, dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
+        `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
       );
     }
     try {
       setLoading(true);
       setCloseTimeModalVisible(false);
       await insertAvailability(cid, dayOfWeek, openTime, date);
-      setAvailability(await fetchAvailabilityByCid(cid));
+      setAvailability(await fetchAvailability());
       setLoading(false);
     } catch (error) {
       throw error;
