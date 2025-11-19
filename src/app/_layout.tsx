@@ -12,7 +12,6 @@ import { fetchAdmin } from '../lib/admin';
 import { fetchAllCharities } from '../lib/charities';
 import { fetchAllRatings } from '../lib/ratings';
 import { supabase } from '../lib/supabase';
-import { setAdmin } from '../stores/admin';
 import { initCharitiesStore } from '../stores/charities';
 import { initRatingsStore } from '../stores/ratings';
 import { darkTheme, lightTheme } from '../styles/themes';
@@ -110,7 +109,6 @@ export default function RootLayout() {
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
     fetchAllRatings().then((ratings) => initRatingsStore(ratings));
-    fetchAdmin().then((admin) => (admin ? setAdmin(admin) : setAdmin(undefined)));
   }, []);
 
   // check if isDonor is undefined to prevent prematurely showing the auth screen

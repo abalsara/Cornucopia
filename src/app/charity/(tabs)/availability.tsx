@@ -6,14 +6,15 @@ import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicato
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
 import TimePicker from '@/src/components/modals/TimePicker';
+import { Admin, fetchAdmin } from '@/src/lib/admin';
 import { Availability, fetchAvailabilityByCid, insertAvailability } from '@/src/lib/availability';
-import { getAdmin } from '@/src/stores/admin';
 import { getCharity } from '@/src/stores/charities';
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
  */
 export default function AvailabilityTab() {
+  const [cid, setCid] = useState<string | null>(null);
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [loading, setLoading] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
@@ -22,22 +23,33 @@ export default function AvailabilityTab() {
   const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
   const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
 
-  const admin = getAdmin();
-  if (!admin) throw new Error('admin is undefined');
-  const cid = admin.cid;
-
-  // Synchronize availability state with database
+  // Synchronize availability and admin state with database
   useEffect(() => {
-    if (cid) {
-      fetchAvailabilityByCid(cid)
-        .then((val) => {
-          setAvailability(val);
-          setLoading(false);
-        })
-        .catch((error) => {
-          throw error;
-        });
-    }
+    const handleFetchAdmin = (adminResponse?: Admin): void => {
+      if (!adminResponse) throw new Error('admin is undefined');
+
+      if (adminResponse.cid) {
+        setCid(adminResponse.cid);
+        fetchAvailabilityByCid(adminResponse.cid)
+          .then(handleFetchAvailability)
+          .catch((error) => {
+            throw error;
+          });
+      } else {
+        setLoading(false);
+      }
+    };
+
+    const handleFetchAvailability = (availabilityResponse: Availability[]): void => {
+      setAvailability(availabilityResponse);
+      setLoading(false);
+    };
+
+    fetchAdmin()
+      .then(handleFetchAdmin)
+      .catch((error) => {
+        throw error;
+      });
   }, [cid]);
 
   // Callback function that is executed when the plus icon is pressed in AvailabilityListItem
@@ -59,6 +71,13 @@ export default function AvailabilityTab() {
     }
   };
 
+  /**
+   * Called when the user confirms the time on the open TimePicker modal.
+   * Sets the openTime state and then renders the close TimePicker modal.
+   *
+   * @param hours - The hour returned by the TimePicker
+   * @param minutes - The minutes returned by the TimePicker
+   */
   const handleConfirmOpenTime = (hours: number, minutes: number): void => {
     const date = new Date();
     date.setHours(hours, minutes);
@@ -67,6 +86,13 @@ export default function AvailabilityTab() {
     setCloseTimeModalVisible(true);
   };
 
+  /**
+   * Called when the user confirms the time on the close TimePicker modal.
+   * Sets the closeTime state and then inserts the Availability object into the db.
+   *
+   * @param hours - The hour returned by the TimePicker
+   * @param minutes - The minutes returned by the TimePicker
+   */
   const handleConfirmCloseTime = async (hours: number, minutes: number): Promise<void> => {
     const date = new Date();
     date.setHours(hours, minutes);
