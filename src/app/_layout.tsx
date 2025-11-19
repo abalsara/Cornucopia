@@ -105,7 +105,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
-    supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
@@ -113,8 +113,8 @@ export default function RootLayout() {
     fetchAdmin().then((admin) => (admin ? setAdmin(admin) : setAdmin(undefined)));
   }, []);
 
-  // App is in loading state if isDonor is undefined
-  if (!isDonor) {
+  // check if isDonor is undefined to prevent prematurely showing the auth screen
+  if (isDonor === undefined) {
     return (
       <PaperProvider theme={paperTheme}>
         <ThemedView>
