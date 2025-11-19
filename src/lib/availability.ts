@@ -34,7 +34,6 @@ export const fetchAvailabilityByCid = async (cid: string): Promise<Availability[
  * @param {number} day_of_week - The day of the week (0–6) the availability applies to.
  * @param {Date} open_time - The opening time as a JavaScript Date object.
  * @param {Date} close_time - The closing time as a JavaScript Date object.
- * @param {boolean} [is_closed=false] - Whether the charity is closed for the given day/period.
  * @returns {Promise<void>} Resolves when the insert completes successfully.
  * @throws {Error} If the Supabase insert operation fails.
  */
@@ -43,7 +42,6 @@ export const insertAvailability = async (
   day_of_week: number,
   open_time: Date,
   close_time: Date,
-  is_closed?: boolean,
 ): Promise<void> => {
   console.log(`open: ${open_time.toTimeString().substring(0, 5)}`);
 
@@ -52,7 +50,6 @@ export const insertAvailability = async (
     day_of_week,
     open_time: open_time.toTimeString().substring(0, 5), // format HH:MM
     close_time: close_time.toTimeString().substring(0, 5),
-    is_closed: is_closed ?? false,
   });
   if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
 };

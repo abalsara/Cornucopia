@@ -103,32 +103,29 @@ export type Database = {
       Availability: {
         Row: {
           cid: string;
-          close_time: string | null;
+          close_time: string;
           created_at: string;
           day_of_week: number;
           id: string;
-          is_closed: boolean | null;
-          open_time: string | null;
+          open_time: string;
           period_index: number;
         };
         Insert: {
           cid: string;
-          close_time?: string | null;
+          close_time: string;
           created_at?: string;
           day_of_week: number;
-          id: string;
-          is_closed?: boolean | null;
-          open_time?: string | null;
-          period_index: number;
+          id?: string;
+          open_time: string;
+          period_index?: number;
         };
         Update: {
           cid?: string;
-          close_time?: string | null;
+          close_time?: string;
           created_at?: string;
           day_of_week?: number;
           id?: string;
-          is_closed?: boolean | null;
-          open_time?: string | null;
+          open_time?: string;
           period_index?: number;
         };
         Relationships: [

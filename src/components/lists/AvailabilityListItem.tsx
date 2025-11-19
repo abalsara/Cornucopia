@@ -101,24 +101,14 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
   };
 
   return availabilityList.map((availability) => {
-    const closed = availability.is_closed;
-
-    if (availability.open_time === null || availability.close_time === null) {
-      throw new Error('open or close time values are null');
-    }
-
     const item = (
       <List.Item
         key={availability.id + '-' + availability.period_index}
         title={
-          closed ? (
-            'Closed'
-          ) : (
-            <Text style={{ marginLeft: 'auto' }}>
-              {formatTimeFromString(availability.open_time)} -{' '}
-              {formatTimeFromString(availability.close_time)}
-            </Text>
-          )
+          <Text style={{ marginLeft: 'auto' }}>
+            {formatTimeFromString(availability.open_time)} -{' '}
+            {formatTimeFromString(availability.close_time)}
+          </Text>
         }
         left={(leftProps) => (
           <MaterialCommunityIcons
