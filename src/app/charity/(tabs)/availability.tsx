@@ -123,14 +123,12 @@ export default function AvailabilityTab() {
           visible={openTimeModalVisible}
           onConfirm={handleConfirmOpenTime}
           onDismiss={() => setOpenTimeModalVisible(false)}
-          defaultInputType="keyboard"
         />
         <TimePicker
           label="Select closing time"
           visible={closeTimeModalVisible}
           onConfirm={async (hours, minutes) => handleConfirmCloseTime(hours, minutes)}
           onDismiss={() => setCloseTimeModalVisible(false)}
-          defaultInputType="keyboard"
         />
       </View>
     </ThemedView>

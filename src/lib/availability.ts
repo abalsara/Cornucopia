@@ -43,8 +43,6 @@ export const insertAvailability = async (
   open_time: Date,
   close_time: Date,
 ): Promise<void> => {
-  console.log(`open: ${open_time.toTimeString().substring(0, 5)}`);
-
   const { error } = await supabase.from('Availability').insert({
     cid,
     day_of_week,

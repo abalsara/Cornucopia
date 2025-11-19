@@ -59,7 +59,6 @@ registerTranslation('en', en);
  */
 
 export default function RootLayout() {
-  const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [isDonor, setIsDonor] = useState<boolean | undefined>(undefined);
 
@@ -102,7 +101,6 @@ export default function RootLayout() {
       setIsDonor(true);
     }
     setSession(session);
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -115,8 +113,8 @@ export default function RootLayout() {
     fetchAdmin().then((admin) => (admin ? setAdmin(admin) : setAdmin(undefined)));
   }, []);
 
-  // check if isDonor is undefined to prevent prematurely showing the auth screen
-  if (loading === true || isDonor === undefined) {
+  // App is in loading state if isDonor is undefined
+  if (!isDonor) {
     return (
       <PaperProvider theme={paperTheme}>
         <ThemedView>
