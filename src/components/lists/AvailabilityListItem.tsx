@@ -63,7 +63,7 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
   }
 
   /**
-   * Deletes a specific availability entry and synce the availability tab with the database.
+   * Deletes a specific availability entry and syncs the availability tab with the database.
    * Displays a loading indicator for the row being deleted.
    *
    * @param {string} availability - The availability record to delete.
