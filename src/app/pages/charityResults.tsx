@@ -35,7 +35,7 @@ export default function CharityResults() {
   const theme = useTheme();
   const router = useRouter();
 
-  const { lat, lon } = useLocalSearchParams<{ lat: string; lon: string }>();
+  const { lat, lon, search } = useLocalSearchParams<{ lat: string; lon: string; search: string }>();
   const userLat = parseFloat(lat);
   const userLon = parseFloat(lon);
 
@@ -64,7 +64,7 @@ export default function CharityResults() {
             <IconButton icon="arrow-left" size={24} onPress={() => router.back()} />
             <View style={styles.headerTextContainer}>
               <Text variant="titleLarge" style={styles.headerTitle}>
-                Charities Near Seattle
+                Charities Near {search == null ? 'user' : search}
               </Text>
               <Text variant="labelMedium" style={styles.headerSubtitle}>
                 within 50 miles
