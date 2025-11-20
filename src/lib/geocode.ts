@@ -1,13 +1,14 @@
 import { supabase } from './supabase';
 
-type LatLng = { lat: number; lng: number };
+export type LatLng = { lat: number; lng: number };
 
 /**
  * Convert an address string to lat/lng using Google Geocoding API (server-side).
  * Returns the best match or throws an error.
  */
 export async function geocodeAddress(address: string): Promise<LatLng> {
-  const payload = { address };
+  const payload = { addressToGeocode: address };
+  console.log(`Payload ${payload.addressToGeocode}}`);
   const { data, error } = await supabase.functions.invoke('geocode-address', { body: payload });
   if (error) throw error;
   if (!data) throw new Error('No data returned from geocoding');
@@ -34,5 +35,6 @@ export async function geocodePartialAddress(
   }
 
   const address = addressParts.join(',+');
+  console.log(`Partial address is: ${address}`);
   return geocodeAddress(address);
 }
