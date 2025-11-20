@@ -6,8 +6,8 @@ type LatLng = { lat: number; lng: number };
  * Convert an address string to lat/lng using Google Geocoding API (server-side).
  * Returns the best match or throws an error.
  */
-export async function geocodeAddress(address: string): Promise<LatLng> {
-  const payload = { address };
+export async function geocodeAddress(addressParam: string): Promise<LatLng> {
+  const payload = { address: addressParam };
   const { data, error } = await supabase.functions.invoke('geocode-address', { body: payload });
   if (error) throw error;
   if (!data) throw new Error('No data returned from geocoding');
