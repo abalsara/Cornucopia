@@ -4,15 +4,35 @@ import { Tables } from '../types/database.types';
 
 export type Availability = Tables<'Availability'>;
 
-export const fetchAvailability = async (): Promise<Availability[]> => {
-  try {
-    const admin = await fetchAdmin();
-    if (admin === undefined || admin.cid === null) return [];
+type AdminAvailability = {
+  cid: string | null;
+  availability: Availability[];
+};
 
-    return await fetchAvailabilityByCid(admin.cid);
-  } catch (error) {
-    throw error;
+/**
+ * Fetches the charity ID and full availability list for the currently
+ * authenticated administrator.
+ *
+ * If the logged-in user is not a charity administrator or has no associated
+ * charity (`cid`), the function returns `{ cid: null, availability: [] }`.
+ *
+ * @returns {Promise<{ cid: string | null, availability: Availability[] }>}
+ *   An object containing the admin's `cid` (or `null` if none) and the list
+ *   of availability records for that charity.
+ *
+ * @throws {Error} If fetching the admin or availability data fails unexpectedly.
+ */
+export const fetchAvailabilityByAdmin = async (): Promise<AdminAvailability> => {
+  const admin = await fetchAdmin();
+
+  if (!admin || !admin.cid) {
+    return { cid: null, availability: [] };
   }
+
+  return {
+    cid: admin.cid,
+    availability: await fetchAvailabilityByCid(admin.cid),
+  };
 };
 
 /**

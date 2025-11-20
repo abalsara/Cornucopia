@@ -16,8 +16,7 @@ type AvailabilityListProps = {
  *
  * The component receives an array of availability entries and groups them by
  * `day_of_week` (0–6). Each grouped set is passed to the corresponding
- * `AvailabilityListItem`, which handles rendering of intervals or "Closed"
- * status for that day.
+ * `AvailabilityListItem`, which handles rendering of time intervals.
  *
  * Days are rendered in order from Sunday (0) through Saturday (6).
  *
@@ -36,48 +35,15 @@ export default function AvailabilityList(props: AvailabilityListProps) {
 
   return (
     <List.Section>
-      <AvailabilityListItem
-        dayOfWeek={0}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(0)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={1}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(1)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={2}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(2)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={3}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(3)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={4}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(4)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={5}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(5)}
-        onTrashPress={props.onTrashPress}
-      />
-      <AvailabilityListItem
-        dayOfWeek={6}
-        availabilityMap={availabilityMap}
-        onPlusIconPress={() => props.onPlusIconPress(6)}
-        onTrashPress={props.onTrashPress}
-      />
+      {Array.from({ length: 7 }, (_, dayOfWeek) => (
+        <AvailabilityListItem
+          key={dayOfWeek}
+          dayOfWeek={dayOfWeek}
+          availabilityMap={availabilityMap}
+          onPlusIconPress={() => props.onPlusIconPress(dayOfWeek)}
+          onTrashPress={props.onTrashPress}
+        />
+      ))}
     </List.Section>
   );
 }

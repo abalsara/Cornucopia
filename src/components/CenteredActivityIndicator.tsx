@@ -8,7 +8,7 @@ import { ActivityIndicator } from 'react-native-paper';
  */
 export default function CenteredActivityIndicator() {
   return (
-    <View style={{ flex: 1, marginVertical: 'auto' }}>
+    <View style={{ flex: 1, justifyContent: 'center' }}>
       <ActivityIndicator />
     </View>
   );

@@ -1,5 +1,4 @@
-import { useFocusEffect } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -7,8 +6,7 @@ import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicato
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
 import TimePicker from '@/src/components/modals/TimePicker';
-import { Availability, fetchAvailability, insertAvailability } from '@/src/lib/availability';
-import { getAvailabilityStore } from '@/src/stores/availability';
+import { Availability, fetchAvailabilityByAdmin, insertAvailability } from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
 
 /**
@@ -25,29 +23,32 @@ export default function AvailabilityTab() {
   const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
 
   // Synchronize availability with database
-  useFocusEffect(() => {
-    const availabilityStore = getAvailabilityStore();
-    if (!availabilityStore) {
-      throw new Error('availability store is undefined');
-    }
-    setCid(availabilityStore.cid);
-    setAvailability(availabilityStore.availability);
-    setLoading(false);
-  });
+  useEffect(() => {
+    syncAvailability().then(() => setLoading(false));
+  }, []);
 
-  // Callback function that is executed when the plus icon is pressed in AvailabilityListItem
+  const syncAvailability = async (): Promise<void> => {
+    const { cid, availability } = await fetchAvailabilityByAdmin();
+    setCid(cid);
+    setAvailability(availability);
+  };
+
+  /**
+   * Opens the time selection modal for creating a new availability entry.
+   *
+   * @param dayOfWeek - The day of the week (0–6) that the user wants to add availability for.
+   */
   const handlePlusIconPress = (dayOfWeek: number): void => {
     setDayOfWeek(dayOfWeek);
     setOpenTimeModalVisible(true);
   };
 
-  // Callback function that is executed when the trash icon is pressed in AvailabilityListItem
+  /**
+   * Refreshes the availability state after a child component deletes an entry.
+   * Ensures the UI stays in sync with the database.
+   */
   const handleTrashPress = async (): Promise<void> => {
-    try {
-      setAvailability(await fetchAvailability());
-    } catch (error) {
-      throw error;
-    }
+    await syncAvailability();
   };
 
   /**
@@ -85,7 +86,7 @@ export default function AvailabilityTab() {
       setLoading(true);
       setCloseTimeModalVisible(false);
       await insertAvailability(cid, dayOfWeek, openTime, date);
-      setAvailability(await fetchAvailability());
+      await syncAvailability();
       setLoading(false);
     } catch (error) {
       throw error;
@@ -112,7 +113,7 @@ export default function AvailabilityTab() {
     <ThemedView>
       <View style={styles.container}>
         <Text variant="bodyMedium">
-          Choose which days & times your organization can accept donations
+          Choose which days & times {charity.c_name} can accept donations
         </Text>
         <Text variant="titleLarge" style={{ marginTop: 20 }}>
           Weekly Hours

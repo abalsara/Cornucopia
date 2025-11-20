@@ -62,15 +62,17 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
     );
   }
 
+  /**
+   * Deletes a specific availability entry and synce the availability tab with the database.
+   * Displays a loading indicator for the row being deleted.
+   *
+   * @param {string} availability - The availability record to delete.
+   */
   const handleTrashPress = async (availability: Availability): Promise<void> => {
     setPendingDeleteId(availability.id);
-    try {
-      await deleteAvailability(availability.id);
-      await props.onTrashPress();
-      setPendingDeleteId('');
-    } catch (error) {
-      throw error;
-    }
+    await deleteAvailability(availability.id);
+    await props.onTrashPress();
+    setPendingDeleteId('');
   };
 
   const renderRightButtons = (
