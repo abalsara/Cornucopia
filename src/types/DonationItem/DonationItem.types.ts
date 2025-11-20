@@ -33,6 +33,7 @@ export type BaseDonationItem = {
   quantity: number;
   unit: string;
   category: Category;
+  item_id: string;
 };
 
 // each donation item type has a unique Category
