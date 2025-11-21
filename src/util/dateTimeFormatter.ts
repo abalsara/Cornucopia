@@ -68,6 +68,14 @@ export const formatTimeFromString = (time: string | null): string | undefined =>
   return formatTime(date);
 };
 
+export function getDayIndexFromDate(dateStr: string): number {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid date string: ${dateStr}`);
+  }
+  return date.getDay(); // 0–6
+}
+
 /**
  * Helper: Returns the ordinal suffix for a given day (e.g., "st", "nd", "rd", "th").
  */
