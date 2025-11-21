@@ -1,13 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Calendar, DateData } from 'react-native-calendars';
 import { Button, Text, useTheme } from 'react-native-paper';
 
+import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
 import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
-import DatePicker from '@/src/components/modals/DatePicker';
-import TimePicker from '@/src/components/modals/TimePicker';
+import { Availability, fetchAvailabilityByCid } from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
 import { setSavedSchedule } from '@/src/stores/savedSchedule';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
@@ -26,27 +27,33 @@ export default function ScheduleDropoffPage() {
   // date state
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [dateVisible, setDateVisible] = useState(false);
+  const [selected, setSelected] = useState('');
 
   // time state
   const [hours, setHours] = useState<number | undefined>();
   const [minutes, setMinutes] = useState<number | undefined>();
   const [timeVisible, setTimeVisible] = useState(false);
 
-  const handleConfirmDate = (date?: Date): void => {
-    setDate(date);
-    setDateVisible(false);
-  };
+  const [loading, setLoading] = useState(true);
+  const [availability, setAvailability] = useState<Availability[]>([]);
 
-  const handleConfirmTime = (hours: number, minutes: number): void => {
-    if (date) {
-      setHours(hours);
-      setMinutes(minutes);
+  useEffect(() => {
+    fetchAvailabilityByCid(cid).then((availability) => {
+      setAvailability(availability);
+      setLoading(false);
+    });
+  });
 
-      const newDate = date;
-      newDate.setHours(hours, minutes);
-      setDate(newDate);
-      setTimeVisible(false);
+  const getUnavailableDays = (): number[] => {
+    const days = [0, 1, 2, 3, 4, 5, 6];
+    const available = new Set();
+    for (const a of availability) {
+      available.add(a.day_of_week);
     }
+
+    return days.filter((day) => {
+      return !available.has(day);
+    });
   };
 
   const getFormattedTime = (): string => {
@@ -65,6 +72,14 @@ export default function ScheduleDropoffPage() {
   const handleSelectTimePress = (): void => {
     setTimeVisible(true);
   };
+
+  if (loading) {
+    return (
+      <ThemedView>
+        <CenteredActivityIndicator />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView>
@@ -94,18 +109,16 @@ export default function ScheduleDropoffPage() {
               Select Time
             </Button>
           </View>
+          <Calendar
+            onDayPress={(day) => {
+              setSelected(day.dateString);
+            }}
+            disabledByWeekDays={getUnavailableDays()}
+            // markedDates={{
+            //   [selected]: { selected: true, disableTouchEvent: true, selectedColor: 'orange' },
+            // }}
+          />
         </View>
-
-        <DatePicker
-          onConfirm={handleConfirmDate}
-          onDismiss={() => setDateVisible(false)}
-          visible={dateVisible}
-        />
-        <TimePicker
-          onConfirm={handleConfirmTime}
-          onDismiss={() => setTimeVisible(false)}
-          visible={timeVisible}
-        />
 
         <View style={styles.buttonContainer}>
           <View style={{ flex: 1 }} />
