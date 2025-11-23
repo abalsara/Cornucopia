@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Portal } from 'react-native-paper';
 
+import NewNeedForm from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
 import { lightColorScheme } from '@/src/styles/colors';
 
@@ -52,6 +53,8 @@ const statusColors: Record<string, string> = {
 };
 
 export default function Needs() {
+  const [addNeedModalVisible, setAddNeedModalVisible] = useState(false);
+
   return (
     <ThemedView>
       <Portal.Host>
@@ -64,7 +67,12 @@ export default function Needs() {
               </Text>
             </View>
 
-            <IconButton icon="plus" size={28} accessibilityLabel="Add need" />
+            <IconButton
+              icon="plus"
+              size={28}
+              accessibilityLabel="Add need"
+              onPress={() => setAddNeedModalVisible(true)}
+            />
           </View>
 
           {EXAMPLE_NEEDS.map((section) => (
@@ -92,12 +100,12 @@ export default function Needs() {
           ))}
         </ScrollView>
         <Portal>
-          {addModalVisible && (
+          {addNeedModalVisible && (
             <NewNeedForm
-              onClose={() => setAddModalVisible(false)}
+              onClose={() => setAddNeedModalVisible(false)}
               onPost={(payload) => {
                 console.log('New need posted:', payload);
-                setAddModalVisible(false);
+                setAddNeedModalVisible(false);
               }}
             />
           )}
@@ -153,5 +161,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 8,
     paddingRight: 8,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    margin: 20,
+    borderRadius: 8,
   },
 });
