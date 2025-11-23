@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
-import { Text, IconButton, TextInput, Button } from 'react-native-paper';
-
-import { lightColorScheme } from '@/src/styles/colors';
+import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
 type Priority = 'Urgent' | 'High Priority' | 'Ongoing';
 
@@ -35,23 +33,27 @@ const NEED_CATEGORIES = [
   'Uncategorized',
 ];
 
-const themeColors = lightColorScheme.colors;
-
-const statusColors: Record<Priority, string> = {
-  Urgent: themeColors.error,
-  'High Priority': 'rgb(220, 163, 17)',
-  Ongoing: themeColors.secondary,
-};
-
-const SELECTED_PILL = themeColors.primary;
-const UNSELECTED_PILL = themeColors.surfaceVariant;
-const UNSELECTED_TEXT = themeColors.onSurface;
+// Theme values are read inside the component via `useTheme` so the UI
+// follows the currently selected theme (light/dark/custom).
 
 export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: Props) {
   const [title, setTitle] = useState(initial.title ?? '');
   const [description, setDescription] = useState(initial.description ?? '');
   const [category, setCategory] = useState<string | null>(initial.category ?? 'Food');
   const [priority, setPriority] = useState<Priority | null>(initial.priority ?? 'Urgent');
+
+  const theme = useTheme();
+  const themeColors = theme.colors;
+
+  const statusColors: Record<Priority, string> = {
+    Urgent: themeColors.error,
+    'High Priority': 'rgb(220, 163, 17)',
+    Ongoing: themeColors.secondary,
+  };
+
+  const SELECTED_PILL = themeColors.primary;
+  const UNSELECTED_PILL = themeColors.surfaceVariant;
+  const UNSELECTED_TEXT = themeColors.onSurface;
 
   const priorityDescriptions: Record<Priority, string> = {
     Urgent: 'This item is needed within 24 hours',

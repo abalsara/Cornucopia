@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { Text, Card, IconButton, Portal } from 'react-native-paper';
+import { Text, Card, IconButton, Portal, useTheme } from 'react-native-paper';
 
 import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
 import NewNeedForm from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
-import { lightColorScheme } from '@/src/styles/colors';
 
 type NeedCard = {
   id: string;
@@ -45,16 +44,18 @@ const EXAMPLE_NEEDS: { title: string; needs: NeedCard[] }[] = [
   },
 ];
 
-const themeColors = lightColorScheme.colors;
-
-const statusColors: Record<string, string> = {
-  Urgent: themeColors.error,
-  'High Priority': 'rgb(220, 163, 17)',
-  Ongoing: themeColors.secondary,
-};
+// Theme-aware colors are computed inside the component using `useTheme()`.
 
 export default function Needs() {
   const [showPostNeedForm, setShowPostNeedForm] = useState(false);
+  const theme = useTheme();
+  const themeColors = theme.colors;
+
+  const statusColors: Record<string, string> = {
+    Urgent: themeColors.error,
+    'High Priority': 'rgb(220, 163, 17)',
+    Ongoing: themeColors.secondary,
+  };
 
   type SelectedNeed = {
     id: string;
