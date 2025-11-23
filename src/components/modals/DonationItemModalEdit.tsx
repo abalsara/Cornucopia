@@ -52,7 +52,11 @@ export default function DonationItemModalEdit(props: DonationItemModalEditProps)
           minHeight: buttonPos,
         }}>
         <View>
-          <View style={{ flexDirection: 'row-reverse' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text variant="titleLarge" style={{ marginLeft: 20 }}>
+              {item.category}
+            </Text>
             <Feather
               onPress={() => props.setIsVisible(false)}
               style={{ padding: 15 }}
