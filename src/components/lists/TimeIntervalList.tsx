@@ -7,17 +7,16 @@ import { toMinutes, toHHMM } from '@/src/util/dateTimeFormatter';
 
 type TimeIntervalListProps = {
   availability: Availability[];
-  dayOfWeek: number;
+  date: Date;
   onPress: (hours: number, minutes: number) => void;
 };
 
-export default function TimeIntervalList({
-  availability,
-  dayOfWeek,
-  onPress,
-}: TimeIntervalListProps) {
+export default function TimeIntervalList({ availability, date, onPress }: TimeIntervalListProps) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
+
+  // get day of week
+  const dayOfWeek = date.getDay();
 
   // Filter to this specific day
   const todaysPeriods = availability
@@ -54,8 +53,8 @@ export default function TimeIntervalList({
       {intervals.map((time, idx) => {
         const color = selected === idx ? theme.colors.primary : theme.colors.outlineVariant;
         return (
-          <Pressable onPress={() => handlePress(time, idx)}>
-            <View key={idx} style={{ ...styles.container, borderColor: color }}>
+          <Pressable key={idx} onPress={() => handlePress(time, idx)}>
+            <View style={{ ...styles.container, borderColor: color }}>
               <Text variant="titleMedium" style={{ color }}>
                 {time}
               </Text>

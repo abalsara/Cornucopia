@@ -84,8 +84,9 @@ export default function ScheduleDropoffPage() {
           </Text>
           {date === undefined ? (
             <Calendar
-              onDayPress={(day) => {
-                const selected = new Date(day.dateString);
+              onDayPress={(selectedDay) => {
+                const [year, month, day] = selectedDay.dateString.split('-').map(Number);
+                const selected = new Date(year, month - 1, day);
                 setDate(selected);
               }}
               disabledByWeekDays={getUnavailableDays()}
@@ -94,7 +95,7 @@ export default function ScheduleDropoffPage() {
           ) : (
             <TimeIntervalList
               availability={availability}
-              dayOfWeek={date.getUTCDay()}
+              date={date}
               onPress={handleIntervalPress}
             />
           )}
