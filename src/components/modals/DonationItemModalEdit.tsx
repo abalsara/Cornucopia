@@ -21,7 +21,7 @@ type DonationItemModalEditProps = {
 export default function DonationItemModalEdit(props: DonationItemModalEditProps) {
   const item = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');
-  const [notes, setNotes] = useState(props.item?.notes ?? '');
+  const notes = props.item?.notes ?? '';
   const theme = useTheme();
 
   const { height } = useWindowDimensions();
@@ -64,9 +64,7 @@ export default function DonationItemModalEdit(props: DonationItemModalEditProps)
           <View style={styles.modalContent}>
             <View>
               <Text variant="headlineMedium">{item.itemName}</Text>
-              <Text variant="titleLarge" style={styles.mt20}>
-                Quantity
-              </Text>
+              <Text variant="bodyLarge">{notes}</Text>
             </View>
             <View style={styles.QuantityContainer}>
               <View>
@@ -77,6 +75,7 @@ export default function DonationItemModalEdit(props: DonationItemModalEditProps)
                   placeholder="0"
                   keyboardType="numeric"
                   style={{ width: 140 }}
+                  mode="outlined"
                 />
               </View>
               <View style={styles.QuantityUnitContainer}>
@@ -85,14 +84,6 @@ export default function DonationItemModalEdit(props: DonationItemModalEditProps)
                   {item.unit}
                 </Text>
               </View>
-            </View>
-            <View style={styles.mt20}>
-              <Text variant="titleLarge">Notes</Text>
-              <TextInput
-                autoCorrect={false}
-                value={notes}
-                onChangeText={(text) => setNotes(text)}
-              />
             </View>
           </View>
         </View>
