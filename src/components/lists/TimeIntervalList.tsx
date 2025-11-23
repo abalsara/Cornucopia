@@ -1,17 +1,24 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 
 import { Availability } from '@/src/lib/availability';
-import { toMinutes, toHHMM } from '@/src/util/dateTimeFormatter';
+import { toMinutes, toHHMM, formatDate } from '@/src/util/dateTimeFormatter';
 
 type TimeIntervalListProps = {
   availability: Availability[];
   date: Date;
-  onPress: (hours: number, minutes: number) => void;
+  onIntervalPress: (hours: number, minutes: number) => void;
+  onBackPress: () => void;
 };
 
-export default function TimeIntervalList({ availability, date, onPress }: TimeIntervalListProps) {
+export default function TimeIntervalList({
+  availability,
+  date,
+  onIntervalPress,
+  onBackPress,
+}: TimeIntervalListProps) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
 
@@ -45,24 +52,36 @@ export default function TimeIntervalList({ availability, date, onPress }: TimeIn
     const hours = period === 'pm' && rawHours !== 12 ? rawHours + 12 : rawHours;
     const minutes = totalMinutes % 60;
     setSelected(idx);
-    onPress(hours, minutes);
+    onIntervalPress(hours, minutes);
   };
 
   return (
-    <ScrollView>
-      {intervals.map((time, idx) => {
-        const color = selected === idx ? theme.colors.primary : theme.colors.outlineVariant;
-        return (
-          <Pressable key={idx} onPress={() => handlePress(time, idx)}>
-            <View style={{ ...styles.container, borderColor: color }}>
-              <Text variant="titleMedium" style={{ color }}>
-                {time}
-              </Text>
-            </View>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
+    <>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color={theme.colors.onBackground}
+          style={{ paddingRight: 8 }}
+          onPress={onBackPress}
+        />
+        <Text variant="titleLarge">{formatDate(date)}</Text>
+      </View>
+      <ScrollView>
+        {intervals.map((time, idx) => {
+          const color = selected === idx ? theme.colors.primary : theme.colors.outlineVariant;
+          return (
+            <Pressable key={idx} onPress={() => handlePress(time, idx)}>
+              <View style={{ ...styles.container, borderColor: color }}>
+                <Text variant="titleMedium" style={{ color }}>
+                  {time}
+                </Text>
+              </View>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </>
   );
 }
 

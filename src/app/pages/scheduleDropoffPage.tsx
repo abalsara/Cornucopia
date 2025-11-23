@@ -12,6 +12,7 @@ import TimeIntervalList from '@/src/components/lists/TimeIntervalList';
 import { Availability, fetchAvailabilityByCid } from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
 import { setSavedSchedule } from '@/src/stores/savedSchedule';
+import { getUnavailableDays } from '@/src/util/dateTimeFormatter';
 
 /**
  * This page allows the donor to pick a date and time to drop off their donation
@@ -25,10 +26,13 @@ export default function ScheduleDropoffPage() {
   const router = useRouter();
 
   const [date, setDate] = useState<Date | undefined>(undefined);
-
   const [loading, setLoading] = useState(true);
   const [availability, setAvailability] = useState<Availability[]>([]);
+  const unavailableDays = getUnavailableDays(availability);
+  const today = new Date();
+  const todayString = today.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
+  // set availability state
   useEffect(() => {
     fetchAvailabilityByCid(cid).then((availability) => {
       setAvailability(availability);
@@ -36,21 +40,12 @@ export default function ScheduleDropoffPage() {
     });
   }, []);
 
-  const getUnavailableDays = (): number[] => {
-    const days = [0, 1, 2, 3, 4, 5, 6];
-    const available = new Set();
-    for (const a of availability) {
-      available.add(a.day_of_week);
-    }
-
-    return days.filter((day) => {
-      return !available.has(day);
-    });
+  const handleBackArrowPress = (): void => {
+    setDate(undefined);
   };
 
   const handleIntervalPress = (hours: number, minutes: number) => {
     if (!date) throw new Error('invalid date');
-    console.log(`HH:MM: ${hours}:${minutes}`);
     const newDate = new Date(date);
     newDate.setHours(hours, minutes);
     setDate(newDate);
@@ -89,14 +84,22 @@ export default function ScheduleDropoffPage() {
                 const selected = new Date(year, month - 1, day);
                 setDate(selected);
               }}
-              disabledByWeekDays={getUnavailableDays()}
+              disabledByWeekDays={unavailableDays}
               disableAllTouchEventsForDisabledDays
+              minDate={todayString}
+              markedDates={{
+                [todayString]: {
+                  disabled: unavailableDays.includes(today.getDay()),
+                  marked: true,
+                },
+              }}
             />
           ) : (
             <TimeIntervalList
               availability={availability}
               date={date}
-              onPress={handleIntervalPress}
+              onIntervalPress={handleIntervalPress}
+              onBackPress={handleBackArrowPress}
             />
           )}
         </View>

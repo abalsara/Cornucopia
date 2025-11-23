@@ -1,3 +1,5 @@
+import { Availability } from '../lib/availability';
+
 /**
  * Formats a Date object into a string like "Tuesday, October 29th".
  *
@@ -20,11 +22,9 @@ export function formatDate(date: Date): string {
     'November',
     'December',
   ];
-
   const dayName = days[date.getDay()];
   const monthName = months[date.getMonth()];
   const dayOfMonth = date.getDate();
-
   const suffix = getOrdinalSuffix(dayOfMonth);
 
   return `${dayName}, ${monthName} ${dayOfMonth}${suffix}`;
@@ -68,6 +68,17 @@ export const formatTimeFromString = (time: string | null): string | undefined =>
   return formatTime(date);
 };
 
+/**
+ * Returns the day-of-week index (0–6) for a given date string.
+ *
+ * The input date string must be in a format that the JavaScript `Date`
+ * constructor can parse (such as "YYYY-MM-DD"). The result follows the
+ * standard `Date.getDay()` convention:
+
+ * @param {string} dateStr - A date string parsable by the JavaScript `Date` constructor.
+ * @returns {number} An integer from 0 to 6 representing the day of the week.
+ * @throws {Error} If the provided string cannot be parsed into a valid Date.
+ */
 export function getDayIndexFromDate(dateStr: string): number {
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
@@ -75,6 +86,28 @@ export function getDayIndexFromDate(dateStr: string): number {
   }
   return date.getDay(); // 0–6
 }
+
+/**
+ * Computes the list of day-of-week indices (0–6) that have **no availability**
+ * in the given Availability array.
+
+ * This function returns all days (0–6) that do *not* appear in any of the
+ * availability records.
+ *
+ * @param {Availability[]} availability - An array of availability objects.
+ * @returns {number[]} A list of day indices (0–6) where availability is missing.
+ */
+export const getUnavailableDays = (availability: Availability[]): number[] => {
+  const days = [0, 1, 2, 3, 4, 5, 6];
+  const available = new Set();
+  for (const a of availability) {
+    available.add(a.day_of_week);
+  }
+
+  return days.filter((day) => {
+    return !available.has(day);
+  });
+};
 
 /**
  * Converts "HH:MM" → minutes since midnight.
