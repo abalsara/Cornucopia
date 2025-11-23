@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
 import { Text, IconButton, TextInput, Button } from 'react-native-paper';
 
@@ -15,7 +15,9 @@ type NeedPayload = {
 
 type Props = {
   onClose: () => void;
-  onPost?: (payload: NeedPayload) => void;
+  initial: NeedPayload;
+  onUpdate?: (payload: NeedPayload) => void;
+  onRemove?: () => void;
 };
 
 const NEED_CATEGORIES = [
@@ -41,15 +43,15 @@ const statusColors: Record<Priority, string> = {
   Ongoing: themeColors.secondary,
 };
 
-const PRIMARY_PILL = themeColors.primary;
+const SELECTED_PILL = themeColors.primary;
 const UNSELECTED_PILL = themeColors.surfaceVariant;
 const UNSELECTED_TEXT = themeColors.onSurface;
 
-export default function NewNeedForm({ onClose, onPost }: Props) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<string | null>('Food');
-  const [priority, setPriority] = useState<Priority | null>('Urgent');
+export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: Props) {
+  const [title, setTitle] = useState(initial.title ?? '');
+  const [description, setDescription] = useState(initial.description ?? '');
+  const [category, setCategory] = useState<string | null>(initial.category ?? 'Food');
+  const [priority, setPriority] = useState<Priority | null>(initial.priority ?? 'Urgent');
 
   const priorityDescriptions: Record<Priority, string> = {
     Urgent: 'This item is needed within 24 hours',
@@ -57,8 +59,25 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
     Ongoing: 'This item is needed on an ongoing basis',
   };
 
-  const handlePost = () => {
-    onPost?.({ title, description, category, priority });
+  // "changed" determines whether the Update button should be enabled. This
+  // prevents sending updates when the user hasn't changed any fields.
+  const changed = useMemo(() => {
+    return (
+      title !== (initial.title ?? '') ||
+      description !== (initial.description ?? '') ||
+      category !== (initial.category ?? null) ||
+      priority !== (initial.priority ?? null)
+    );
+  }, [title, description, category, priority, initial]);
+
+  const handleUpdate = () => {
+    if (!changed) return;
+    onUpdate?.({ title, description, category, priority });
+    onClose();
+  };
+
+  const handleRemove = () => {
+    onRemove?.();
     onClose();
   };
 
@@ -67,7 +86,7 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
       <View style={styles.root}>
         <View style={styles.header}>
           <Text variant="headlineSmall" style={styles.headerTitle}>
-            New Need
+            Edit Need
           </Text>
           <IconButton icon="close" onPress={onClose} accessibilityLabel="Close" />
         </View>
@@ -106,7 +125,7 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
                     onPress={() => setCategory(selected ? null : c)}
                     style={[
                       styles.pill,
-                      { backgroundColor: selected ? PRIMARY_PILL : UNSELECTED_PILL },
+                      { backgroundColor: selected ? SELECTED_PILL : UNSELECTED_PILL },
                     ]}>
                     <Text style={[styles.pillText, { color: selected ? '#fff' : UNSELECTED_TEXT }]}>
                       {c}
@@ -152,8 +171,16 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
           <View style={{ height: 24 }} />
         </ScrollView>
 
-        <Button mode="contained" onPress={handlePost} style={styles.postButton}>
-          Post Need
+        <Pressable style={styles.removeWrap} onPress={handleRemove} accessibilityRole="button">
+          <Text style={styles.removeText}>Remove need</Text>
+        </Pressable>
+
+        <Button
+          mode="contained"
+          onPress={handleUpdate}
+          disabled={!changed}
+          style={styles.postButton}>
+          Update Need
         </Button>
       </View>
     </Modal>
@@ -216,5 +243,15 @@ const styles = StyleSheet.create({
     bottom: 20,
     borderRadius: 24,
     minWidth: 100,
+  },
+  removeWrap: {
+    position: 'absolute',
+    left: 20,
+    bottom: 28,
+  },
+  removeText: {
+    color: '#000',
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

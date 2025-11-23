@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Portal } from 'react-native-paper';
 
+import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
 import NewNeedForm from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
 import { lightColorScheme } from '@/src/styles/colors';
@@ -55,6 +56,16 @@ const statusColors: Record<string, string> = {
 export default function Needs() {
   const [showPostNeedForm, setShowPostNeedForm] = useState(false);
 
+  type SelectedNeed = {
+    id: string;
+    title: string;
+    description: string;
+    category: string | null;
+    priority: 'Urgent' | 'High Priority' | 'Ongoing' | null;
+  };
+
+  const [selectedNeed, setSelectedNeed] = useState<SelectedNeed | null>(null);
+
   return (
     <ThemedView>
       <Portal.Host>
@@ -82,7 +93,20 @@ export default function Needs() {
               </Text>
 
               {section.needs.map((need) => (
-                <Card key={need.id} style={styles.card} mode="elevated">
+                <Card
+                  key={need.id}
+                  style={styles.card}
+                  mode="elevated"
+                  // Opens the edit need modal
+                  onPress={() =>
+                    setSelectedNeed({
+                      id: need.id,
+                      title: need.title,
+                      description: need.subtitle,
+                      category: section.title,
+                      priority: need.status,
+                    })
+                  }>
                   <Card.Title
                     title={need.title}
                     subtitle={need.subtitle}
@@ -104,7 +128,28 @@ export default function Needs() {
             <NewNeedForm
               onClose={() => setShowPostNeedForm(false)}
               onPost={(payload) => {
+                // TODO: persist `payload` and update list
                 setShowPostNeedForm(false);
+              }}
+            />
+          )}
+
+          {selectedNeed && (
+            <EditNeedForm
+              initial={{
+                title: selectedNeed.title,
+                description: selectedNeed.description,
+                category: selectedNeed.category,
+                priority: selectedNeed.priority,
+              }}
+              onClose={() => setSelectedNeed(null)}
+              onUpdate={(payload) => {
+                // TODO: persist `payload` and update list
+                setSelectedNeed(null);
+              }}
+              onRemove={() => {
+                // TODO: delete selectedNeed and update list
+                setSelectedNeed(null);
               }}
             />
           )}
