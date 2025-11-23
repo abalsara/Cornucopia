@@ -13,30 +13,30 @@ type NeedCard = {
   status: 'Urgent' | 'High Priority' | 'Ongoing';
 };
 
-const EXAMPLE_NEEDS: { category: string; needs: NeedCard[] }[] = [
+const EXAMPLE_NEEDS: { title: string; needs: NeedCard[] }[] = [
   {
-    category: 'Food',
+    title: 'Food',
     needs: [
       { id: '1', title: 'Canned Beans', subtitle: 'Black and pinto beans', status: 'Urgent' },
       { id: '3', title: 'Rice', subtitle: 'Dry, white rice', status: 'Ongoing' },
     ],
   },
   {
-    category: 'Clothing',
+    title: 'Clothing',
     needs: [
       { id: '4', title: 'Winter Jackets', subtitle: 'All sizes, clean', status: 'High Priority' },
       { id: '5', title: 'Socks', subtitle: 'New socks only', status: 'Ongoing' },
     ],
   },
   {
-    category: 'Hygiene Products',
+    title: 'Hygiene Products',
     needs: [
       { id: '6', title: 'Toothpaste', subtitle: 'Travel-sized tubes', status: 'Ongoing' },
       { id: '7', title: 'Sanitary Pads', subtitle: 'All sizes', status: 'High Priority' },
     ],
   },
   {
-    category: 'Toys',
+    title: 'Toys',
     needs: [
       { id: '8', title: 'Stuffed Animals', subtitle: 'Small to medium', status: 'Ongoing' },
       { id: '9', title: 'Puzzles', subtitle: 'Ages 3-8', status: 'High Priority' },
@@ -48,12 +48,12 @@ const themeColors = lightColorScheme.colors;
 
 const statusColors: Record<string, string> = {
   Urgent: themeColors.error,
-  'High Priority': themeColors.warning,
+  'High Priority': 'rgb(220, 163, 17)',
   Ongoing: themeColors.secondary,
 };
 
 export default function Needs() {
-  const [addNeedModalVisible, setAddNeedModalVisible] = useState(false);
+  const [showPostNeedForm, setShowPostNeedForm] = useState(false);
 
   return (
     <ThemedView>
@@ -70,15 +70,15 @@ export default function Needs() {
             <IconButton
               icon="plus"
               size={28}
-              accessibilityLabel="Add need"
-              onPress={() => setAddNeedModalVisible(true)}
+              accessibilityLabel="Post need"
+              onPress={() => setShowPostNeedForm(true)}
             />
           </View>
 
           {EXAMPLE_NEEDS.map((section) => (
-            <View key={section.category} style={styles.sectionBlock}>
+            <View key={section.title} style={styles.sectionBlock}>
               <Text variant="titleLarge" style={styles.sectionTitle}>
-                {section.category}
+                {section.title}
               </Text>
 
               {section.needs.map((need) => (
@@ -100,12 +100,11 @@ export default function Needs() {
           ))}
         </ScrollView>
         <Portal>
-          {addNeedModalVisible && (
+          {showPostNeedForm && (
             <NewNeedForm
-              onClose={() => setAddNeedModalVisible(false)}
+              onClose={() => setShowPostNeedForm(false)}
               onPost={(payload) => {
-                console.log('New need posted:', payload);
-                setAddNeedModalVisible(false);
+                setShowPostNeedForm(false);
               }}
             />
           )}
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: 6,
-    color: '#616161',
+    color: '#888',
   },
   sectionBlock: {
     marginTop: 18,
@@ -146,10 +145,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     minHeight: 72,
     overflow: 'hidden',
-  },
-  cardSubtitle: {
-    marginTop: 6,
-    color: '#616161',
   },
   statusText: {
     marginTop: 0,

@@ -35,7 +35,7 @@ const themeColors = lightColorScheme.colors;
 
 const statusColors: Record<Priority, string> = {
   Urgent: themeColors.error,
-  'High Priority': themeColors.warning,
+  'High Priority': 'rgb(220, 163, 17)',
   Ongoing: themeColors.secondary,
 };
 
@@ -96,18 +96,18 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
               Category
             </Text>
             <View style={styles.pillsWrap}>
-              {NEED_CATEGORIES.map((categoryName) => {
-                const selected = categoryName === category;
+              {NEED_CATEGORIES.map((c) => {
+                const selected = c === category;
                 return (
                   <Pressable
-                    key={categoryName}
-                    onPress={() => setCategory(selected ? null : categoryName)}
+                    key={c}
+                    onPress={() => setCategory(selected ? null : c)}
                     style={[
                       styles.pill,
                       { backgroundColor: selected ? PRIMARY_PILL : UNSELECTED_PILL },
                     ]}>
                     <Text style={[styles.pillText, { color: selected ? '#fff' : UNSELECTED_TEXT }]}>
-                      {categoryName}
+                      {c}
                     </Text>
                   </Pressable>
                 );
@@ -120,20 +120,20 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
               Priority
             </Text>
             <View style={styles.pillsWrap}>
-              {(['Urgent', 'High Priority', 'Ongoing'] as Priority[]).map((priorityLevel) => {
-                const selected = priorityLevel === priority;
+              {(['Urgent', 'High Priority', 'Ongoing'] as Priority[]).map((p) => {
+                const selected = p === priority;
                 return (
                   <Pressable
-                    key={priorityLevel}
-                    onPress={() => setPriority(selected ? null : priorityLevel)}
+                    key={p}
+                    onPress={() => setPriority(selected ? null : p)}
                     style={[
                       styles.pill,
                       {
-                        backgroundColor: selected ? statusColors[priorityLevel] : UNSELECTED_PILL,
+                        backgroundColor: selected ? statusColors[p] : UNSELECTED_PILL,
                       },
                     ]}>
                     <Text style={[styles.pillText, { color: selected ? '#fff' : UNSELECTED_TEXT }]}>
-                      {priorityLevel}
+                      {p}
                     </Text>
                   </Pressable>
                 );
@@ -151,7 +151,7 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
         </ScrollView>
 
         <Button mode="contained" onPress={handlePost} style={styles.postButton}>
-          Post
+          Post Need
         </Button>
       </View>
     </Modal>
