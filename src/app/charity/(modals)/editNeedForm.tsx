@@ -33,9 +33,6 @@ const NEED_CATEGORIES = [
   'Uncategorized',
 ];
 
-// Theme values are read inside the component via `useTheme` so the UI
-// follows the currently selected theme (light/dark/custom).
-
 export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: Props) {
   const [title, setTitle] = useState(initial.title ?? '');
   const [description, setDescription] = useState(initial.description ?? '');
