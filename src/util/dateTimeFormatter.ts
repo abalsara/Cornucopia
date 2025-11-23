@@ -77,6 +77,27 @@ export function getDayIndexFromDate(dateStr: string): number {
 }
 
 /**
+ * Converts "HH:MM" → minutes since midnight.
+ */
+export const toMinutes = (hhmm: string): number => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+
+/**
+ * Converts minutes since midnight → "HH:MM".
+ */
+export const toHHMM = (minutes: number): string => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+
+  if (h < 12) {
+    return `${h}:${String(m).padStart(2, '0')} am`;
+  }
+  return `${h === 12 ? 12 : h % 12}:${String(m).padStart(2, '0')} pm`;
+};
+
+/**
  * Helper: Returns the ordinal suffix for a given day (e.g., "st", "nd", "rd", "th").
  */
 function getOrdinalSuffix(day: number): string {
