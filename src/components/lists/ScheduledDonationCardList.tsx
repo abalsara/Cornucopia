@@ -7,6 +7,7 @@ import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 type ScheduledDonationCardListProps = {
   onCardPress?: (item: ScheduledDonation) => void;
   scheduledDonations: ScheduledDonation[];
+  screenType: 'charity' | 'donor';
 };
 
 export default function ScheduledDonationCardList(props: ScheduledDonationCardListProps) {
@@ -17,9 +18,10 @@ export default function ScheduledDonationCardList(props: ScheduledDonationCardLi
     <>
       {props.scheduledDonations.map((scheduledDonation) => (
         <ScheduledDonationCard
-          scheudledDonation={scheduledDonation}
+          scheduledDonation={scheduledDonation}
           onPress={props.onCardPress}
           key={`${scheduledDonation.cid}${scheduledDonation.scheduledDate}`}
+          screenType={props.screenType}
         />
       ))}
     </>

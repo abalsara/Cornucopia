@@ -25,6 +25,7 @@ export default function Index() {
         <ScheduledDonationCardList
           scheduledDonations={scheduledDonations}
           onCardPress={handleCardPress}
+          screenType="donor"
         />
       </View>
     </ThemedView>

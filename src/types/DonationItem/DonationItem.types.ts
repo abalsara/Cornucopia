@@ -29,8 +29,6 @@ export type DonationItem =
 // all DonationItems have at least these attributes
 export type BaseDonationItem = {
   itemId: string;
-  pid?: string;
-  cid: string;
   itemName: string;
   notes: string;
   quantity: number;

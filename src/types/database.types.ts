@@ -232,36 +232,58 @@ export type Database = {
       };
       Donation: {
         Row: {
-          cid: string | null;
+          cid: string;
           created_at: string;
           donation_id: string;
-          fulfilled: boolean | null;
-          item_id: string | null;
-          pid: string | null;
-          quantitiy_comitted: number | null;
-          scheduled_date: string | null;
+          fulfilled: boolean;
+          item_id: string;
+          pid: string;
+          quantitiy_comitted: number;
+          scheduled_date: string;
         };
         Insert: {
-          cid?: string | null;
+          cid: string;
           created_at?: string;
           donation_id?: string;
-          fulfilled?: boolean | null;
-          item_id?: string | null;
-          pid?: string | null;
-          quantitiy_comitted?: number | null;
-          scheduled_date?: string | null;
+          fulfilled?: boolean;
+          item_id: string;
+          pid: string;
+          quantitiy_comitted?: number;
+          scheduled_date: string;
         };
         Update: {
-          cid?: string | null;
+          cid?: string;
           created_at?: string;
           donation_id?: string;
-          fulfilled?: boolean | null;
-          item_id?: string | null;
-          pid?: string | null;
-          quantitiy_comitted?: number | null;
-          scheduled_date?: string | null;
+          fulfilled?: boolean;
+          item_id?: string;
+          pid?: string;
+          quantitiy_comitted?: number;
+          scheduled_date?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Donation_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Donation_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
+          {
+            foreignKeyName: 'Donation_pid_fkey';
+            columns: ['pid'];
+            isOneToOne: false;
+            referencedRelation: 'Profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Electronics: {
         Row: {
