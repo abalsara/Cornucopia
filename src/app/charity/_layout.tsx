@@ -8,6 +8,7 @@ export default function CharityLayout() {
         headerShown: false,
       }}>
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="pages/charityDonationDetails" />
     </Stack>
   );
 }

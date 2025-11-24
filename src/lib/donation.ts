@@ -6,7 +6,7 @@ import { Tables } from '../types/database.types';
 
 export type Donation = Tables<'Donation'>;
 
-export const getCharityScheduledDonations = async (): Promise<ScheduledDonation[]> => {
+export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDonation[]> => {
   const donations = await fetchDonations();
   const adminNeeds = await fetchNeedsByAdmin();
   const user = await supabase.auth.getUser();
