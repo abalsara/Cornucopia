@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, Portal, Text } from 'react-native-paper';
+import { Appbar, Portal, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -23,6 +23,7 @@ export default function CharityDonationDetails() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DonationItem | undefined>(undefined);
   const router = useRouter();
+  const theme = useTheme();
 
   const date = new Date(dateString);
   useEffect(() => {
@@ -49,6 +50,35 @@ export default function CharityDonationDetails() {
     setModalVisible(true);
   };
 
+  const renderStatusBanner = (): JSX.Element | undefined => {
+    if (donation.fulfilled) {
+      return (
+        <View
+          style={{
+            ...styles.banner,
+            borderColor: theme.colors.secondary,
+          }}>
+          <Text style={{ color: theme.colors.secondary, margin: 4 }}>
+            This donation was marked as received
+          </Text>
+        </View>
+      );
+    }
+    const now = new Date();
+    const expired = now.getTime() - donation.scheduledDate.getTime() > 0;
+    if (expired) {
+      return (
+        <View
+          style={{
+            ...styles.banner,
+            borderColor: theme.colors.error,
+          }}>
+          <Text style={{ color: theme.colors.error, margin: 4 }}>This donation has expired</Text>
+        </View>
+      );
+    }
+  };
+
   return (
     <ThemedView>
       <Portal.Host>
@@ -58,6 +88,7 @@ export default function CharityDonationDetails() {
         <View style={styles.container}>
           <View style={{ gap: 2 }}>
             <Text variant="headlineMedium">Donation Details</Text>
+            {renderStatusBanner()}
             <Text variant="bodyLarge">
               {donor.first_name} {donor.last_name}
             </Text>
@@ -80,7 +111,7 @@ export default function CharityDonationDetails() {
           />
         </Portal>
         <View style={styles.button}>
-          <ActionButton label="Review & Complete Donation" onPress={() => {}} />
+          <ActionButton label="Complete Donation" onPress={() => {}} />
         </View>
       </Portal.Host>
     </ThemedView>
@@ -96,5 +127,10 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 20,
     marginVertical: 16,
+  },
+  banner: {
+    minHeight: 60,
+    marginVertical: 12,
+    borderWidth: 2,
   },
 });

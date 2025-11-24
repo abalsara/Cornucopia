@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Card, Text } from 'react-native-paper';
+import { JSX, useEffect, useState } from 'react';
+import { Card, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '../CenteredActivityIndicator';
 
@@ -17,6 +17,7 @@ type ScheduledDonationCardProps = {
 export default function ScheduledDonationCard(props: ScheduledDonationCardProps) {
   const [loading, setLoading] = useState(true);
   const [donor, setDonor] = useState<Profile | undefined>(undefined);
+  const theme = useTheme();
 
   useEffect(() => {
     getProfile(props.scheduledDonation.pid).then((donor) => {
@@ -45,6 +46,17 @@ export default function ScheduledDonationCard(props: ScheduledDonationCardProps)
     return description;
   };
 
+  const renderStatus = (): JSX.Element | undefined => {
+    if (props.scheduledDonation.fulfilled) {
+      return <Text style={{ color: theme.colors.secondary }}>Received</Text>;
+    }
+    const now = new Date();
+    const expired = now.getTime() - props.scheduledDonation.scheduledDate.getTime() > 0;
+    if (expired) {
+      return <Text style={{ color: theme.colors.error }}>Expired</Text>;
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -59,7 +71,12 @@ export default function ScheduledDonationCard(props: ScheduledDonationCardProps)
 
   return (
     <Card style={{ marginTop: 10 }} onPress={handlePress}>
-      <Card.Title title={title} subtitle={getDescription()} />
+      <Card.Title
+        title={title}
+        subtitle={getDescription()}
+        right={() => renderStatus()}
+        rightStyle={{ marginRight: 20, marginTop: -24 }}
+      />
       <Card.Content>
         <Text>
           {formatDate(props.scheduledDonation.scheduledDate)} at{' '}
