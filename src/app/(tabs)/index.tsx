@@ -5,10 +5,12 @@ import { Text } from 'react-native-paper';
 import ThemedView from '@/src/components/ThemedView';
 import ScheduledDonationCardList from '@/src/components/lists/ScheduledDonationCardList';
 import 'react-native-url-polyfill/auto';
+import { getScheduledDonations } from '@/src/stores/scheduledDonations';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
 export default function Index() {
   const router = useRouter();
+  const scheduledDonations = getScheduledDonations();
 
   const handleCardPress = (scheduledDonation: ScheduledDonation): void => {
     router.push(
@@ -20,7 +22,10 @@ export default function Index() {
     <ThemedView>
       <View style={styles.container}>
         <Text>Upcoming</Text>
-        <ScheduledDonationCardList onCardPress={handleCardPress} />
+        <ScheduledDonationCardList
+          scheduledDonations={scheduledDonations}
+          onCardPress={handleCardPress}
+        />
       </View>
     </ThemedView>
   );

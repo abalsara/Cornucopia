@@ -36,10 +36,11 @@ export const removeScheduledDonation = (cid: string, date: Date): void => {
  */
 export const setScheduledDonation = (
   cid: string,
+  pid: string,
   items: DonationItem[],
   scheduledDate: Date,
 ): void => {
-  scheduledDonations.set(hashSchedule(cid, scheduledDate), { cid, scheduledDate, items });
+  scheduledDonations.set(hashSchedule(cid, scheduledDate), { cid, pid, scheduledDate, items });
 };
 
 /**

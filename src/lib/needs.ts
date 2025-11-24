@@ -1,5 +1,11 @@
+import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
+
+export type AdminNeeds = {
+  cid: string | null;
+  needs: DonationItem[];
+};
 
 /**
  * Get the charity needs for a given charity ID.
@@ -33,6 +39,20 @@ export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
 
   return data.needs ?? [];
 }
+
+export const fetchNeedsByAdmin = async (): Promise<AdminNeeds> => {
+  const admin = await fetchAdmin();
+  if (!admin) {
+    throw new Error('User is not a charity administrator');
+  }
+
+  const { cid } = admin;
+  if (cid !== null) {
+    const needs = await getCharityNeeds(cid);
+    return { cid, needs };
+  }
+  return { cid, needs: [] };
+};
 
 /**
  * Creates a new need entry in the specified table for the given charity ID (cid).
@@ -71,6 +91,8 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
     // Merge shared fields from both sources
     const base = {
       category,
+      cid: need.cid ?? request.cid ?? '',
+      itemId: need.item_id ?? request.item_id ?? '',
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
       quantity: need.quantity ?? request.quantitiy ?? 1,
