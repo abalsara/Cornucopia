@@ -8,9 +8,12 @@ import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { en, registerTranslation } from 'react-native-paper-dates';
 
 import ThemedView from '../components/ThemedView';
+import { fetchAdmin } from '../lib/admin';
 import { fetchAllCharities } from '../lib/charities';
+import { fetchAllRatings } from '../lib/ratings';
 import { supabase } from '../lib/supabase';
 import { initCharitiesStore } from '../stores/charities';
+import { initRatingsStore } from '../stores/ratings';
 import { darkTheme, lightTheme } from '../styles/themes';
 
 /**
@@ -19,7 +22,6 @@ import { darkTheme, lightTheme } from '../styles/themes';
  * --------------------------------------------------------
  */
 const isAndroid = require('react-native').Platform.OS === 'android';
-// const isHermesEnabled = !!global.HermesInternal;
 
 if (isAndroid) {
   require('@formatjs/intl-getcanonicallocales/polyfill');
@@ -56,7 +58,6 @@ registerTranslation('en', en);
  */
 
 export default function RootLayout() {
-  const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [isDonor, setIsDonor] = useState<boolean | undefined>(undefined);
 
@@ -69,30 +70,56 @@ export default function RootLayout() {
     SystemUI.setBackgroundColorAsync('black');
   }
 
-  const handleSessionChange = async (session: Session | null): Promise<void> => {
+  /**
+   * Handles updates to the authentication session and determines whether
+   * the current user should be treated as a donor or an admin.
+   *
+   * Behavior:
+   * - If a session exists, the function attempts to fetch the admin record.
+   *   - If an admin record is found, the user is marked *not* a donor.
+   *   - If no admin record exists, the user is treated as a donor.
+   * - If no session exists, the user is always treated as a donor.
+   *
+   * After determining donor/admin status, the function updates session state
+   * and clears the loading state.
+   *
+   * @param {Session | null} session - The updated authentication session, or null if the user is signed out.
+   * @returns {Promise<void>} Resolves when session and loading state have been updated.
+   *
+   * @throws {Error} Throws if fetching the admin record fails.
+   */
+  const handleAuthEvent = async (session: Session | null): Promise<void> => {
     if (session) {
-      const { data, error } = await supabase.functions.invoke('get-user-type');
-      if (error)
-        throw new Error(`An unexpected error occurred while invoking get-user-type: ${error}`);
-
-      setIsDonor(data.userType === 'donor');
+      try {
+        const admin = await fetchAdmin();
+        setIsDonor(admin === undefined);
+      } catch (error) {
+        throw new Error(`Error while calling handleSessionChange: ${error}`);
+      }
     } else {
       setIsDonor(true);
     }
     setSession(session);
-    setLoading(false);
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => handleSessionChange(session));
-    supabase.auth.onAuthStateChange((_event, session) => handleSessionChange(session));
+    supabase.auth.getSession().then(({ data: { session } }) => handleAuthEvent(session));
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      handleAuthEvent(session);
+    });
 
     // initialize global state
     fetchAllCharities().then((charities) => initCharitiesStore(charities));
+    fetchAllRatings().then((ratings) => initRatingsStore(ratings));
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // check if isDonor is undefined to prevent prematurely showing the auth screen
-  if (loading || isDonor === undefined) {
+  if (isDonor === undefined) {
     return (
       <PaperProvider theme={paperTheme}>
         <ThemedView>

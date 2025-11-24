@@ -105,6 +105,44 @@ export type Database = {
           },
         ];
       };
+      Availability: {
+        Row: {
+          cid: string;
+          close_time: string;
+          created_at: string;
+          day_of_week: number;
+          id: string;
+          open_time: string;
+          period_index: number;
+        };
+        Insert: {
+          cid: string;
+          close_time: string;
+          created_at?: string;
+          day_of_week: number;
+          id?: string;
+          open_time: string;
+          period_index?: number;
+        };
+        Update: {
+          cid?: string;
+          close_time?: string;
+          created_at?: string;
+          day_of_week?: number;
+          id?: string;
+          open_time?: string;
+          period_index?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Availability_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+        ];
+      };
       Charities: {
         Row: {
           address: string;
