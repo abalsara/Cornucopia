@@ -238,7 +238,7 @@ export type Database = {
           fulfilled: boolean;
           item_id: string;
           pid: string;
-          quantitiy_comitted: number;
+          quantity_comitted: number;
           scheduled_date: string;
         };
         Insert: {
@@ -248,7 +248,7 @@ export type Database = {
           fulfilled?: boolean;
           item_id: string;
           pid: string;
-          quantitiy_comitted?: number;
+          quantity_comitted?: number;
           scheduled_date: string;
         };
         Update: {
@@ -258,7 +258,7 @@ export type Database = {
           fulfilled?: boolean;
           item_id?: string;
           pid?: string;
-          quantitiy_comitted?: number;
+          quantity_comitted?: number;
           scheduled_date?: string;
         };
         Relationships: [
