@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
 import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
-import { getAdminByUid } from '@/src/lib/admin';
-import { getCurrentUserId } from '@/src/lib/userId';
 import { type Database } from '@/src/types/database.types';
 import { Constants } from '@/src/types/database.types';
 
