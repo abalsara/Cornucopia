@@ -63,13 +63,15 @@ Below is an overview of the key directories and files:
 
 1. Complete all the steps under [General prerequisites](#general-prerequisites)
 
-2. Install a JDK (e.g., [Oracle JDK 21](https://www.oracle.com/java/technologies/downloads/#java21))
+2. Install a JDK. We recommend [Java 21](https://www.oracle.com/java/technologies/downloads/#java21) as newer versions may cause compatibility issues.
 
-3. Install [Android Studio](https://developer.android.com/studio) using the default installation options. This will additionally install the Android SDK and an emulator.
+3. Ensure that your JAVA_HOME variable is set to the correct Java installation as described on [this page](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/).
 
-4. Configure the Android environment variables by following the instructions under [Android configuration](#android-configuration):
+4. Install [Android Studio](https://developer.android.com/studio) using the default installation options. This will additionally install the Android SDK and an emulator.
 
-5. Build and launch the app
+5. Configure the Android environment variables by following the instructions under [Android configuration](#android-configuration).
+
+6. Build and launch the app
    `npx expo run:android`
 
 ### Android configuration
