@@ -13,6 +13,13 @@ type DonationDetails = {
   fulfilled: boolean;
 };
 
+/**
+ * Fetches all donations and the admin's needs, then merges them into a list
+ * of scheduled donations
+ *
+ * @returns {Promise<ScheduledDonation[]>} A list of scheduled donation groups.
+ * @throws {Error} If the user ID cannot be retrieved.
+ */
 export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDonation[]> => {
   const donations = await fetchDonations();
   const adminNeeds = await fetchNeedsByAdmin();
@@ -20,9 +27,16 @@ export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDo
   const uid = user.data.user?.id;
   if (!uid) throw new Error('user id is undefined');
 
-  return donationsToScheduledDonations(donations, adminNeeds.needs, adminNeeds.cid ?? 'null');
+  return groupDonations(donations, adminNeeds.needs, adminNeeds.cid ?? 'null');
 };
 
+/**
+ * Fetches all donation records from the database.
+ * RLS policy returns data where cid column matches the charity associated with the admin
+ *
+ * @returns {Promise<Donation[]>} A list of all donations.
+ * @throws {PostgrestError} If Supabase query fails.
+ */
 export const fetchDonations = async (): Promise<Donation[]> => {
   const { data, error } = await supabase.from('Donation').select();
   if (error) throw error;
@@ -31,6 +45,15 @@ export const fetchDonations = async (): Promise<Donation[]> => {
   return donations;
 };
 
+/**
+ * Updates all donation items within a scheduled donation as fulfilled or not
+ * by performing an UPSERT operation.
+ *
+ * @param {ScheduledDonation} scheduledDonation - The donation group to update.
+ * @returns {Promise<void>} Resolves when all updates are committed.
+ * @throws {Error} If any item is missing its donationId.
+ * @throws {PostgrestError} If the database update fails.
+ */
 export const updateDonationsAsFulfilled = async (
   scheduledDonation: ScheduledDonation,
 ): Promise<void> => {
@@ -53,8 +76,17 @@ export const updateDonationsAsFulfilled = async (
   if (error) throw error;
 };
 
-// returns a new array of items that exist in both parameters
-const donationsToScheduledDonations = (
+/**
+ * Converts raw donation records and needs into grouped scheduled donation objects.
+ * A scheduled donation groups all DonationItems that share the same pid
+ * and scheduled date.
+ *
+ * @param {Donation[]} donations - Raw donation rows from the database.
+ * @param {DonationItem[]} needs - Need items associated with the admin’s charity.
+ * @param {string} cid - The charity ID.
+ * @returns {ScheduledDonation[]} A list of grouped scheduled donations.
+ */
+const groupDonations = (
   donations: Donation[],
   needs: DonationItem[],
   cid: string,
@@ -69,7 +101,7 @@ const donationsToScheduledDonations = (
       merge.donationId = donation.donation_id;
       merge.fulfilled = donation.fulfilled;
 
-      const key = hashDonation(donation.scheduled_date, donation.pid);
+      const key = hashDonationKey(donation.scheduled_date, donation.pid);
 
       if (!donationMap.get(key)) donationMap.set(key, []);
       const curr = donationMap.get(key);
@@ -101,6 +133,14 @@ const donationsToScheduledDonations = (
   return items;
 };
 
-const hashDonation = (scheduledDate: string, uid: string): string => {
+/**
+ * Generates a unique hash for grouping donation items based on
+ * scheduled date and pid.
+ *
+ * @param {string} scheduledDate - The scheduled pickup date.
+ * @param {string} uid - The unique donor ID.
+ * @returns {string} A stable composite hash key.
+ */
+const hashDonationKey = (scheduledDate: string, uid: string): string => {
   return `${scheduledDate}?${uid}`;
 };

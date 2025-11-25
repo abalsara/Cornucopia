@@ -12,7 +12,7 @@ import { updateDonationsAsFulfilled } from '@/src/lib/donation';
 import { getProfile, Profile } from '@/src/lib/profiles';
 import {
   getCharityScheduledDonation,
-  initCharityScheduledDonationsStore,
+  loadScheduledDonations,
 } from '@/src/stores/charityScheduledDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
@@ -103,7 +103,7 @@ export default function CharityDonationDetails() {
       item.fulfilled = true;
     }
     await updateDonationsAsFulfilled(updated);
-    await initCharityScheduledDonationsStore();
+    await loadScheduledDonations();
     setDonation(getCharityScheduledDonation(date, pid));
     setLoading(false);
   };

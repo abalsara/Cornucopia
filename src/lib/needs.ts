@@ -40,6 +40,16 @@ export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
   return data.needs ?? [];
 }
 
+/**
+ * Fetches all needs associated with the charity administered by the
+ * currently authenticated user. If the user is not an administrator, an error
+ * is thrown. If the administrator's charity ID  is null, an empty list
+ * of needs is returned.
+ *
+ * @returns {Promise<AdminNeeds>} An object containing the administrator's
+ *   charity ID and its associated need items.
+ * @throws {Error} If the authenticated user is not a charity administrator.
+ */
 export const fetchNeedsByAdmin = async (): Promise<AdminNeeds> => {
   const admin = await fetchAdmin();
   if (!admin) {

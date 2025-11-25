@@ -7,7 +7,7 @@ import ThemedView from '@/src/components/ThemedView';
 import ScheduledDonationCardList from '@/src/components/lists/ScheduledDonationCardList';
 import {
   getAllCharityScheduledDonations,
-  initCharityScheduledDonationsStore,
+  loadScheduledDonations,
 } from '@/src/stores/charityScheduledDonations';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
@@ -19,7 +19,7 @@ export default function Donations() {
 
   // set donation state
   useFocusEffect(() => {
-    initCharityScheduledDonationsStore().then(() => {
+    loadScheduledDonations().then(() => {
       setDonations(getAllCharityScheduledDonations());
       setLoading(false);
     });

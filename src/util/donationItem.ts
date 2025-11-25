@@ -36,6 +36,11 @@ export const getDonationCardSubtitle = (item: DonationItem): string => {
   }
 };
 
+/**
+ * Checks if at least one of the scheduled donation items is fulfilled
+ * @param scheduledDonation - The scheduled donations to check
+ * @returns true iff at least one of the scheduled donation items is fulfilled
+ */
 export const scheduledDonationIsFulfilled = (scheduledDonation: ScheduledDonation): boolean => {
   for (const item of scheduledDonation.items) {
     if (item.fulfilled === true) {
