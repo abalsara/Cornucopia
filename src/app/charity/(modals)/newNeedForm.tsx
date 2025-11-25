@@ -7,16 +7,16 @@ import { Constants } from '@/src/types/database.types';
 
 export type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 
-type GenderT = Database['public']['Enums']['GenderT'];
-type AgeGroupT = Database['public']['Enums']['AgeGroupT'];
-type StorageRequirementT = Database['public']['Enums']['StorageRequirementT'];
-type AnimalTypeT = Database['public']['Enums']['AnimalTypeT'];
-type AnimalNeedT = Database['public']['Enums']['AnimalNeedT'];
-type ElectronicsTypeT = Database['public']['Enums']['ElectronicsTypeT'];
-type FurnitureTypeT = Database['public']['Enums']['FurnitureTypeT'];
-type HouseholdGoodsTypeT = Database['public']['Enums']['HouseholdGoodsTypeT'];
-type MedicalSuppliesTypeT = Database['public']['Enums']['MedicalSuppliesTypeT'];
-type SportsEquipmentTypeT = Database['public']['Enums']['SportsEquipmentTypeT'];
+export type GenderT = Database['public']['Enums']['GenderT'];
+export type AgeGroupT = Database['public']['Enums']['AgeGroupT'];
+export type StorageRequirementT = Database['public']['Enums']['StorageRequirementT'];
+export type AnimalTypeT = Database['public']['Enums']['AnimalTypeT'];
+export type AnimalNeedT = Database['public']['Enums']['AnimalNeedT'];
+export type ElectronicsTypeT = Database['public']['Enums']['ElectronicsTypeT'];
+export type FurnitureTypeT = Database['public']['Enums']['FurnitureTypeT'];
+export type HouseholdGoodsTypeT = Database['public']['Enums']['HouseholdGoodsTypeT'];
+export type MedicalSuppliesTypeT = Database['public']['Enums']['MedicalSuppliesTypeT'];
+export type SportsEquipmentTypeT = Database['public']['Enums']['SportsEquipmentTypeT'];
 
 // Allowing null values to create valid JSON when fields are not set
 export type NeedPayload = {
@@ -38,8 +38,6 @@ export type NeedPayload = {
   animal?: AnimalTypeT;
   gender?: GenderT;
   age_group?: AgeGroupT;
-  condition?: string;
-  power_type?: string;
   storage_reqs?: StorageRequirementT;
 };
 
@@ -60,7 +58,7 @@ const CATEGORY_FIELDS: Record<string, string[]> = {
   'Medical Supplies': ['type'],
   'School & Office Supplies': [],
   'Animal Care Supplies': ['animal', 'type'],
-  Electronics: ['type', 'power_type'],
+  Electronics: ['type'],
   'Sports Equipment': ['type', 'age_group'],
   Uncategorized: [],
 };
@@ -75,14 +73,12 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
   const [notes, setNotes] = useState('');
   const [category, setCategory] = useState<string | null>('Food');
   const [priority, setPriority] = useState<Priority | null>('Urgent');
-  const [unit] = useState<string | undefined>(undefined);
-  const [quantity] = useState<number | undefined>(undefined);
+  const [unit, setUnit] = useState<string>('Ea.');
+  const [quantity, setQuantity] = useState<number>(1);
   const [type, setType] = useState<any>(undefined);
   const [animal, setAnimal] = useState<AnimalTypeT | undefined>(undefined);
   const [gender, setGender] = useState<GenderT | undefined>(undefined);
   const [age_group, setAgeGroup] = useState<AgeGroupT | undefined>(undefined);
-  const [condition, setCondition] = useState<string | undefined>(undefined);
-  const [power_type, setPowerType] = useState<string | undefined>(undefined);
   const [storage_reqs, setStorageReqs] = useState<StorageRequirementT | undefined>(undefined);
   const [menuVisible, setMenuVisible] = useState<Record<string, boolean>>({});
 
@@ -147,8 +143,6 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
       animal,
       gender,
       age_group,
-      condition,
-      power_type,
       storage_reqs,
     });
     onClose();
@@ -232,6 +226,27 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
             style={[styles.input, styles.multiline]}
           />
 
+          <View style={styles.rowInputs}>
+            <TextInput
+              mode="outlined"
+              label="Quantity"
+              value={quantity.toString()}
+              onChangeText={(text) => {
+                const num = parseInt(text) || 1;
+                setQuantity(num);
+              }}
+              keyboardType="numeric"
+              style={[styles.input, styles.halfWidth]}
+            />
+            <TextInput
+              mode="outlined"
+              label="Unit"
+              value={unit}
+              onChangeText={setUnit}
+              style={[styles.input, styles.halfWidth]}
+            />
+          </View>
+
           <View style={styles.section}>
             <Text variant="titleMedium" style={styles.sectionTitle}>
               Category
@@ -305,11 +320,7 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
                         ? animal
                         : field === 'type'
                           ? type
-                          : field === 'condition'
-                            ? condition
-                            : field === 'power_type'
-                              ? power_type
-                              : undefined,
+                          : undefined,
                 field === 'storage_reqs'
                   ? setStorageReqs
                   : field === 'age_group'
@@ -320,11 +331,7 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
                         ? setAnimal
                         : field === 'type'
                           ? setType
-                          : field === 'condition'
-                            ? setCondition
-                            : field === 'power_type'
-                              ? setPowerType
-                              : () => {},
+                          : () => {},
               )}
             </View>
           ))}
@@ -422,5 +429,12 @@ const styles = StyleSheet.create({
   dropdownItem: {
     padding: 16,
     borderBottomWidth: 1,
+  },
+  rowInputs: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  halfWidth: {
+    flex: 1,
   },
 });

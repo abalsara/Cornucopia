@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
 import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
@@ -38,18 +38,26 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
   const [notes, setNotes] = useState(initial.notes ?? '');
   const [category, setCategory] = useState<string | null>(initial.category ?? 'Food');
   const [priority, setPriority] = useState<Priority | null>(initial.priority ?? 'Urgent');
-  const [unit, setUnit] = useState(initial.unit ?? '');
-  const [quantity, setQuantity] = useState(initial.quantity ?? 0);
+  const [unit, setUnit] = useState(initial.unit ?? 'Ea.');
+  const [quantity, setQuantity] = useState(initial.quantity ?? 1);
   const [type, setType] = useState<any>(initial.type);
   const [animal, setAnimal] = useState<AnimalTypeT | undefined>(initial.animal);
   const [gender, setGender] = useState<GenderT | undefined>(initial.gender);
   const [age_group, setAgeGroup] = useState<AgeGroupT | undefined>(initial.age_group);
-  const [condition, setCondition] = useState(initial.condition ?? '');
-  const [power_type, setPowerType] = useState(initial.power_type ?? '');
   const [storage_reqs, setStorageReqs] = useState<StorageRequirementT | undefined>(
     initial.storage_reqs,
   );
   const [menuVisible, setMenuVisible] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (category !== initial.category) {
+      setType(undefined);
+      setAnimal(undefined);
+      setGender(undefined);
+      setAgeGroup(undefined);
+      setStorageReqs(undefined);
+    }
+  }, [category, initial.category]);
 
   const theme = useTheme();
   const themeColors = theme.colors;
@@ -105,14 +113,12 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
       notes !== (initial.notes ?? '') ||
       category !== (initial.category ?? null) ||
       priority !== (initial.priority ?? null) ||
-      unit !== (initial.unit ?? '') ||
-      quantity !== (initial.quantity ?? 0) ||
+      unit !== (initial.unit ?? 'Ea.') ||
+      quantity !== (initial.quantity ?? 1) ||
       type !== initial.type ||
       animal !== initial.animal ||
       gender !== initial.gender ||
       age_group !== initial.age_group ||
-      condition !== (initial.condition ?? '') ||
-      power_type !== (initial.power_type ?? '') ||
       storage_reqs !== initial.storage_reqs
     );
   }, [
@@ -126,8 +132,6 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
     animal,
     gender,
     age_group,
-    condition,
-    power_type,
     storage_reqs,
     initial,
   ]);
@@ -146,8 +150,6 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
       animal,
       gender,
       age_group,
-      condition,
-      power_type,
       storage_reqs,
     });
     onClose();
@@ -236,6 +238,27 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
             style={[styles.input, styles.multiline]}
           />
 
+          <View style={styles.rowInputs}>
+            <TextInput
+              mode="outlined"
+              label="Quantity"
+              value={quantity.toString()}
+              onChangeText={(text) => {
+                const num = parseInt(text) || 1;
+                setQuantity(num);
+              }}
+              keyboardType="numeric"
+              style={[styles.input, styles.halfWidth]}
+            />
+            <TextInput
+              mode="outlined"
+              label="Unit"
+              value={unit}
+              onChangeText={setUnit}
+              style={[styles.input, styles.halfWidth]}
+            />
+          </View>
+
           <View style={styles.section}>
             <Text variant="titleMedium" style={styles.sectionTitle}>
               Category
@@ -246,7 +269,10 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
                 return (
                   <Pressable
                     key={c}
-                    onPress={() => setCategory(selected ? null : c)}
+                    onPress={() => {
+                      const newCategory = selected ? null : c;
+                      setCategory(newCategory);
+                    }}
                     style={[
                       styles.pill,
                       { backgroundColor: selected ? SELECTED_PILL : UNSELECTED_PILL },
@@ -265,7 +291,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
               Priority
             </Text>
             <View style={styles.pillsWrap}>
-              {(['Urgent', 'High Priority', 'Ongoing'] as Priority[]).map((p) => {
+              {(['Urgent', 'High Priority', 'Ongoing', 'Low'] as Priority[]).map((p) => {
                 const selected = p === priority;
                 return (
                   <Pressable
@@ -309,11 +335,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
                         ? animal
                         : field === 'type'
                           ? type
-                          : field === 'condition'
-                            ? condition
-                            : field === 'power_type'
-                              ? power_type
-                              : undefined,
+                          : undefined,
                 field === 'storage_reqs'
                   ? setStorageReqs
                   : field === 'age_group'
@@ -324,11 +346,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
                         ? setAnimal
                         : field === 'type'
                           ? setType
-                          : field === 'condition'
-                            ? setCondition
-                            : field === 'power_type'
-                              ? setPowerType
-                              : () => {},
+                          : () => {},
               )}
             </View>
           ))}
@@ -444,5 +462,12 @@ const styles = StyleSheet.create({
   dropdownItem: {
     padding: 16,
     borderBottomWidth: 1,
+  },
+  rowInputs: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  halfWidth: {
+    flex: 1,
   },
 });
