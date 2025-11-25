@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
@@ -40,7 +39,7 @@ export default function ReviewAndConfirmPage() {
     for (const item of donationItems) {
       await createDonation(id, item.item_id, item.cid, item.quantity, date.toISOString());
     }
-    setScheduledDonation(cid, donationItems, date);
+    setScheduledDonation(cid, id, donationItems, date);
     router.push(`/pages/donationConfirmedPage?cid=${cid}`);
   };
 

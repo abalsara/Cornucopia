@@ -2,9 +2,9 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, Divider, List, Portal, Text, useTheme } from 'react-native-paper';
+import { Appbar, List, Portal, Text, useTheme } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
@@ -13,6 +13,7 @@ import { getCharity } from '@/src/stores/charities';
 import { getScheduledDonation, removeScheduledDonation } from '@/src/stores/scheduledDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
+import { scheduledDonationIsFulfilled } from '@/src/util/donationItem';
 
 /**
  * This page renders information about a scheduled donation including
@@ -43,6 +44,35 @@ export default function DonationDetailsPage() {
     router.dismissAll();
   };
 
+  const renderStatusBanner = (): JSX.Element | undefined => {
+    if (scheduledDonationIsFulfilled(scheduledDonation)) {
+      return (
+        <View
+          style={{
+            ...styles.banner,
+            borderColor: theme.colors.secondary,
+          }}>
+          <Text style={{ color: theme.colors.secondary, margin: 4 }}>
+            This donation was marked as received
+          </Text>
+        </View>
+      );
+    }
+    const now = new Date();
+    const expired = now.getTime() - scheduledDonation.scheduledDate.getTime() > 0;
+    if (expired) {
+      return (
+        <View
+          style={{
+            ...styles.banner,
+            borderColor: theme.colors.error,
+          }}>
+          <Text style={{ color: theme.colors.error, margin: 4 }}>This donation has expired</Text>
+        </View>
+      );
+    }
+  };
+
   return (
     <Portal.Host>
       <Appbar.Header>
@@ -60,15 +90,13 @@ export default function DonationDetailsPage() {
       />
       <ThemedView>
         <View style={styles.container}>
-          <View style={styles.header}>
-            <Text variant="titleLarge">Donation Details</Text>
-            <Text>{charity.c_name}</Text>
+          <View>
+            <Text variant="headlineMedium">Donation Details</Text>
+            {renderStatusBanner()}
+            <Text variant="titleLarge">{charity.c_name}</Text>
           </View>
-          <Divider style={styles.divider} />
           <ScrollView>
             <View style={styles.section}>
-              <Text variant="titleLarge">Location & Logistics</Text>
-
               <View style={styles.labelView}>
                 <Text variant="labelLarge">Location</Text>
                 <Text>{charity.address}</Text>
@@ -121,20 +149,18 @@ export default function DonationDetailsPage() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-  },
   container: {
     marginHorizontal: 20,
-  },
-  divider: {
-    marginTop: 20,
-    height: 1,
   },
   labelView: {
     marginTop: 10,
   },
   section: {
-    marginVertical: 20,
+    marginBottom: 20,
+  },
+  banner: {
+    minHeight: 60,
+    marginVertical: 12,
+    borderWidth: 2,
   },
 });
