@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
-import { Text, IconButton, TextInput, Button, useTheme, Menu } from 'react-native-paper';
+import { View, ScrollView, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
+import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
+import { getAdminByUid } from '@/src/lib/admin';
+import { getCurrentUserId } from '@/src/lib/userId';
 import { type Database } from '@/src/types/database.types';
 import { Constants } from '@/src/types/database.types';
 
@@ -18,6 +20,7 @@ type HouseholdGoodsTypeT = Database['public']['Enums']['HouseholdGoodsTypeT'];
 type MedicalSuppliesTypeT = Database['public']['Enums']['MedicalSuppliesTypeT'];
 type SportsEquipmentTypeT = Database['public']['Enums']['SportsEquipmentTypeT'];
 
+// Allowing null values to create valid JSON when fields are not set
 export type NeedPayload = {
   cid: string;
   item_name: string;
@@ -158,29 +161,45 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
     const isVisible = menuVisible[field] || false;
 
     return (
-      <Menu
-        visible={isVisible}
-        onDismiss={() => setMenuVisible((prev) => ({ ...prev, [field]: false }))}
-        anchor={
+      <>
+        <Pressable
+          onPress={() => setMenuVisible((prev) => ({ ...prev, [field]: true }))}
+          style={[
+            styles.dropdown,
+            { backgroundColor: themeColors.surface, borderColor: themeColors.outline },
+          ]}>
+          <Text style={{ color: value ? themeColors.onSurface : themeColors.onSurfaceVariant }}>
+            {value || `Select ${field.replace('_', ' ')}`}
+          </Text>
+        </Pressable>
+
+        <Modal
+          visible={isVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setMenuVisible((prev) => ({ ...prev, [field]: false }))}>
           <Pressable
-            onPress={() => setMenuVisible((prev) => ({ ...prev, [field]: true }))}
-            style={[styles.dropdown, { backgroundColor: themeColors.surface }]}>
-            <Text style={{ color: value ? themeColors.onSurface : themeColors.onSurfaceVariant }}>
-              {value || `Select ${field.replace('_', ' ')}`}
-            </Text>
+            style={styles.modalOverlay}
+            onPress={() => setMenuVisible((prev) => ({ ...prev, [field]: false }))}>
+            <View style={[styles.dropdownModal, { backgroundColor: themeColors.surface }]}>
+              <FlatList
+                data={options}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <Pressable
+                    style={[styles.dropdownItem, { borderBottomColor: themeColors.outline }]}
+                    onPress={() => {
+                      setValue(item);
+                      setMenuVisible((prev) => ({ ...prev, [field]: false }));
+                    }}>
+                    <Text style={{ color: themeColors.onSurface }}>{item}</Text>
+                  </Pressable>
+                )}
+              />
+            </View>
           </Pressable>
-        }>
-        {options.map((option: any) => (
-          <Menu.Item
-            key={option}
-            onPress={() => {
-              setValue(option);
-              setMenuVisible((prev) => ({ ...prev, [field]: false }));
-            }}
-            title={option}
-          />
-        ))}
-      </Menu>
+        </Modal>
+      </>
     );
   };
 
@@ -382,10 +401,28 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 4,
     padding: 12,
     minHeight: 48,
     justifyContent: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdownModal: {
+    width: '80%',
+    maxHeight: '50%',
+    borderRadius: 8,
+    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  dropdownItem: {
+    padding: 16,
+    borderBottomWidth: 1,
   },
 });

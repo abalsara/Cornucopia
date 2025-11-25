@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Portal, useTheme } from 'react-native-paper';
 
 import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
-import NewNeedForm from '@/src/app/charity/(modals)/newNeedForm';
+import NewNeedForm, { type NeedPayload } from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
+import { getAdminByUid } from '@/src/lib/admin';
 import { insertNeed } from '@/src/lib/needs';
+import { getCurrentUserId } from '@/src/lib/userId';
 
 type NeedCard = {
   id: string;
   title: string;
   subtitle: string;
-  status: 'Urgent' | 'High Priority' | 'Ongoing';
+  status: 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 };
 
 const EXAMPLE_NEEDS: { title: string; needs: NeedCard[] }[] = [
@@ -49,6 +51,8 @@ const EXAMPLE_NEEDS: { title: string; needs: NeedCard[] }[] = [
 
 export default function Needs() {
   const [showPostNeedForm, setShowPostNeedForm] = useState(false);
+  const [selectedNeed, setSelectedNeed] = useState<NeedPayload | null>(null);
+  const [cid, setCid] = useState<string | null>(null);
   const theme = useTheme();
   const themeColors = theme.colors;
 
@@ -58,15 +62,20 @@ export default function Needs() {
     Ongoing: themeColors.secondary,
   };
 
-  type SelectedNeed = {
-    id: string;
-    title: string;
-    description: string;
-    category: string | null;
-    priority: 'Urgent' | 'High Priority' | 'Ongoing' | 'Low' | null;
-  };
-
-  const [selectedNeed, setSelectedNeed] = useState<SelectedNeed | null>(null);
+  useEffect(() => {
+    const fetchCid = async () => {
+      try {
+        const userId = await getCurrentUserId();
+        if (!userId) throw new Error('User ID not found');
+        const admin = await getAdminByUid(userId);
+        if (!admin || !admin.cid) throw new Error('Admin not found for user ID');
+        setCid(admin.cid);
+      } catch (error) {
+        console.error('Error fetching CID:', error);
+      }
+    };
+    fetchCid();
+  }, []);
 
   return (
     <ThemedView>
@@ -102,9 +111,9 @@ export default function Needs() {
                   // Opens the edit need modal
                   onPress={() =>
                     setSelectedNeed({
-                      id: need.id,
-                      title: need.title,
-                      description: need.subtitle,
+                      cid: cid || '',
+                      item_name: need.title,
+                      notes: need.subtitle,
                       category: section.title,
                       priority: need.status,
                     })
@@ -126,13 +135,16 @@ export default function Needs() {
           ))}
         </ScrollView>
         <Portal>
-          {showPostNeedForm && (
+          {showPostNeedForm && cid && (
             <NewNeedForm
+              cid={cid}
               onClose={() => setShowPostNeedForm(false)}
-              onPost={(payload) => {
+              onPost={async (payload) => {
                 // TODO: persist `payload` and update list
-                insertNeed(payload);
-
+                const userId = await getCurrentUserId();
+                if (userId) {
+                  await insertNeed(payload);
+                }
                 setShowPostNeedForm(false);
               }}
             />
@@ -140,16 +152,10 @@ export default function Needs() {
 
           {selectedNeed && (
             <EditNeedForm
-              initial={{
-                title: selectedNeed.title,
-                description: selectedNeed.description,
-                category: selectedNeed.category,
-                priority: selectedNeed.priority,
-              }}
+              initial={selectedNeed}
               onClose={() => setSelectedNeed(null)}
               onUpdate={(payload) => {
                 // TODO: persist `payload` and update list
-
                 setSelectedNeed(null);
               }}
               onRemove={() => {

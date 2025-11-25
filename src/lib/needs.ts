@@ -179,6 +179,13 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
 }
 
 export async function insertNeed(payload: NeedPayload): Promise<void> {
+  // clear all undefined fields from payload
+  Object.keys(payload).forEach((key) => {
+    if (payload[key as keyof NeedPayload] == undefined) {
+      delete payload[key as keyof NeedPayload];
+    }
+  });
+  console.log('Creating request with payload:', payload);
   const { data, error } = await supabase.functions.invoke('insert-need', {
     body: payload,
     method: 'POST',
