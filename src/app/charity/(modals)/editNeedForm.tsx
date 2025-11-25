@@ -1,8 +1,30 @@
 import { useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
-import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
+import { Text, IconButton, TextInput, Button, useTheme, Menu } from 'react-native-paper';
 
-import { NeedPayload, Priority } from './newNeedForm';
+import { NeedPayload, Priority, NEED_CATEGORIES } from './newNeedForm';
+
+import { Constants, type Database } from '@/src/types/database.types';
+
+type GenderT = Database['public']['Enums']['GenderT'];
+type AgeGroupT = Database['public']['Enums']['AgeGroupT'];
+type StorageRequirementT = Database['public']['Enums']['StorageRequirementT'];
+type AnimalTypeT = Database['public']['Enums']['AnimalTypeT'];
+
+const CATEGORY_FIELDS: Record<string, string[]> = {
+  Food: ['storage_reqs'],
+  Clothing: ['age_group', 'gender'],
+  'Hygiene Products': [],
+  'Household Goods': ['type'],
+  Furniture: ['type'],
+  'Toys & Games': ['age_group'],
+  'Medical Supplies': ['type'],
+  'School & Office Supplies': [],
+  'Animal Care Supplies': ['animal', 'type'],
+  Electronics: ['type'],
+  'Sports Equipment': ['type', 'age_group'],
+  Uncategorized: [],
+};
 
 type Props = {
   onClose: () => void;
@@ -11,26 +33,23 @@ type Props = {
   onRemove?: () => void;
 };
 
-const NEED_CATEGORIES = [
-  'Food',
-  'Clothing',
-  'Hygiene Products',
-  'Household goods',
-  'Furniture',
-  'Toys',
-  'Medical supplies',
-  'School supplies',
-  'Animal Care supplies',
-  'Electronics',
-  'Sports Equipment',
-  'Uncategorized',
-];
-
 export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: Props) {
-  const [title, setTitle] = useState(initial.title ?? '');
-  const [description, setDescription] = useState(initial.description ?? '');
+  const [item_name, setItemName] = useState(initial.item_name ?? '');
+  const [notes, setNotes] = useState(initial.notes ?? '');
   const [category, setCategory] = useState<string | null>(initial.category ?? 'Food');
   const [priority, setPriority] = useState<Priority | null>(initial.priority ?? 'Urgent');
+  const [unit, setUnit] = useState(initial.unit ?? '');
+  const [quantity, setQuantity] = useState(initial.quantity ?? 0);
+  const [type, setType] = useState<any>(initial.type);
+  const [animal, setAnimal] = useState<AnimalTypeT | undefined>(initial.animal);
+  const [gender, setGender] = useState<GenderT | undefined>(initial.gender);
+  const [age_group, setAgeGroup] = useState<AgeGroupT | undefined>(initial.age_group);
+  const [condition, setCondition] = useState(initial.condition ?? '');
+  const [power_type, setPowerType] = useState(initial.power_type ?? '');
+  const [storage_reqs, setStorageReqs] = useState<StorageRequirementT | undefined>(
+    initial.storage_reqs,
+  );
+  const [menuVisible, setMenuVisible] = useState<Record<string, boolean>>({});
 
   const theme = useTheme();
   const themeColors = theme.colors;
@@ -53,21 +72,116 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
     Low: 'This item is needed but not urgently',
   };
 
-  // "changed" determines whether the Update button should be enabled. This
-  // prevents sending updates when the user hasn't changed any fields.
+  const getRequiredFields = () => {
+    return category ? CATEGORY_FIELDS[category] || [] : [];
+  };
+
+  const getEnumOptions = (field: string) => {
+    switch (field) {
+      case 'storage_reqs':
+        return Constants.public.Enums.StorageRequirementT;
+      case 'age_group':
+        return Constants.public.Enums.AgeGroupT;
+      case 'gender':
+        return Constants.public.Enums.GenderT;
+      case 'animal':
+        return Constants.public.Enums.AnimalTypeT;
+      case 'type':
+        if (category === 'Household Goods') return Constants.public.Enums.HouseholdGoodsTypeT;
+        if (category === 'Furniture') return Constants.public.Enums.FurnitureTypeT;
+        if (category === 'Animal Care Supplies') return Constants.public.Enums.AnimalNeedT;
+        if (category === 'Medical Supplies') return Constants.public.Enums.MedicalSuppliesTypeT;
+        if (category === 'Electronics') return Constants.public.Enums.ElectronicsTypeT;
+        if (category === 'Sports Equipment') return Constants.public.Enums.SportsEquipmentTypeT;
+        return [];
+      default:
+        return [];
+    }
+  };
+
   const changed = useMemo(() => {
     return (
-      title !== (initial.title ?? '') ||
-      description !== (initial.description ?? '') ||
+      item_name !== (initial.item_name ?? '') ||
+      notes !== (initial.notes ?? '') ||
       category !== (initial.category ?? null) ||
-      priority !== (initial.priority ?? null)
+      priority !== (initial.priority ?? null) ||
+      unit !== (initial.unit ?? '') ||
+      quantity !== (initial.quantity ?? 0) ||
+      type !== initial.type ||
+      animal !== initial.animal ||
+      gender !== initial.gender ||
+      age_group !== initial.age_group ||
+      condition !== (initial.condition ?? '') ||
+      power_type !== (initial.power_type ?? '') ||
+      storage_reqs !== initial.storage_reqs
     );
-  }, [title, description, category, priority, initial]);
+  }, [
+    item_name,
+    notes,
+    category,
+    priority,
+    unit,
+    quantity,
+    type,
+    animal,
+    gender,
+    age_group,
+    condition,
+    power_type,
+    storage_reqs,
+    initial,
+  ]);
 
   const handleUpdate = () => {
     if (!changed) return;
-    onUpdate?.({ title, description, category, priority });
+    onUpdate?.({
+      cid: initial.cid,
+      item_name,
+      notes,
+      category,
+      priority,
+      unit,
+      quantity,
+      type,
+      animal,
+      gender,
+      age_group,
+      condition,
+      power_type,
+      storage_reqs,
+    });
     onClose();
+  };
+
+  const renderDropdown = (field: string, value: any, setValue: (val: any) => void) => {
+    const options = getEnumOptions(field);
+    const isVisible = menuVisible[field] || false;
+
+    return (
+      <Menu
+        visible={isVisible}
+        onDismiss={() => setMenuVisible((prev) => ({ ...prev, [field]: false }))}
+        anchor={
+          <Pressable
+            onPress={() => setMenuVisible((prev) => ({ ...prev, [field]: true }))}
+            style={[styles.dropdown, { backgroundColor: themeColors.surface }]}>
+            <Text style={{ color: value ? themeColors.onSurface : themeColors.onSurfaceVariant }}>
+              {value || `Select ${field.replace('_', ' ')}`}
+            </Text>
+          </Pressable>
+        }>
+        {options.map((option) => (
+          <Menu.Item
+            key={option}
+            onPress={() => {
+              setValue(option);
+              setMenuVisible((prev) => ({ ...prev, [field]: false }));
+            }}
+            title={option}
+          />
+        ))}
+      </Menu>
+    );
   };
 
   const handleRemove = () => {
@@ -90,8 +204,8 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
             mode="outlined"
             label="Title"
             placeholder="Boys Winter Coats"
-            value={title}
-            onChangeText={setTitle}
+            value={item_name}
+            onChangeText={setItemName}
             style={styles.input}
           />
 
@@ -99,8 +213,8 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
             mode="outlined"
             label="Description"
             placeholder="Winter coats for boys ages 5-12. Gently used or new."
-            value={description}
-            onChangeText={setDescription}
+            value={notes}
+            onChangeText={setNotes}
             multiline
             numberOfLines={4}
             style={[styles.input, styles.multiline]}
@@ -161,6 +275,47 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
               {priority ? priorityDescriptions[priority] : priorityDescriptions['Urgent']}
             </Text>
           </View>
+
+          {getRequiredFields().map((field) => (
+            <View key={field} style={styles.section}>
+              <Text variant="titleMedium" style={styles.sectionTitle}>
+                {field.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+              </Text>
+              {renderDropdown(
+                field,
+                field === 'storage_reqs'
+                  ? storage_reqs
+                  : field === 'age_group'
+                    ? age_group
+                    : field === 'gender'
+                      ? gender
+                      : field === 'animal'
+                        ? animal
+                        : field === 'type'
+                          ? type
+                          : field === 'condition'
+                            ? condition
+                            : field === 'power_type'
+                              ? power_type
+                              : undefined,
+                field === 'storage_reqs'
+                  ? setStorageReqs
+                  : field === 'age_group'
+                    ? setAgeGroup
+                    : field === 'gender'
+                      ? setGender
+                      : field === 'animal'
+                        ? setAnimal
+                        : field === 'type'
+                          ? setType
+                          : field === 'condition'
+                            ? setCondition
+                            : field === 'power_type'
+                              ? setPowerType
+                              : () => {},
+              )}
+            </View>
+          ))}
 
           <View style={{ height: 24 }} />
         </ScrollView>
@@ -247,5 +402,13 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '700',
     textDecorationLine: 'underline',
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 12,
+    minHeight: 48,
+    justifyContent: 'center',
   },
 });
