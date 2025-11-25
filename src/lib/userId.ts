@@ -1,24 +1,24 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL ? process.env.EXPO_PUBLIC_SUPABASE_URL : '',
-  process.env.EXPO_PUBLIC_SUPABASE_KEY ? process.env.EXPO_PUBLIC_SUPABASE_KEY : '',
-);
+import { supabase } from '../lib/supabase';
 
 export async function getCurrentUserId() {
   const {
-    data: { user },
+    data: { session },
     error,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getSession();
+
+  if (!session?.user?.id) {
+    console.log('No user session found.');
+    return null;
+  }
 
   if (error) {
     console.error('Error fetching user:', error.message);
     return null;
   }
 
-  if (user) {
-    console.log('Current user ID:', user.id);
-    return user.id;
+  if (session) {
+    console.log('Current user ID:', session.user.id);
+    return session.user.id;
   } else {
     console.log('No user is currently signed in.');
     return null;
