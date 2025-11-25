@@ -60,7 +60,7 @@ const CATEGORY_FIELDS: Record<string, string[]> = {
   'Medical Supplies': ['type'],
   'School & Office Supplies': [],
   'Animal Care Supplies': ['animal', 'type'],
-  Electronics: ['type'],
+  Electronics: ['type', 'power_type'],
   'Sports Equipment': ['type', 'age_group'],
   Uncategorized: [],
 };

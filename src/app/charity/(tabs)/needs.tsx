@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Text, Card, IconButton, Portal, useTheme } from 'react-native-paper';
 
@@ -6,7 +6,7 @@ import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
 import NewNeedForm, { type NeedPayload } from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
 import { getAdminByUid } from '@/src/lib/admin';
-import { insertNeed } from '@/src/lib/needs';
+import { insertNeed, getCharityNeeds } from '@/src/lib/needs';
 import { getCurrentUserId } from '@/src/lib/userId';
 
 type NeedCard = {
@@ -16,43 +16,14 @@ type NeedCard = {
   status: 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 };
 
-const EXAMPLE_NEEDS: { title: string; needs: NeedCard[] }[] = [
-  {
-    title: 'Food',
-    needs: [
-      { id: '1', title: 'Canned Beans', subtitle: 'Black and pinto beans', status: 'Urgent' },
-      { id: '3', title: 'Rice', subtitle: 'Dry, white rice', status: 'Ongoing' },
-    ],
-  },
-  {
-    title: 'Clothing',
-    needs: [
-      { id: '4', title: 'Winter Jackets', subtitle: 'All sizes, clean', status: 'High Priority' },
-      { id: '5', title: 'Socks', subtitle: 'New socks only', status: 'Ongoing' },
-    ],
-  },
-  {
-    title: 'Hygiene Products',
-    needs: [
-      { id: '6', title: 'Toothpaste', subtitle: 'Travel-sized tubes', status: 'Ongoing' },
-      { id: '7', title: 'Sanitary Pads', subtitle: 'All sizes', status: 'High Priority' },
-    ],
-  },
-  {
-    title: 'Toys',
-    needs: [
-      { id: '8', title: 'Stuffed Animals', subtitle: 'Small to medium', status: 'Ongoing' },
-      { id: '9', title: 'Puzzles', subtitle: 'Ages 3-8', status: 'High Priority' },
-    ],
-  },
-];
-
 // Theme-aware colors are computed inside the component using `useTheme()`.
 
 export default function Needs() {
   const [showPostNeedForm, setShowPostNeedForm] = useState(false);
   const [selectedNeed, setSelectedNeed] = useState<NeedPayload | null>(null);
   const [cid, setCid] = useState<string | null>(null);
+  const [needsSections, setNeedsSections] = useState<{ title: string; needs: NeedCard[] }[]>([]);
+
   const theme = useTheme();
   const themeColors = theme.colors;
 
@@ -60,7 +31,42 @@ export default function Needs() {
     Urgent: themeColors.error,
     'High Priority': 'rgb(220, 163, 17)',
     Ongoing: themeColors.secondary,
+    Low: themeColors.primary,
   };
+
+  const loadNeeds = useCallback(async (charityId: string) => {
+    try {
+      const fetchedNeeds = await getCharityNeeds(charityId);
+
+      // Group flat list by category
+      const groups: Record<string, NeedCard[]> = {};
+
+      fetchedNeeds.forEach((item) => {
+        const category = item.category || 'Uncategorized';
+        if (!groups[category]) {
+          groups[category] = [];
+        }
+
+        groups[category].push({
+          id: item.item_id,
+          title: item.itemName,
+          subtitle: item.notes || '',
+          // Cast urgency to known status types, defaulting to Low if unknown
+          status: (item.priority as NeedCard['status']) || 'Low',
+        });
+      });
+
+      // Convert groups to array of sections
+      const sections = Object.keys(groups).map((key) => ({
+        title: key,
+        needs: groups[key],
+      }));
+
+      setNeedsSections(sections);
+    } catch (error) {
+      console.error('Error loading needs:', error);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCid = async () => {
@@ -69,13 +75,16 @@ export default function Needs() {
         if (!userId) throw new Error('User ID not found');
         const admin = await getAdminByUid(userId);
         if (!admin || !admin.cid) throw new Error('Admin not found for user ID');
+
         setCid(admin.cid);
+        // Fetch needs once we have the CID
+        await loadNeeds(admin.cid);
       } catch (error) {
         console.error('Error fetching CID:', error);
       }
     };
     fetchCid();
-  }, []);
+  }, [loadNeeds]);
 
   return (
     <ThemedView>
@@ -97,42 +106,53 @@ export default function Needs() {
             />
           </View>
 
-          {EXAMPLE_NEEDS.map((section) => (
-            <View key={section.title} style={styles.sectionBlock}>
-              <Text variant="titleLarge" style={styles.sectionTitle}>
-                {section.title}
-              </Text>
+          {needsSections.length === 0 ? (
+            <Text style={{ marginTop: 20, textAlign: 'center', color: '#888' }}>
+              No needs posted yet.
+            </Text>
+          ) : (
+            needsSections.map((section) => (
+              <View key={section.title} style={styles.sectionBlock}>
+                <Text variant="titleLarge" style={styles.sectionTitle}>
+                  {section.title}
+                </Text>
 
-              {section.needs.map((need) => (
-                <Card
-                  key={need.id}
-                  style={styles.card}
-                  mode="elevated"
-                  // Opens the edit need modal
-                  onPress={() =>
-                    setSelectedNeed({
-                      cid: cid || '',
-                      item_name: need.title,
-                      notes: need.subtitle,
-                      category: section.title,
-                      priority: need.status,
-                    })
-                  }>
-                  <Card.Title
-                    title={need.title}
-                    subtitle={need.subtitle}
-                    right={() => (
-                      <View style={styles.statusContainer}>
-                        <Text style={[styles.statusText, { color: statusColors[need.status] }]}>
-                          {need.status}
-                        </Text>
-                      </View>
-                    )}
-                  />
-                </Card>
-              ))}
-            </View>
-          ))}
+                {section.needs.map((need) => (
+                  <Card
+                    key={need.id}
+                    style={styles.card}
+                    mode="elevated"
+                    // Opens the edit need modal
+                    onPress={() =>
+                      setSelectedNeed({
+                        cid: cid || '',
+                        item_name: need.title,
+                        notes: need.subtitle,
+                        category: section.title, // Note: section.title is the category name
+                        priority: need.status,
+                        // Note: Assuming we might want to pass ID or other fields for editing later
+                      })
+                    }>
+                    <Card.Title
+                      title={need.title}
+                      subtitle={need.subtitle}
+                      right={() => (
+                        <View style={styles.statusContainer}>
+                          <Text
+                            style={[
+                              styles.statusText,
+                              { color: statusColors[need.status] || statusColors['Low'] },
+                            ]}>
+                            {need.status}
+                          </Text>
+                        </View>
+                      )}
+                    />
+                  </Card>
+                ))}
+              </View>
+            ))
+          )}
         </ScrollView>
         <Portal>
           {showPostNeedForm && cid && (
@@ -140,10 +160,11 @@ export default function Needs() {
               cid={cid}
               onClose={() => setShowPostNeedForm(false)}
               onPost={async (payload) => {
-                // TODO: persist `payload` and update list
                 const userId = await getCurrentUserId();
                 if (userId) {
                   await insertNeed(payload);
+                  // Refresh list after insert
+                  await loadNeeds(cid);
                 }
                 setShowPostNeedForm(false);
               }}
@@ -154,12 +175,14 @@ export default function Needs() {
             <EditNeedForm
               initial={selectedNeed}
               onClose={() => setSelectedNeed(null)}
-              onUpdate={(payload) => {
-                // TODO: persist `payload` and update list
+              onUpdate={async (payload) => {
+                // TODO: persist `payload`
+                if (cid) await loadNeeds(cid);
                 setSelectedNeed(null);
               }}
-              onRemove={() => {
-                // TODO: delete selectedNeed and update list
+              onRemove={async () => {
+                // TODO: delete selectedNeed
+                if (cid) await loadNeeds(cid);
                 setSelectedNeed(null);
               }}
             />
