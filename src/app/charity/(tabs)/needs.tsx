@@ -46,7 +46,6 @@ export default function Needs() {
         if (!groups[category]) {
           groups[category] = [];
         }
-
         groups[category].push({
           id: item.item_id,
           title: item.itemName,

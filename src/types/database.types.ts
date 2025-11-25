@@ -407,7 +407,7 @@ export type Database = {
           },
         ];
       };
-      HygieneProduct: {
+      HygieneProducts: {
         Row: {
           cid: string;
           created_at: string;
@@ -425,14 +425,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'HygieneProduct_cid_fkey';
+            foreignKeyName: 'HygieneProducts_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'HygieneProduct_item_id_fkey';
+            foreignKeyName: 'HygieneProducts_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';
@@ -553,6 +553,7 @@ export type Database = {
           quantity_fulfilled: number;
           request_id: string;
           unit: string;
+          priority: string;
         };
         Insert: {
           category?: Database['public']['Enums']['RequestTypeT'];
@@ -694,7 +695,7 @@ export type Database = {
           },
         ];
       };
-      Uncatergorized: {
+      Uncategorized: {
         Row: {
           cid: string;
           created_at: string;
@@ -712,14 +713,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'Uncatergorized_cid_fkey';
+            foreignKeyName: 'Uncategorized_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'Uncatergorized_item_id_fkey';
+            foreignKeyName: 'Uncategorized_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';
