@@ -8,6 +8,9 @@ import 'react-native-url-polyfill/auto';
 import { getScheduledDonations } from '@/src/stores/scheduledDonations';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
+/**
+ * Displays all donations that the currently logged-in donor has scheduled with charities.
+ */
 export default function Index() {
   const router = useRouter();
   const scheduledDonations = getScheduledDonations();

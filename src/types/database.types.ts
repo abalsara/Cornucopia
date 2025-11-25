@@ -571,7 +571,7 @@ export type Database = {
           created_at: string;
           item_name: string;
           notes: string | null;
-          quantitiy: number;
+          quantity: number;
           quantity_fulfilled: number;
           request_id: string;
           unit: string;
@@ -582,7 +582,7 @@ export type Database = {
           created_at?: string;
           item_name: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;
@@ -593,7 +593,7 @@ export type Database = {
           created_at?: string;
           item_name?: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;

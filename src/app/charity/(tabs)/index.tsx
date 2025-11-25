@@ -11,6 +11,10 @@ import {
 } from '@/src/stores/charityScheduledDonations';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 
+/**
+ * Displays all donations that donors have scheduled with the charity
+ * associated with the logged in admin.
+ */
 export default function Donations() {
   const [loading, setLoading] = useState(true);
   const [donations, setDonations] = useState<ScheduledDonation[]>([]);

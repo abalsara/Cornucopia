@@ -19,6 +19,10 @@ import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
 import { scheduledDonationIsFulfilled } from '@/src/util/donationItem';
 
+/**
+ * Displays detailed information for a single scheduled donation.
+ * This screen is navigated to from /charity/(tabs)/index.tsx.
+ */
 export default function CharityDonationDetails() {
   const { dateString, pid } = useLocalSearchParams<{ dateString: string; pid: string }>();
 

@@ -101,12 +101,12 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
     // Merge shared fields from both sources
     const base = {
       category,
-      cid: need.cid ?? request.cid ?? '',
-      item_id: need.item_id ?? request.item_id ?? '',
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
-      quantity: need.quantity ?? request.quantitiy ?? 1,
+      quantity: need.quantity ?? request.quantity ?? 1,
       unit: need.unit ?? request.unit ?? 'Ea.',
+      item_id: request.request_id ?? need.item_id,
+      cid: need.cid,
     };
 
     let donationItem: DonationItem;
