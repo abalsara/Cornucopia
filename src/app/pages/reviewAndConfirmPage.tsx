@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { Text } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
@@ -9,7 +8,6 @@ import ActionButton from '@/src/components/buttons/ActionButton';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
 import { createDonation } from '@/src/lib/donations';
 import { getCurrentUserId } from '@/src/lib/userId';
-import { supabase } from '@/src/lib/supabase';
 import { getCharity } from '@/src/stores/charities';
 import { getSavedDonations } from '@/src/stores/savedDonations';
 import { getSavedSchedule } from '@/src/stores/savedSchedule';

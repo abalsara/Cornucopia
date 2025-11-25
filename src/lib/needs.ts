@@ -107,8 +107,6 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       notes: need.notes ?? request.notes ?? '',
       quantity: need.quantity ?? request.quantity ?? 1,
       unit: need.unit ?? request.unit ?? 'Ea.',
-      item_id: request.request_id ?? need.item_id,
-      cid: need.cid,
     };
 
     let donationItem: DonationItem;
