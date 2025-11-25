@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
 import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
-type Priority = 'Urgent' | 'High Priority' | 'Ongoing';
+type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 
 type NeedPayload = {
   title: string;
@@ -46,6 +46,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
     Urgent: themeColors.error,
     'High Priority': 'rgb(220, 163, 17)',
     Ongoing: themeColors.secondary,
+    Low: themeColors.tertiary,
   };
 
   const SELECTED_PILL = themeColors.primary;
@@ -56,6 +57,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
     Urgent: 'This item is needed within 24 hours',
     'High Priority': 'This item is needed within the week',
     Ongoing: 'This item is needed on an ongoing basis',
+    Low: 'This item is needed but not urgently',
   };
 
   // "changed" determines whether the Update button should be enabled. This
