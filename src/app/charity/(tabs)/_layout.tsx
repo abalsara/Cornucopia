@@ -39,6 +39,7 @@ export default function TabLayout() {
         name="needs"
         options={{
           title: 'Needs',
+          headerTitle: '',
           tabBarIcon: ({ color }) => <FontAwesome6 name="clipboard-list" size={24} color={color} />,
         }}
       />

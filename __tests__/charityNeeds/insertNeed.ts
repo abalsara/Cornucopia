@@ -22,7 +22,7 @@ describe('createNeed', () => {
       request: {
         cid: '7c7a3c42-1234-4567-890a-abcdef123456',
         item_name: 'Canned Tuna',
-        quantitiy: 50,
+        quantity: 50,
         quantity_fulfilled: 0,
         unit: 'Can',
         notes: 'No salt added',

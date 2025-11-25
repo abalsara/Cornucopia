@@ -226,7 +226,7 @@ alter table "public"."Request" drop column "item_id";
 
 alter table "public"."Request" drop column "post_id";
 
-alter table "public"."Request" drop column "quantitiy_requested";
+alter table "public"."Request" drop column "quantity_requested";
 
 alter table "public"."Request" drop column "urgency";
 
@@ -234,7 +234,7 @@ alter table "public"."Request" add column "category" public."RequestTypeT" not n
 
 alter table "public"."Request" add column "notes" text default '"No additional notes."'::text;
 
-alter table "public"."Request" add column "quantitiy" integer not null default 1;
+alter table "public"."Request" add column "quantity" integer not null default 1;
 
 alter table "public"."Request" add column "request_id" uuid not null default gen_random_uuid();
 

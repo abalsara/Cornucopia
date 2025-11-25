@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
             *,
             Request (
               item_name,
-              quantitiy,
+              quantity,
               quantity_fulfilled,
               notes,
               unit,
