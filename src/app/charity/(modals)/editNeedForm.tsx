@@ -2,14 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
 import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
-type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
-
-type NeedPayload = {
-  title: string;
-  description: string;
-  category: string | null;
-  priority: Priority | null;
-};
+import { NeedPayload, Priority } from './newNeedForm';
 
 type Props = {
   onClose: () => void;

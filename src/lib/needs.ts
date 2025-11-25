@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { NeedPayload } from '../app/charity/(modals)/newNeedForm';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
 /**
@@ -175,4 +176,18 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
   }
 
   return parsedDonations;
+}
+
+export async function insertNeed(payload: NeedPayload): Promise<void> {
+  const { data, error } = await supabase.functions.invoke('insert-need', {
+    body: payload,
+    method: 'POST',
+  });
+
+  if (error) {
+    console.error('Error inserting need:', error);
+    throw error;
+  }
+
+  console.log('Need inserted successfully:', data);
 }

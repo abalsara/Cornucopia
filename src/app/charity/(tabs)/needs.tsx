@@ -5,6 +5,7 @@ import { Text, Card, IconButton, Portal, useTheme } from 'react-native-paper';
 import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
 import NewNeedForm from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
+import { insertNeed } from '@/src/lib/needs';
 
 type NeedCard = {
   id: string;
@@ -62,7 +63,7 @@ export default function Needs() {
     title: string;
     description: string;
     category: string | null;
-    priority: 'Urgent' | 'High Priority' | 'Ongoing' | null;
+    priority: 'Urgent' | 'High Priority' | 'Ongoing' | 'Low' | null;
   };
 
   const [selectedNeed, setSelectedNeed] = useState<SelectedNeed | null>(null);
@@ -130,6 +131,8 @@ export default function Needs() {
               onClose={() => setShowPostNeedForm(false)}
               onPost={(payload) => {
                 // TODO: persist `payload` and update list
+                insertNeed(payload);
+
                 setShowPostNeedForm(false);
               }}
             />
@@ -146,6 +149,7 @@ export default function Needs() {
               onClose={() => setSelectedNeed(null)}
               onUpdate={(payload) => {
                 // TODO: persist `payload` and update list
+
                 setSelectedNeed(null);
               }}
               onRemove={() => {
