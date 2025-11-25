@@ -1,44 +1,89 @@
 import { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
-import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
+import { Text, IconButton, TextInput, Button, useTheme, Menu } from 'react-native-paper';
+
+import { type Database } from '@/src/types/database.types';
+import { Constants } from '@/src/types/database.types';
 
 export type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 
+type GenderT = Database['public']['Enums']['GenderT'];
+type AgeGroupT = Database['public']['Enums']['AgeGroupT'];
+type StorageRequirementT = Database['public']['Enums']['StorageRequirementT'];
+type AnimalTypeT = Database['public']['Enums']['AnimalTypeT'];
+type AnimalNeedT = Database['public']['Enums']['AnimalNeedT'];
+type ElectronicsTypeT = Database['public']['Enums']['ElectronicsTypeT'];
+type FurnitureTypeT = Database['public']['Enums']['FurnitureTypeT'];
+type HouseholdGoodsTypeT = Database['public']['Enums']['HouseholdGoodsTypeT'];
+type MedicalSuppliesTypeT = Database['public']['Enums']['MedicalSuppliesTypeT'];
+type SportsEquipmentTypeT = Database['public']['Enums']['SportsEquipmentTypeT'];
+
 export type NeedPayload = {
-  title: string;
-  description: string;
+  cid: string;
+  item_name: string;
+  notes: string;
   category: string | null;
   priority: Priority | null;
+  unit?: string;
+  quantity?: number;
+  // Below are the optional, table specific fields that may be included
+  type?:
+    | HouseholdGoodsTypeT
+    | FurnitureTypeT
+    | AnimalNeedT
+    | MedicalSuppliesTypeT
+    | ElectronicsTypeT
+    | SportsEquipmentTypeT;
+  animal?: AnimalTypeT;
+  gender?: GenderT;
+  age_group?: AgeGroupT;
+  condition?: string;
+  power_type?: string;
+  storage_reqs?: StorageRequirementT;
 };
 
 export type Props = {
   onClose: () => void;
   onPost?: (payload: NeedPayload) => void;
+  cid: string;
 };
 
-const NEED_CATEGORIES = [
-  'Food',
-  'Clothing',
-  'Hygiene Products',
-  'Household goods',
-  'Furniture',
-  'Toys',
-  'Medical supplies',
-  'School supplies',
-  'Animal Care supplies',
-  'Electronics',
-  'Sports Equipment',
-  'Uncategorized',
-];
+// Category field requirements mapping
+const CATEGORY_FIELDS: Record<string, string[]> = {
+  Food: ['storage_reqs'],
+  Clothing: ['age_group', 'gender'],
+  'Hygiene Products': [],
+  'Household Goods': ['type'],
+  Furniture: ['type'],
+  'Toys & Games': ['age_group'],
+  'Medical Supplies': ['type'],
+  'School & Office Supplies': [],
+  'Animal Care Supplies': ['animal', 'type'],
+  Electronics: ['type'],
+  'Sports Equipment': ['type', 'age_group'],
+  Uncategorized: [],
+};
+
+export const NEED_CATEGORIES = Object.keys(CATEGORY_FIELDS);
 
 // Theme values are read inside the component via `useTheme` so the UI
 // follows the currently selected theme (light/dark/custom).
 
-export default function NewNeedForm({ onClose, onPost }: Props) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+export default function NewNeedForm({ onClose, onPost, cid }: Props) {
+  const [item_name, setItemName] = useState('');
+  const [notes, setNotes] = useState('');
   const [category, setCategory] = useState<string | null>('Food');
   const [priority, setPriority] = useState<Priority | null>('Urgent');
+  const [unit] = useState<string | undefined>(undefined);
+  const [quantity] = useState<number | undefined>(undefined);
+  const [type, setType] = useState<any>(undefined);
+  const [animal, setAnimal] = useState<AnimalTypeT | undefined>(undefined);
+  const [gender, setGender] = useState<GenderT | undefined>(undefined);
+  const [age_group, setAgeGroup] = useState<AgeGroupT | undefined>(undefined);
+  const [condition, setCondition] = useState<string | undefined>(undefined);
+  const [power_type, setPowerType] = useState<string | undefined>(undefined);
+  const [storage_reqs, setStorageReqs] = useState<StorageRequirementT | undefined>(undefined);
+  const [menuVisible, setMenuVisible] = useState<Record<string, boolean>>({});
 
   const theme = useTheme();
   const themeColors = theme.colors;
@@ -61,9 +106,82 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
     Low: 'This item is needed but not urgently',
   };
 
+  const getRequiredFields = () => {
+    return category ? CATEGORY_FIELDS[category] || [] : [];
+  };
+
+  const getEnumOptions = (field: string) => {
+    switch (field) {
+      case 'storage_reqs':
+        return Constants.public.Enums.StorageRequirementT;
+      case 'age_group':
+        return Constants.public.Enums.AgeGroupT;
+      case 'gender':
+        return Constants.public.Enums.GenderT;
+      case 'animal':
+        return Constants.public.Enums.AnimalTypeT;
+      case 'type':
+        if (category === 'Household Goods') return Constants.public.Enums.HouseholdGoodsTypeT;
+        if (category === 'Furniture') return Constants.public.Enums.FurnitureTypeT;
+        if (category === 'Animal Care Supplies') return Constants.public.Enums.AnimalNeedT;
+        if (category === 'Medical Supplies') return Constants.public.Enums.MedicalSuppliesTypeT;
+        if (category === 'Electronics') return Constants.public.Enums.ElectronicsTypeT;
+        if (category === 'Sports Equipment') return Constants.public.Enums.SportsEquipmentTypeT;
+        return [];
+      default:
+        return [];
+    }
+  };
+
   const handlePost = () => {
-    onPost?.({ title, description, category, priority });
+    onPost?.({
+      cid,
+      item_name,
+      notes,
+      category,
+      priority,
+      unit,
+      quantity,
+      type,
+      animal,
+      gender,
+      age_group,
+      condition,
+      power_type,
+      storage_reqs,
+    });
     onClose();
+  };
+
+  const renderDropdown = (field: string, value: any, setValue: (val: any) => void) => {
+    const options = getEnumOptions(field);
+    const isVisible = menuVisible[field] || false;
+
+    return (
+      <Menu
+        visible={isVisible}
+        onDismiss={() => setMenuVisible((prev) => ({ ...prev, [field]: false }))}
+        anchor={
+          <Pressable
+            onPress={() => setMenuVisible((prev) => ({ ...prev, [field]: true }))}
+            style={[styles.dropdown, { backgroundColor: themeColors.surface }]}>
+            <Text style={{ color: value ? themeColors.onSurface : themeColors.onSurfaceVariant }}>
+              {value || `Select ${field.replace('_', ' ')}`}
+            </Text>
+          </Pressable>
+        }>
+        {options.map((option: any) => (
+          <Menu.Item
+            key={option}
+            onPress={() => {
+              setValue(option);
+              setMenuVisible((prev) => ({ ...prev, [field]: false }));
+            }}
+            title={option}
+          />
+        ))}
+      </Menu>
+    );
   };
 
   return (
@@ -81,8 +199,8 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
             mode="outlined"
             label="Title"
             placeholder="Boys Winter Coats"
-            value={title}
-            onChangeText={setTitle}
+            value={item_name}
+            onChangeText={setItemName}
             style={styles.input}
           />
 
@@ -90,8 +208,8 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
             mode="outlined"
             label="Description"
             placeholder="Winter coats for boys ages 5-12. Gently used or new."
-            value={description}
-            onChangeText={setDescription}
+            value={notes}
+            onChangeText={setNotes}
             multiline
             numberOfLines={4}
             style={[styles.input, styles.multiline]}
@@ -126,7 +244,7 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
               Priority
             </Text>
             <View style={styles.pillsWrap}>
-              {(['Urgent', 'High Priority', 'Ongoing'] as Priority[]).map((p) => {
+              {(['Urgent', 'High Priority', 'Ongoing', 'Low'] as Priority[]).map((p) => {
                 const selected = p === priority;
                 return (
                   <Pressable
@@ -152,6 +270,47 @@ export default function NewNeedForm({ onClose, onPost }: Props) {
               {priority ? priorityDescriptions[priority] : priorityDescriptions['Urgent']}
             </Text>
           </View>
+
+          {getRequiredFields().map((field) => (
+            <View key={field} style={styles.section}>
+              <Text variant="titleMedium" style={styles.sectionTitle}>
+                {field.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+              </Text>
+              {renderDropdown(
+                field,
+                field === 'storage_reqs'
+                  ? storage_reqs
+                  : field === 'age_group'
+                    ? age_group
+                    : field === 'gender'
+                      ? gender
+                      : field === 'animal'
+                        ? animal
+                        : field === 'type'
+                          ? type
+                          : field === 'condition'
+                            ? condition
+                            : field === 'power_type'
+                              ? power_type
+                              : undefined,
+                field === 'storage_reqs'
+                  ? setStorageReqs
+                  : field === 'age_group'
+                    ? setAgeGroup
+                    : field === 'gender'
+                      ? setGender
+                      : field === 'animal'
+                        ? setAnimal
+                        : field === 'type'
+                          ? setType
+                          : field === 'condition'
+                            ? setCondition
+                            : field === 'power_type'
+                              ? setPowerType
+                              : () => {},
+              )}
+            </View>
+          ))}
 
           <View style={{ height: 24 }} />
         </ScrollView>
@@ -220,5 +379,13 @@ const styles = StyleSheet.create({
     bottom: 20,
     borderRadius: 24,
     minWidth: 100,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 12,
+    minHeight: 48,
+    justifyContent: 'center',
   },
 });
