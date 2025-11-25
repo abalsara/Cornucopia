@@ -248,7 +248,7 @@ Deno.serve(async (req) => {
       .insert({
         cid,
         item_name: body.item_name,
-        quantitiy: body.quantitiy ?? 1,
+        quantity: body.quantity ?? 1,
         quantity_fulfilled: 0,
         unit: body.unit ?? 'Ea.',
         notes: body.notes ?? 'No additional notes.',

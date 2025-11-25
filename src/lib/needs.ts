@@ -73,7 +73,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       category,
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
-      quantity: need.quantity ?? request.quantitiy ?? 1,
+      quantity: need.quantity ?? request.quantity ?? 1,
       unit: need.unit ?? request.unit ?? 'Ea.',
     };
 

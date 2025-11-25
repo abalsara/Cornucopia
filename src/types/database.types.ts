@@ -200,7 +200,7 @@ export type Database = {
           fulfilled: boolean | null;
           item_id: string | null;
           pid: string | null;
-          quantitiy_comitted: number | null;
+          quantity_comitted: number | null;
           scheduled_date: string | null;
         };
         Insert: {
@@ -210,7 +210,7 @@ export type Database = {
           fulfilled?: boolean | null;
           item_id?: string | null;
           pid?: string | null;
-          quantitiy_comitted?: number | null;
+          quantity_comitted?: number | null;
           scheduled_date?: string | null;
         };
         Update: {
@@ -220,7 +220,7 @@ export type Database = {
           fulfilled?: boolean | null;
           item_id?: string | null;
           pid?: string | null;
-          quantitiy_comitted?: number | null;
+          quantity_comitted?: number | null;
           scheduled_date?: string | null;
         };
         Relationships: [];
@@ -511,7 +511,7 @@ export type Database = {
           created_at: string;
           item_name: string;
           notes: string | null;
-          quantitiy: number;
+          quantity: number;
           quantity_fulfilled: number;
           request_id: string;
           unit: string;
@@ -522,7 +522,7 @@ export type Database = {
           created_at?: string;
           item_name: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;
@@ -533,7 +533,7 @@ export type Database = {
           created_at?: string;
           item_name?: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;
