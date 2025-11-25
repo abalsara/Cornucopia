@@ -8,10 +8,13 @@ export type LatLng = { lat: number; lng: number };
  */
 export async function geocodeAddress(address: string): Promise<LatLng> {
   const payload = { addressToGeocode: address };
-  console.log(`Payload ${payload.addressToGeocode}}`);
-  const { data, error } = await supabase.functions.invoke('geocode-address', { body: payload });
+  // console.log(`Payload ${payload.addressToGeocode}}`);
+  const { data, error } = await supabase.functions.invoke('get-lat-lng-from-address', {
+    body: payload,
+  });
   if (error) throw error;
   if (!data) throw new Error('No data returned from geocoding');
+  console.log(data);
   return data as LatLng;
 }
 
