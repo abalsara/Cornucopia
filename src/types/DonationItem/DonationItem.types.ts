@@ -28,14 +28,14 @@ export type DonationItem =
 
 // all DonationItems have at least these attributes
 export type BaseDonationItem = {
-  itemId: string;
   itemName: string;
   notes: string;
   quantity: number;
   unit: string;
   category: Category;
-  fulfilled?: boolean;
+  item_id: string;
   donationId?: string;
+  fulfilled?: boolean;
 };
 
 // each donation item type has a unique Category

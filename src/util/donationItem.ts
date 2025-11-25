@@ -38,7 +38,6 @@ export const getDonationCardSubtitle = (item: DonationItem): string => {
 
 export const scheduledDonationIsFulfilled = (scheduledDonation: ScheduledDonation): boolean => {
   for (const item of scheduledDonation.items) {
-    console.log('Fulfilled: ', item.fulfilled);
     if (item.fulfilled === true) {
       return true;
     }

@@ -6,6 +6,13 @@ import { Tables } from '../types/database.types';
 
 export type Donation = Tables<'Donation'>;
 
+type DonationDetails = {
+  pid: string;
+  scheduledDate: string;
+  item: DonationItem;
+  fulfilled: boolean;
+};
+
 export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDonation[]> => {
   const donations = await fetchDonations();
   const adminNeeds = await fetchNeedsByAdmin();
@@ -24,13 +31,6 @@ export const fetchDonations = async (): Promise<Donation[]> => {
   return donations;
 };
 
-type DonationDetails = {
-  pid: string;
-  scheduledDate: string;
-  item: DonationItem;
-  fulfilled: boolean;
-};
-
 export const updateDonationsAsFulfilled = async (
   scheduledDonation: ScheduledDonation,
 ): Promise<void> => {
@@ -38,10 +38,9 @@ export const updateDonationsAsFulfilled = async (
   const updated = [];
   for (const item of items) {
     if (!item.donationId) throw new Error('donationId is undefined');
-    console.log('donationId: ', item.donationId);
     updated.push({
       donation_id: item.donationId,
-      item_id: item.itemId,
+      item_id: item.item_id,
       pid,
       cid,
       quantity_comitted: item.quantity,
@@ -63,10 +62,9 @@ const donationsToScheduledDonations = (
   const items: ScheduledDonation[] = [];
   const donationMap: Map<string, DonationDetails[]> = new Map();
   for (const donation of donations) {
-    const need = needs.find((need) => need.itemId === donation.item_id);
+    const need = needs.find((need) => need.item_id === donation.item_id);
     if (need) {
       const merge = structuredClone(need);
-      console.log('record:', merge);
       merge.quantity = donation.quantity_comitted;
       merge.donationId = donation.donation_id;
       merge.fulfilled = donation.fulfilled;

@@ -92,7 +92,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
     const base = {
       category,
       cid: need.cid ?? request.cid ?? '',
-      itemId: need.item_id ?? request.item_id ?? '',
+      item_id: need.item_id ?? request.item_id ?? '',
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
       quantity: need.quantity ?? request.quantitiy ?? 1,
