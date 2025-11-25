@@ -8,11 +8,16 @@ import ThemedView from '@/src/components/ThemedView';
 import ActionButton from '@/src/components/buttons/ActionButton';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
 import DonationItemModalRead from '@/src/components/modals/DonationItemModalRead';
+import { updateDonationsAsFulfilled } from '@/src/lib/donation';
 import { getProfile, Profile } from '@/src/lib/profiles';
-import { getCharityScheduledDonation } from '@/src/stores/charityScheduledDonations';
+import {
+  getCharityScheduledDonation,
+  initCharityScheduledDonationsStore,
+} from '@/src/stores/charityScheduledDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
+import { scheduledDonationIsFulfilled } from '@/src/util/donationItem';
 
 export default function CharityDonationDetails() {
   const { dateString, pid } = useLocalSearchParams<{ dateString: string; pid: string }>();
@@ -45,13 +50,15 @@ export default function CharityDonationDetails() {
   if (!donor) throw new Error('Donor is undefined');
   if (!donation) throw new Error('Donation is undefined');
 
+  const fulfilled = scheduledDonationIsFulfilled(donation);
+
   const handleCardPress = (item: DonationItem): void => {
     setSelectedItem(item);
     setModalVisible(true);
   };
 
   const renderStatusBanner = (): JSX.Element | undefined => {
-    if (donation.fulfilled) {
+    if (fulfilled) {
       return (
         <View
           style={{
@@ -77,6 +84,28 @@ export default function CharityDonationDetails() {
         </View>
       );
     }
+  };
+
+  const renderActionButton = (): JSX.Element | undefined => {
+    if (!fulfilled) {
+      return (
+        <View style={styles.button}>
+          <ActionButton label="Mark as Received" onPress={handleCompletePress} />
+        </View>
+      );
+    }
+  };
+
+  const handleCompletePress = async (): Promise<void> => {
+    setLoading(true);
+    const updated = donation;
+    for (const item of updated.items) {
+      item.fulfilled = true;
+    }
+    await updateDonationsAsFulfilled(updated);
+    await initCharityScheduledDonationsStore();
+    setDonation(getCharityScheduledDonation(date, pid));
+    setLoading(false);
   };
 
   return (
@@ -110,9 +139,7 @@ export default function CharityDonationDetails() {
             item={selectedItem}
           />
         </Portal>
-        <View style={styles.button}>
-          <ActionButton label="Complete Donation" onPress={() => {}} />
-        </View>
+        {renderActionButton()}
       </Portal.Host>
     </ThemedView>
   );

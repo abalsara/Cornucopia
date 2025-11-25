@@ -4,7 +4,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { JSX, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, Divider, List, Portal, Text, useTheme } from 'react-native-paper';
+import { Appbar, List, Portal, Text, useTheme } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
@@ -13,6 +13,7 @@ import { getCharity } from '@/src/stores/charities';
 import { getScheduledDonation, removeScheduledDonation } from '@/src/stores/scheduledDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
+import { scheduledDonationIsFulfilled } from '@/src/util/donationItem';
 
 /**
  * This page renders information about a scheduled donation including
@@ -44,7 +45,7 @@ export default function DonationDetailsPage() {
   };
 
   const renderStatusBanner = (): JSX.Element | undefined => {
-    if (scheduledDonation.fulfilled) {
+    if (scheduledDonationIsFulfilled(scheduledDonation)) {
       return (
         <View
           style={{

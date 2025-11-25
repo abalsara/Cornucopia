@@ -13,7 +13,6 @@ export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDo
   const uid = user.data.user?.id;
   if (!uid) throw new Error('user id is undefined');
 
-  console.log(`donations length: ${donations.length}`);
   return donationsToScheduledDonations(donations, adminNeeds.needs, adminNeeds.cid ?? 'null');
 };
 
@@ -32,6 +31,29 @@ type DonationDetails = {
   fulfilled: boolean;
 };
 
+export const updateDonationsAsFulfilled = async (
+  scheduledDonation: ScheduledDonation,
+): Promise<void> => {
+  const { pid, cid, items, scheduledDate } = scheduledDonation;
+  const updated = [];
+  for (const item of items) {
+    if (!item.donationId) throw new Error('donationId is undefined');
+    console.log('donationId: ', item.donationId);
+    updated.push({
+      donation_id: item.donationId,
+      item_id: item.itemId,
+      pid,
+      cid,
+      quantity_comitted: item.quantity,
+      scheduled_date: scheduledDate,
+      fulfilled: item.fulfilled === true,
+    });
+  }
+
+  const { error } = await supabase.from('Donation').upsert(updated);
+  if (error) throw error;
+};
+
 // returns a new array of items that exist in both parameters
 const donationsToScheduledDonations = (
   donations: Donation[],
@@ -45,7 +67,9 @@ const donationsToScheduledDonations = (
     if (need) {
       const merge = structuredClone(need);
       console.log('record:', merge);
-      merge.quantity = donation.quantitiy_comitted;
+      merge.quantity = donation.quantity_comitted;
+      merge.donationId = donation.donation_id;
+      merge.fulfilled = donation.fulfilled;
 
       const key = hashDonation(donation.scheduled_date, donation.pid);
 

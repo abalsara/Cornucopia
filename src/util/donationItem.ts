@@ -1,4 +1,5 @@
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
+import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 
 /**
  * returns a description of a given DoantionItem for use on a DonationCard component
@@ -33,4 +34,14 @@ export const getDonationCardSubtitle = (item: DonationItem): string => {
     default:
       return notes;
   }
+};
+
+export const scheduledDonationIsFulfilled = (scheduledDonation: ScheduledDonation): boolean => {
+  for (const item of scheduledDonation.items) {
+    console.log('Fulfilled: ', item.fulfilled);
+    if (item.fulfilled === true) {
+      return true;
+    }
+  }
+  return false;
 };

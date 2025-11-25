@@ -7,6 +7,7 @@ import { getProfile, Profile } from '@/src/lib/profiles';
 import { getCharity } from '@/src/stores/charities';
 import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
 import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
+import { scheduledDonationIsFulfilled } from '@/src/util/donationItem';
 
 type ScheduledDonationCardProps = {
   scheduledDonation: ScheduledDonation;
@@ -47,7 +48,7 @@ export default function ScheduledDonationCard(props: ScheduledDonationCardProps)
   };
 
   const renderStatus = (): JSX.Element | undefined => {
-    if (props.scheduledDonation.fulfilled) {
+    if (scheduledDonationIsFulfilled(props.scheduledDonation)) {
       return <Text style={{ color: theme.colors.secondary }}>Received</Text>;
     }
     const now = new Date();
