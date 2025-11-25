@@ -30,6 +30,7 @@ export default function TabLayout() {
         name="availability"
         options={{
           title: 'Availability',
+          headerTitle: 'Drop-off Availability',
           tabBarIcon: ({ color }) => <FontAwesome6 size={28} name="clock" color={color} />,
         }}
       />
@@ -38,6 +39,7 @@ export default function TabLayout() {
         name="needs"
         options={{
           title: 'Needs',
+          headerTitle: '',
           tabBarIcon: ({ color }) => <FontAwesome6 name="clipboard-list" size={24} color={color} />,
         }}
       />

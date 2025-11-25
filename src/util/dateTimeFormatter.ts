@@ -48,6 +48,27 @@ export function formatTime(date: Date): string {
 }
 
 /**
+ * Converts a time string (e.g., `"14:30"`) into a formatted 12-hour time string
+ * using the `formatTime` utility. If the input is `null` or empty, `undefined`
+ * is returned.
+ *
+ * This helper is useful when time values are stored as `"HH:MM"` strings (such
+ * as those coming from supabase) but need to be displayed in user-friendly
+ * AM/PM format.
+ *
+ * @param {string | null} time - A time string in `"HH:MM"` format, or `null` if no time is available.
+ * @returns {string | undefined} A formatted time string (e.g., `"2:30 PM"`), or `undefined` if input is invalid.
+ */
+export const formatTimeFromString = (time: string | null): string | undefined => {
+  if (!time) return undefined;
+
+  const [h, m] = time.split(':').map(Number);
+  const date = new Date();
+  date.setHours(h, m);
+  return formatTime(date);
+};
+
+/**
  * Helper: Returns the ordinal suffix for a given day (e.g., "st", "nd", "rd", "th").
  */
 function getOrdinalSuffix(day: number): string {
