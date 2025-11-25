@@ -8,5 +8,4 @@ export type ScheduledDonation = {
   pid: string;
   scheduledDate: Date;
   items: DonationItem[];
-  fulfilled?: boolean;
 };
