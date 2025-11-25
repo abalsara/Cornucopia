@@ -1,4 +1,5 @@
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
+import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 
 /**
  * returns a description of a given DoantionItem for use on a DonationCard component
@@ -33,4 +34,18 @@ export const getDonationCardSubtitle = (item: DonationItem): string => {
     default:
       return notes;
   }
+};
+
+/**
+ * Checks if at least one of the scheduled donation items is fulfilled
+ * @param scheduledDonation - The scheduled donations to check
+ * @returns true iff at least one of the scheduled donation items is fulfilled
+ */
+export const scheduledDonationIsFulfilled = (scheduledDonation: ScheduledDonation): boolean => {
+  for (const item of scheduledDonation.items) {
+    if (item.fulfilled === true) {
+      return true;
+    }
+  }
+  return false;
 };

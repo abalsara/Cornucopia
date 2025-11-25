@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS "public"."Donation" (
     "pid" "uuid",
     "item_id" "uuid",
     "cid" "uuid",
-    "quantitiy_comitted" integer DEFAULT 1,
+    "quantity_comitted" integer DEFAULT 1,
     "scheduled_date" timestamp with time zone,
     "fulfilled" boolean DEFAULT false,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS "public"."Request" (
     "item_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "cid" "uuid",
     "item_name" "text",
-    "quantitiy_requested" integer DEFAULT 1,
+    "quantity_requested" integer DEFAULT 1,
     "quantity_fulfilled" integer DEFAULT 0,
     "urgency" smallint DEFAULT '0'::smallint,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,

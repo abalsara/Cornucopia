@@ -1,5 +1,11 @@
+import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
+
+export type AdminNeeds = {
+  cid: string | null;
+  needs: DonationItem[];
+};
 
 /**
  * Get the charity needs for a given charity ID.
@@ -33,6 +39,30 @@ export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
 
   return data.needs ?? [];
 }
+
+/**
+ * Fetches all needs associated with the charity administered by the
+ * currently authenticated user. If the user is not an administrator, an error
+ * is thrown. If the administrator's charity ID  is null, an empty list
+ * of needs is returned.
+ *
+ * @returns {Promise<AdminNeeds>} An object containing the administrator's
+ *   charity ID and its associated need items.
+ * @throws {Error} If the authenticated user is not a charity administrator.
+ */
+export const fetchNeedsByAdmin = async (): Promise<AdminNeeds> => {
+  const admin = await fetchAdmin();
+  if (!admin) {
+    throw new Error('User is not a charity administrator');
+  }
+
+  const { cid } = admin;
+  if (cid !== null) {
+    const needs = await getCharityNeeds(cid);
+    return { cid, needs };
+  }
+  return { cid, needs: [] };
+};
 
 /**
  * Creates a new need entry in the specified table for the given charity ID (cid).
@@ -73,9 +103,10 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       category,
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
-      quantity: need.quantity ?? request.quantitiy ?? 1,
+      quantity: need.quantity ?? request.quantity ?? 1,
       unit: need.unit ?? request.unit ?? 'Ea.',
       item_id: need.item_id ?? request.request_id ?? '',
+      cid: need.cid,
     };
 
     let donationItem: DonationItem;
