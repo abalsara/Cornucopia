@@ -20,3 +20,14 @@ export const fetchAdmin = async (): Promise<Admin | undefined> => {
   const admin: Admin = data;
   return admin;
 };
+
+/**
+ * Gets an admin by their user id (uid). Used to fetch cid associated with admin.
+ * @param uid user id
+ * @returns the admin with the given uid, or null if not found
+ */
+export const getAdminByUid = async (uid: string): Promise<Admin | null> => {
+  const { data, error } = await supabase.from('admin').select().eq('uid', uid).maybeSingle();
+  if (error) throw new Error(`error while calling getAdminByUid: ${error}`);
+  return data;
+};

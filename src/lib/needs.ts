@@ -1,5 +1,6 @@
 import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
+import { NeedPayload } from '../app/charity/(modals)/newNeedForm';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 
 export type AdminNeeds = {
@@ -107,6 +108,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       unit: need.unit ?? request.unit ?? 'Ea.',
       item_id: request.request_id ?? need.item_id,
       cid: need.cid,
+      priority: request.priority ?? need.priority ?? 'Low',
     };
 
     let donationItem: DonationItem;
@@ -204,4 +206,25 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
   }
 
   return parsedDonations;
+}
+
+export async function insertNeed(payload: NeedPayload): Promise<void> {
+  // clear all undefined fields from payload
+  Object.keys(payload).forEach((key) => {
+    if (payload[key as keyof NeedPayload] == undefined) {
+      delete payload[key as keyof NeedPayload];
+    }
+  });
+  console.log('Creating request with payload:', payload);
+  const { data, error } = await supabase.functions.invoke('insert-need', {
+    body: payload,
+    method: 'POST',
+  });
+
+  if (error) {
+    console.error('Error inserting need:', error);
+    throw error;
+  }
+
+  console.log('Need inserted successfully:', data);
 }

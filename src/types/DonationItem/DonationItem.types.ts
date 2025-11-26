@@ -35,6 +35,7 @@ export type BaseDonationItem = {
   category: Category;
   item_id: string;
   cid: string;
+  priority: string;
   donationId?: string;
   fulfilled?: boolean;
 };
