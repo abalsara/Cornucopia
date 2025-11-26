@@ -8,6 +8,7 @@ import CharityFilter from '../(modals)/charityFilter';
 import ThemedView from '@/src/components/ThemedView';
 import { Charity } from '@/src/lib/charities';
 import { getCharities } from '@/src/stores/charities';
+import { calculateDistance } from '@/src/util/distance';
 
 // const charities: Charity[] = [
 //   // PLACEHOLDER CHARITIES
@@ -35,12 +36,21 @@ export default function CharityResults() {
   const theme = useTheme();
   const router = useRouter();
 
-  const { lat, lon } = useLocalSearchParams<{ lat: string; lon: string }>();
+  const { lat, lon, search } = useLocalSearchParams<{ lat: string; lon: string; search: string }>();
   const userLat = parseFloat(lat);
   const userLon = parseFloat(lon);
 
   // const charities = getCharities();
-  const [charities, setCharities] = useState<Charity[]>(getCharities());
+  const [charities, setCharities] = useState<Charity[]>(
+    getCharities().sort((charity) => {
+      const charityLat: number | null = charity.latitude == null ? 0 : charity.latitude;
+      const charityLon: number | null = charity.longitude == null ? 0 : charity.longitude;
+      //47.6061
+      //-122.3328
+      console.log('Charity lat, lon' + charityLat + ' ' + charityLon);
+      return calculateDistance(charityLat, charityLon, userLat, userLon);
+    }),
+  );
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const handleApply = (filtered: Charity[]): void => {
@@ -64,7 +74,7 @@ export default function CharityResults() {
             <IconButton icon="arrow-left" size={24} onPress={() => router.back()} />
             <View style={styles.headerTextContainer}>
               <Text variant="titleLarge" style={styles.headerTitle}>
-                Charities Near Seattle
+                Charities Near {search == null ? 'user' : search}
               </Text>
               <Text variant="labelMedium" style={styles.headerSubtitle}>
                 within 50 miles
