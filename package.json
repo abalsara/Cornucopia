@@ -47,7 +47,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "@supabase/supabase-js": "^2.76.1",
+    "@supabase/supabase-js": "^2.84.0",
     "@types/node": "^24.10.1",
     "adm-zip": "^0.5.16",
     "axios": "^1.13.2",
