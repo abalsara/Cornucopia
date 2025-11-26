@@ -232,36 +232,58 @@ export type Database = {
       };
       Donation: {
         Row: {
-          cid: string | null;
+          cid: string;
           created_at: string;
           donation_id: string;
-          fulfilled: boolean | null;
-          item_id: string | null;
-          pid: string | null;
-          quantitiy_comitted: number | null;
-          scheduled_date: string | null;
+          fulfilled: boolean;
+          item_id: string;
+          pid: string;
+          quantity_comitted: number;
+          scheduled_date: string;
         };
         Insert: {
-          cid?: string | null;
+          cid: string;
           created_at?: string;
           donation_id?: string;
-          fulfilled?: boolean | null;
-          item_id?: string | null;
-          pid?: string | null;
-          quantitiy_comitted?: number | null;
-          scheduled_date?: string | null;
+          fulfilled?: boolean;
+          item_id: string;
+          pid: string;
+          quantity_comitted?: number;
+          scheduled_date: string;
         };
         Update: {
-          cid?: string | null;
+          cid?: string;
           created_at?: string;
           donation_id?: string;
-          fulfilled?: boolean | null;
-          item_id?: string | null;
-          pid?: string | null;
-          quantitiy_comitted?: number | null;
-          scheduled_date?: string | null;
+          fulfilled?: boolean;
+          item_id?: string;
+          pid?: string;
+          quantity_comitted?: number;
+          scheduled_date?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'Donation_cid_fkey';
+            columns: ['cid'];
+            isOneToOne: false;
+            referencedRelation: 'Charities';
+            referencedColumns: ['cid'];
+          },
+          {
+            foreignKeyName: 'Donation_item_id_fkey';
+            columns: ['item_id'];
+            isOneToOne: false;
+            referencedRelation: 'Request';
+            referencedColumns: ['request_id'];
+          },
+          {
+            foreignKeyName: 'Donation_pid_fkey';
+            columns: ['pid'];
+            isOneToOne: false;
+            referencedRelation: 'Profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       Electronics: {
         Row: {
@@ -407,7 +429,7 @@ export type Database = {
           },
         ];
       };
-      HygieneProduct: {
+      HygieneProducts: {
         Row: {
           cid: string;
           created_at: string;
@@ -425,14 +447,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'HygieneProduct_cid_fkey';
+            foreignKeyName: 'HygieneProducts_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'HygieneProduct_item_id_fkey';
+            foreignKeyName: 'HygieneProducts_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';
@@ -549,10 +571,11 @@ export type Database = {
           created_at: string;
           item_name: string;
           notes: string | null;
-          quantitiy: number;
+          quantity: number;
           quantity_fulfilled: number;
           request_id: string;
           unit: string;
+          priority: string;
         };
         Insert: {
           category?: Database['public']['Enums']['RequestTypeT'];
@@ -560,7 +583,7 @@ export type Database = {
           created_at?: string;
           item_name: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;
@@ -571,7 +594,7 @@ export type Database = {
           created_at?: string;
           item_name?: string;
           notes?: string | null;
-          quantitiy?: number;
+          quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
           unit?: string;
@@ -694,7 +717,7 @@ export type Database = {
           },
         ];
       };
-      Uncatergorized: {
+      Uncategorized: {
         Row: {
           cid: string;
           created_at: string;
@@ -712,14 +735,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'Uncatergorized_cid_fkey';
+            foreignKeyName: 'Uncategorized_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'Uncatergorized_item_id_fkey';
+            foreignKeyName: 'Uncategorized_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';

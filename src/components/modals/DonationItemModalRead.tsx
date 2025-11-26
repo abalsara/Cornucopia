@@ -31,7 +31,11 @@ export default function DonationItemModalRead(props: DonationItemModalReadProps)
           backgroundColor: theme.colors.background,
         }}>
         <View>
-          <View style={{ flexDirection: 'row-reverse' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text variant="titleLarge" style={{ marginLeft: 20 }}>
+              {item.category}
+            </Text>
             <Feather
               onPress={() => props.setIsVisible(false)}
               style={{ padding: 15 }}
@@ -43,25 +47,13 @@ export default function DonationItemModalRead(props: DonationItemModalReadProps)
           <View style={styles.modalContent}>
             <View>
               <Text variant="headlineMedium">{item.itemName}</Text>
-              <Text variant="titleLarge" style={styles.mt20}>
+              <Text variant="bodyLarge">{item.notes}</Text>
+              <Text variant="titleMedium" style={styles.mt20}>
                 Quantity
               </Text>
-            </View>
-            <View style={styles.QuantityContainer}>
-              <View>
-                <Text variant="labelLarge">Number</Text>
-                <Text>{item.quantity}</Text>
-              </View>
-              <View style={styles.QuantityUnitContainer}>
-                <Text variant="labelLarge">Unit</Text>
-                <Text variant="titleMedium" style={{ marginTop: 20 }}>
-                  {item.unit}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.mt20}>
-              <Text variant="titleLarge">Notes</Text>
-              <Text>{item.notes}</Text>
+              <Text variant="bodyLarge">
+                {item.quantity} {item.unit}
+              </Text>
             </View>
           </View>
         </View>

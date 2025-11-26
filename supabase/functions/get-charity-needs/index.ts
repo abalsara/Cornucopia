@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       'SchoolOfficeSupplies',
       'SportsEquipment',
       'ToysGames',
-      'Uncatergorized',
+      'Uncategorized',
     ];
     const results = await Promise.all(
       needsTables.map(async (table) => {
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
             *,
             Request (
               item_name,
-              quantitiy,
+              quantity,
               quantity_fulfilled,
               notes,
               unit,

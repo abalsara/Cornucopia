@@ -5,6 +5,7 @@ import { DonationItem } from './DonationItem.types';
  */
 export type ScheduledDonation = {
   cid: string;
+  pid: string;
   scheduledDate: Date;
   items: DonationItem[];
 };

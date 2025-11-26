@@ -1,5 +1,12 @@
+import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
+import { NeedPayload } from '../app/charity/(modals)/newNeedForm';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
+
+export type AdminNeeds = {
+  cid: string | null;
+  needs: DonationItem[];
+};
 
 /**
  * Get the charity needs for a given charity ID.
@@ -33,6 +40,30 @@ export async function fetchAllCharityNeeds(cid: string): Promise<any[]> {
 
   return data.needs ?? [];
 }
+
+/**
+ * Fetches all needs associated with the charity administered by the
+ * currently authenticated user. If the user is not an administrator, an error
+ * is thrown. If the administrator's charity ID  is null, an empty list
+ * of needs is returned.
+ *
+ * @returns {Promise<AdminNeeds>} An object containing the administrator's
+ *   charity ID and its associated need items.
+ * @throws {Error} If the authenticated user is not a charity administrator.
+ */
+export const fetchNeedsByAdmin = async (): Promise<AdminNeeds> => {
+  const admin = await fetchAdmin();
+  if (!admin) {
+    throw new Error('User is not a charity administrator');
+  }
+
+  const { cid } = admin;
+  if (cid !== null) {
+    const needs = await getCharityNeeds(cid);
+    return { cid, needs };
+  }
+  return { cid, needs: [] };
+};
 
 /**
  * Creates a new need entry in the specified table for the given charity ID (cid).
@@ -73,9 +104,11 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       category,
       itemName: need.item_name ?? request.item_name ?? '',
       notes: need.notes ?? request.notes ?? '',
-      quantity: need.quantity ?? request.quantitiy ?? 1,
+      quantity: need.quantity ?? request.quantity ?? 1,
       unit: need.unit ?? request.unit ?? 'Ea.',
-      item_id: need.item_id ?? request.request_id ?? '',
+      item_id: request.request_id ?? need.item_id,
+      cid: need.cid,
+      priority: request.priority ?? need.priority ?? 'Low',
     };
 
     let donationItem: DonationItem;
@@ -173,4 +206,25 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
   }
 
   return parsedDonations;
+}
+
+export async function insertNeed(payload: NeedPayload): Promise<void> {
+  // clear all undefined fields from payload
+  Object.keys(payload).forEach((key) => {
+    if (payload[key as keyof NeedPayload] == undefined) {
+      delete payload[key as keyof NeedPayload];
+    }
+  });
+  console.log('Creating request with payload:', payload);
+  const { data, error } = await supabase.functions.invoke('insert-need', {
+    body: payload,
+    method: 'POST',
+  });
+
+  if (error) {
+    console.error('Error inserting need:', error);
+    throw error;
+  }
+
+  console.log('Need inserted successfully:', data);
 }

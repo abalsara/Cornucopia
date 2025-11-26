@@ -1,102 +1,107 @@
 // supabase/functions/create_need/index.ts
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { randomUUID } from 'node:crypto';
 const tableHandlers = {
-  AnimalCareSupplies: (body, cid) => ({
-    cid,
-    animal: body.animal ?? 'Dogs',
-    type: body.type ?? 'Other',
-    notes: body.notes ?? null,
-    quantity: body.quantity ?? 1,
-    unit: body.unit ?? 'Ea.',
-    item_name: body.item_name,
+  'Animal Care Supplies': (body, cid, item_id) => ({
+    tableName: 'AnimalCareSupplies',
+    data: {
+      cid,
+      animal: body.animal ?? 'Dogs',
+      type: body.type ?? 'Other',
+      item_id,
+    },
   }),
-  Clothing: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    size: body.size ?? 'Unknown',
-    gender: body.gender ?? 'Unisex',
-    age_group: body.age_group ?? 'All Ages',
-    season: body.season ?? 'All',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  Clothing: (body, cid, item_id) => ({
+    tableName: 'Clothing',
+    data: {
+      cid,
+      gender: body.gender ?? 'Unisex',
+      age_group: body.age_group ?? 'All Ages',
+      item_id,
+    },
   }),
-  Electronics: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    type: body.type ?? 'Other',
-    condition: body.condition ?? 'Used',
-    power_type: body.power_type ?? 'Unknown',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  Electronics: (body, cid, item_id) => ({
+    tableName: 'Electronics',
+    data: {
+      cid,
+      type: body.type ?? 'Other',
+      item_id,
+    },
   }),
-  Food: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    quantity: body.quantity ?? 1,
-    unit: body.unit ?? 'Ea.',
-    storage_reqs: body.storage_reqs ?? 'Shelf Stable',
-    notes: body.notes ?? null,
+  Food: (body, cid, item_id) => ({
+    tableName: 'Food',
+    data: {
+      cid,
+      storage_reqs: body.storage_reqs ?? 'Shelf Stable',
+      item_id,
+    },
   }),
-  Furniture: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    type: body.type ?? 'Other',
-    quantity: body.quantity ?? 1,
-    condition: body.condition ?? 'Used',
-    notes: body.notes ?? null,
+  Furniture: (body, cid, item_id) => ({
+    tableName: 'Furniture',
+    data: {
+      cid,
+      type: body.type ?? 'Other',
+      item_id,
+    },
   }),
-  HouseholdGoods: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    type: body.type ?? 'Other',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'Household Goods': (body, cid, item_id) => ({
+    tableName: 'HouseholdGoods',
+    data: {
+      cid,
+      type: body.type ?? 'Other',
+      item_id,
+    },
   }),
-  HygieneProduct: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'Hygiene Products': (body, cid, item_id) => ({
+    tableName: 'HygieneProducts',
+    data: {
+      cid,
+      item_id,
+    },
   }),
-  MedicalSupplies: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    type: body.type ?? 'Other',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'Medical Supplies': (body, cid, item_id) => ({
+    tableName: 'MedicalSupplies',
+    data: {
+      cid,
+      type: body.type ?? 'Other',
+      item_id,
+    },
   }),
-  SchoolOfficeSupplies: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'School & Office Supplies': (body, cid, item_id) => ({
+    tableName: 'SchoolOfficeSupplies',
+    data: {
+      cid,
+      item_id,
+    },
   }),
-  SportsEquipment: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    type: body.type ?? 'Other',
-    age_group: body.age_group ?? 'All Ages',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'Sports Equipment': (body, cid, item_id) => ({
+    tableName: 'SportsEquipment',
+    data: {
+      cid,
+      type: body.type ?? 'Other',
+      age_group: body.age_group ?? 'All Ages',
+      item_id,
+    },
   }),
-  ToysGames: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    age_group: body.age_group ?? 'All Ages',
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  'Toys & Games': (body, cid, item_id) => ({
+    tableName: 'ToysGames',
+    data: {
+      cid,
+      age_group: body.age_group ?? 'All Ages',
+      item_id,
+    },
   }),
-  Uncatergorized: (body, cid) => ({
-    cid,
-    item_name: body.item_name,
-    quantity: body.quantity ?? 1,
-    notes: body.notes ?? null,
+  Uncategorized: (body, cid, item_id) => ({
+    tableName: 'Uncategorized',
+    data: {
+      cid,
+      item_id,
+    },
   }),
 };
 Deno.serve(async (req) => {
   try {
-    // Validate method
     if (req.method !== 'POST') {
       return new Response(
         JSON.stringify({
@@ -110,12 +115,11 @@ Deno.serve(async (req) => {
         },
       );
     }
-    // Initialize Supabase client with Service Role key
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
-    // Validate authorization header
+    // Validate auth token
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -148,14 +152,12 @@ Deno.serve(async (req) => {
         },
       );
     }
-    // Parse query params
-    const url = new URL(req.url);
-    const cid = url.searchParams.get('cid');
-    const table = url.searchParams.get('table');
-    if (!cid || !table) {
+    // Parse body
+    const body = await req.json().catch(() => null);
+    if (!body) {
       return new Response(
         JSON.stringify({
-          error: 'Missing required params: cid, table',
+          error: 'Missing or invalid JSON body',
         }),
         {
           status: 400,
@@ -165,35 +167,29 @@ Deno.serve(async (req) => {
         },
       );
     }
-    // Whitelist valid tables
-    const validTables = [
-      'AnimalCareSupplies',
-      'Clothing',
-      'Electronics',
-      'Food',
-      'Furniture',
-      'HouseholdGoods',
-      'HygieneProduct',
-      'MedicalSupplies',
-      'SchoolOfficeSupplies',
-      'SportsEquipment',
-      'ToysGames',
-      'Uncatergorized',
-    ];
-    if (!validTables.includes(table)) {
+    const { cid, category, item_name } = body;
+    if (!cid || !category || !item_name) {
       return new Response(
         JSON.stringify({
-          error: `Invalid table: ${table}`,
+          error: "Missing required fields: 'cid', 'category', or 'item_name'",
         }),
         {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-          },
         },
       );
     }
-    // Verify admin permissions
+    const validCategories = Object.keys(tableHandlers);
+    if (!validCategories.includes(category)) {
+      return new Response(
+        JSON.stringify({
+          error: `Invalid category '${category}'. Must be one of: ${validCategories.join(', ')}`,
+        }),
+        {
+          status: 400,
+        },
+      );
+    }
+    // Admin verification
     const { data: adminRecord, error: adminErr } = await supabaseAdmin
       .from('admin')
       .select('cid')
@@ -208,9 +204,6 @@ Deno.serve(async (req) => {
         }),
         {
           status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-          },
         },
       );
     }
@@ -221,38 +214,23 @@ Deno.serve(async (req) => {
         }),
         {
           status: 403,
-          headers: {
-            'Content-Type': 'application/json',
-          },
         },
       );
     }
-    // Parse body
-    const body = await req.json().catch(() => null);
-    if (!body || !body.item_name) {
-      return new Response(
-        JSON.stringify({
-          error: 'Missing request body or item_name',
-        }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-    }
-    // Create new Request record
+    const item_id = randomUUID();
+    // Insert into Request table
     const { data: requestData, error: requestErr } = await supabaseAdmin
       .from('Request')
       .insert({
         cid,
-        item_name: body.item_name,
-        quantitiy: body.quantitiy ?? 1,
+        item_name,
+        quantity: body.quantity ?? 1,
         quantity_fulfilled: 0,
         unit: body.unit ?? 'Ea.',
         notes: body.notes ?? 'No additional notes.',
-        type: body.type ?? 'Uncategorized',
+        category: body.category ?? 'Uncategorized',
+        request_id: item_id,
+        priority: body.priority,
       })
       .select()
       .single();
@@ -260,55 +238,40 @@ Deno.serve(async (req) => {
       console.error('Error inserting into Request:', requestErr);
       return new Response(
         JSON.stringify({
-          error: 'Failed to insert into Request',
+          error: 'Failed to insert into Request table',
+          details: requestErr.message,
         }),
         {
           status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-          },
         },
       );
     }
-    // Insert into the corresponding item table
-    const handler = tableHandlers[table];
-    if (!handler) {
-      return new Response(
-        JSON.stringify({
-          error: `Invalid table: ${table}`,
-        }),
-        {
-          status: 400,
-        },
-      );
-    }
-    const insertRow = handler(body, cid);
+    // Insert into the specific item table
+    const handler = tableHandlers[category];
+    const { tableName, data: insertRow } = handler(body, cid, item_id);
     const { data: itemData, error: itemErr } = await supabaseAdmin
-      .from(table)
+      .from(tableName)
       .insert(insertRow)
       .select()
       .single();
     if (itemErr) {
-      console.error(`Error inserting into ${table}:`, itemErr);
+      console.error(`Error inserting into ${tableName}:`, itemErr);
       return new Response(
         JSON.stringify({
-          error: `Failed to insert into ${table}`,
+          error: `Failed to insert into ${tableName}`,
+          details: itemErr.message,
         }),
         {
           status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-          },
         },
       );
     }
-    // Combine response
     return new Response(
       JSON.stringify({
         message: 'Need created successfully',
         request: requestData,
         item: {
-          table,
+          category,
           ...itemData,
         },
       }),

@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
       'SchoolOfficeSupplies',
       'SportsEquipment',
       'ToysGames',
-      'Uncatergorized',
+      'Uncategorized',
     ];
     // Fetch needs data for each category
     const results = await Promise.all(
@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
             *,
             Request (
               item_name,
-              quantitiy,
+              quantity,
               quantity_fulfilled,
               notes,
               unit,

@@ -8,7 +8,7 @@ INSERT INTO "public"."Request" (
   "quantity_fulfilled",
   "category",
   "notes",
-  "quantitiy",
+  "quantity",
   "unit"
 )
 VALUES

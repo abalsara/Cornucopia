@@ -1,16 +1,18 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Calendar } from 'react-native-calendars';
+import { Text, useTheme } from 'react-native-paper';
 
+import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
 import Navbar from '@/src/components/bars/Navbar';
 import ActionButton from '@/src/components/buttons/ActionButton';
-import DatePicker from '@/src/components/modals/DatePicker';
-import TimePicker from '@/src/components/modals/TimePicker';
+import TimeIntervalList from '@/src/components/lists/TimeIntervalList';
+import { Availability, fetchAvailabilityByCid } from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
 import { setSavedSchedule } from '@/src/stores/savedSchedule';
-import { formatDate, formatTime } from '@/src/util/dateTimeFormatter';
+import { getUnavailableDays } from '@/src/util/dateTimeFormatter';
 
 /**
  * This page allows the donor to pick a date and time to drop off their donation
@@ -23,37 +25,30 @@ export default function ScheduleDropoffPage() {
   const theme = useTheme();
   const router = useRouter();
 
-  // date state
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [dateVisible, setDateVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [availability, setAvailability] = useState<Availability[]>([]);
+  const unavailableDays = getUnavailableDays(availability);
+  const today = new Date();
+  const todayString = today.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-  // time state
-  const [hours, setHours] = useState<number | undefined>();
-  const [minutes, setMinutes] = useState<number | undefined>();
-  const [timeVisible, setTimeVisible] = useState(false);
+  // set availability state
+  useEffect(() => {
+    fetchAvailabilityByCid(cid).then((availability) => {
+      setAvailability(availability);
+      setLoading(false);
+    });
+  }, []);
 
-  const handleConfirmDate = (date?: Date): void => {
-    setDate(date);
-    setDateVisible(false);
+  const handleBackArrowPress = (): void => {
+    setDate(undefined);
   };
 
-  const handleConfirmTime = (hours: number, minutes: number): void => {
-    if (date) {
-      setHours(hours);
-      setMinutes(minutes);
-
-      const newDate = date;
-      newDate.setHours(hours, minutes);
-      setDate(newDate);
-      setTimeVisible(false);
-    }
-  };
-
-  const getFormattedTime = (): string => {
-    if (date !== undefined && hours !== undefined && minutes !== undefined) {
-      return formatTime(date);
-    }
-    return 'no time selected';
+  const handleIntervalPress = (hours: number, minutes: number) => {
+    if (!date) throw new Error('invalid date');
+    const newDate = new Date(date);
+    newDate.setHours(hours, minutes);
+    setDate(newDate);
   };
 
   const handleNextButtonPress = (): void => {
@@ -62,9 +57,13 @@ export default function ScheduleDropoffPage() {
     router.push(`/pages/reviewAndConfirmPage?cid=${cid}`);
   };
 
-  const handleSelectTimePress = (): void => {
-    setTimeVisible(true);
-  };
+  if (loading) {
+    return (
+      <ThemedView>
+        <CenteredActivityIndicator />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView>
@@ -78,42 +77,36 @@ export default function ScheduleDropoffPage() {
             Pick a date & time that works best to drop off your donation at {charity.c_name}, in{' '}
             {charity.city}, {charity.state}.
           </Text>
-
-          {/* Date selection */}
-          <View style={styles.dateTimeContainer}>
-            <Text variant="bodyLarge">Date: {date ? formatDate(date) : 'no date selected'}</Text>
-            <Button onPress={() => setDateVisible(true)} mode="contained">
-              Select Date
-            </Button>
-          </View>
-
-          {/* Time selection */}
-          <View style={styles.dateTimeContainer}>
-            <Text variant="bodyLarge">Time: {getFormattedTime()}</Text>
-            <Button onPress={handleSelectTimePress} mode="contained" disabled={date === undefined}>
-              Select Time
-            </Button>
-          </View>
+          {date === undefined ? (
+            <Calendar
+              onDayPress={(selectedDay) => {
+                const [year, month, day] = selectedDay.dateString.split('-').map(Number);
+                const selected = new Date(year, month - 1, day);
+                setDate(selected);
+              }}
+              disabledByWeekDays={unavailableDays}
+              disableAllTouchEventsForDisabledDays
+              minDate={todayString}
+              markedDates={{
+                [todayString]: {
+                  disabled: unavailableDays.includes(today.getDay()),
+                  marked: true,
+                },
+              }}
+            />
+          ) : (
+            <TimeIntervalList
+              availability={availability}
+              date={date}
+              onIntervalPress={handleIntervalPress}
+              onBackPress={handleBackArrowPress}
+            />
+          )}
         </View>
-
-        <DatePicker
-          onConfirm={handleConfirmDate}
-          onDismiss={() => setDateVisible(false)}
-          visible={dateVisible}
-        />
-        <TimePicker
-          onConfirm={handleConfirmTime}
-          onDismiss={() => setTimeVisible(false)}
-          visible={timeVisible}
-        />
 
         <View style={styles.buttonContainer}>
           <View style={{ flex: 1 }} />
-          <ActionButton
-            label="Next"
-            onPress={handleNextButtonPress}
-            disabled={date === undefined || hours === undefined || minutes === undefined}
-          />
+          <ActionButton label="Next" onPress={handleNextButtonPress} disabled={!date} />
         </View>
       </View>
     </ThemedView>
