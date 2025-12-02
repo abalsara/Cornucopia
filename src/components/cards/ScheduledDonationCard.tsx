@@ -1,4 +1,5 @@
 import { JSX, useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Card, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '../CenteredActivityIndicator';
@@ -15,6 +16,9 @@ type ScheduledDonationCardProps = {
   screenType: 'donor' | 'charity';
 };
 
+/**
+ * Displays a single card on the index tab of the donor or charity screen depending on the prop's screenType
+ */
 export default function ScheduledDonationCard(props: ScheduledDonationCardProps) {
   const [loading, setLoading] = useState(true);
   const [donor, setDonor] = useState<Profile | undefined>(undefined);
@@ -66,12 +70,14 @@ export default function ScheduledDonationCard(props: ScheduledDonationCardProps)
     );
   }
 
+  // Display the donor's name if the screenType is 'charity'
+  // otherwise, display the charity's name
   if (!donor) throw new Error('donor is undefined');
   const title =
     props.screenType === 'charity' ? `${donor.first_name} ${donor.last_name}` : charity.c_name;
 
   return (
-    <Card style={{ marginTop: 10 }} onPress={handlePress}>
+    <Card style={styles.card} onPress={handlePress}>
       <Card.Title
         title={title}
         subtitle={getDescription()}
@@ -87,3 +93,10 @@ export default function ScheduledDonationCard(props: ScheduledDonationCardProps)
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    marginVertical: 8,
+    marginHorizontal: 4,
+  },
+});

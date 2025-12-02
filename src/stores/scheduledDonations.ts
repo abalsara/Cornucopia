@@ -1,10 +1,31 @@
+import { fetchDonorScheduledDonations } from '../lib/donation';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 
 /**
- * Internal store for all scheduled donations.
+ * In-memory cache of all scheduled donations for the current donor.
+ *
+ * The map is keyed by a hashed combination of the donation's `cid`
+ * and `scheduledDate`.
  */
 const scheduledDonations: Map<string, ScheduledDonation> = new Map();
+
+/**
+ * Loads all scheduled donations for the current donor and stores them
+ * in the in-memory `scheduledDonations` map.
+ *
+ * @returns {Promise<void>} Resolves when all scheduled donations have been loaded.
+ *
+ * @throws {Error} Propagates any error thrown by `fetchDonorScheduledDonations()`.
+ */
+export const loadScheduledDonations = async (): Promise<void> => {
+  scheduledDonations.clear();
+  const donations = await fetchDonorScheduledDonations();
+  for (const donation of donations) {
+    const key = hashSchedule(donation.cid, donation.scheduledDate);
+    scheduledDonations.set(key, donation);
+  }
+};
 
 /**
  * Retrieve a copy of all scheduled donations.

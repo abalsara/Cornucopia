@@ -1,3 +1,4 @@
+import { fetchAdmin } from './admin';
 import { fetchNeedsByAdmin } from './needs';
 import { supabase } from './supabase';
 import { DonationItem } from '../types/DonationItem/DonationItem.types';
@@ -6,11 +7,85 @@ import { Tables } from '../types/database.types';
 
 export type Donation = Tables<'Donation'>;
 
+type DonationRequestJoin = Donation & { Request: Tables<'Request'> };
+
 type DonationDetails = {
   pid: string;
   scheduledDate: string;
   item: DonationItem;
   fulfilled: boolean;
+};
+
+/**
+ * Fetches all scheduled donations associated with the currently authenticated donor.
+ *
+ * This function:
+ * 1. Retrieves the current user's PID from Supabase authentication.
+ * 2. Queries the `Donation` table (joined with the related `Request` data) for that pid.
+ * 3. Groups donation rows by their `scheduled_date` and `cid` to form composite scheduled donations.
+ * 4. Converts each grouped entry into a `ScheduledDonation` object containing metadata
+ *    and a list of associated `DonationItem` entries.
+ *
+ * The resulting `ScheduledDonation[]` provides a structured view of the donor's scheduled donations,
+ * consolidating all items scheduled for the same date and charity.
+ *
+ * @returns {Promise<ScheduledDonation[]>} A list of grouped and structured scheduled donations.
+ *
+ * @throws {Error} Throws if the user is not authenticated or if the database query fails.
+ */
+export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[]> => {
+  const userResponse = await supabase.auth.getUser();
+  if (!userResponse.data.user) throw new Error('user is undefined');
+  const pid = userResponse.data.user.id;
+
+  const { data, error } = await supabase
+    .from('Donation')
+    .select(
+      `
+    *,
+    Request(*)
+    `,
+    )
+    .eq('pid', pid);
+  if (error) throw error;
+
+  const join: DonationRequestJoin[] = data;
+
+  const groups = new Map<string, DonationItem[]>();
+  for (const row of join) {
+    const key = `${row.scheduled_date}?${row.cid}`;
+    const curr: DonationItem = {
+      itemName: row.Request.item_name,
+      notes: row.Request.notes ?? '',
+      quantity: row.quantity_comitted,
+      unit: row.Request.unit,
+      category: row.Request.category,
+      item_id: row.item_id,
+      cid: row.cid,
+      priority: row.Request.priority,
+      donationId: row.donation_id,
+      fulfilled: row.fulfilled,
+    };
+    if (!groups.get(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(curr);
+  }
+
+  const scheduledDonations: ScheduledDonation[] = [];
+  for (const entry of groups.entries()) {
+    const [key, items] = entry;
+    const [date, cid] = key.split('?');
+    const scheduledDate = new Date(date);
+    scheduledDonations.push({
+      cid,
+      pid,
+      scheduledDate,
+      items,
+    });
+  }
+
+  return scheduledDonations;
 };
 
 /**
@@ -21,24 +96,45 @@ type DonationDetails = {
  * @throws {Error} If the user ID cannot be retrieved.
  */
 export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDonation[]> => {
-  const donations = await fetchDonations();
+  const admin = await fetchAdmin();
+  if (!admin) throw new Error('User is not a charity admin');
+  if (!admin.cid) return [];
+
+  const donations = await fetchDonationsByCharity(admin.cid);
   const adminNeeds = await fetchNeedsByAdmin();
-  const user = await supabase.auth.getUser();
-  const uid = user.data.user?.id;
-  if (!uid) throw new Error('user id is undefined');
 
   return groupDonations(donations, adminNeeds.needs, adminNeeds.cid ?? 'null');
 };
 
 /**
- * Fetches all donation records from the database.
- * RLS policy returns data where cid column matches the charity associated with the admin
+ * Fetches all donation records from the database
+ * where cid column matches the charity associated with the admin
+ *
+ * @param cid - The uuid of the charity.
+ * @returns {Promise<Donation[]>} A list of all donations.
+ * @throws {PostgrestError} If Supabase query fails.
+ */
+export const fetchDonationsByCharity = async (cid: string): Promise<Donation[]> => {
+  const { data, error } = await supabase.from('Donation').select().eq('cid', cid);
+  if (error) throw error;
+
+  const donations: Donation[] = data;
+  return donations;
+};
+
+/**
+ * Fetches all donation records from the database
+ * where pid column matches the user's uuid
  *
  * @returns {Promise<Donation[]>} A list of all donations.
  * @throws {PostgrestError} If Supabase query fails.
  */
 export const fetchDonations = async (): Promise<Donation[]> => {
-  const { data, error } = await supabase.from('Donation').select();
+  const userResponse = await supabase.auth.getUser();
+  if (!userResponse.data.user) throw new Error('user is undefined');
+  const pid = userResponse.data.user.id;
+
+  const { data, error } = await supabase.from('Donation').select().eq('pid', pid);
   if (error) throw error;
 
   const donations: Donation[] = data;
