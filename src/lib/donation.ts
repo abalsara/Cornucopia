@@ -89,6 +89,30 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
 };
 
 /**
+ * Deletes all donation entries for the currently authenticated donor
+ * that match the specified scheduled date.
+ *
+ * This operation removes *all* donation items scheduled for that date, effectively
+ * canceling the donor's scheduled donation for that day.
+ *
+ * @param {Date} date - The scheduled date whose donation entries should be deleted.
+ * @returns {Promise<void>} Resolves when the delete operation completes.
+ *
+ * @throws {Error} Throws if the user is not authenticated or if the database delete fails.
+ */
+export const deleteDonationByDate = async (date: Date): Promise<void> => {
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) throw new Error('user is undefined');
+  const pid = data.user.id;
+  const { error } = await supabase
+    .from('Donation')
+    .delete()
+    .eq('pid', pid)
+    .eq('scheduled_date', date.toJSON());
+  if (error) throw error;
+};
+
+/**
  * Fetches all donations and the admin's needs, then merges them into a list
  * of scheduled donations
  *

@@ -8,7 +8,9 @@ import { Appbar, List, Portal, Text, useTheme } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import DonationItemCardList from '@/src/components/lists/DonationItemCardList';
+import CancelDonationModal from '@/src/components/modals/CancelDonationModal';
 import DonationItemModalRead from '@/src/components/modals/DonationItemModalRead';
+import { deleteDonationByDate } from '@/src/lib/donation';
 import { getCharity } from '@/src/stores/charities';
 import { getScheduledDonation, removeScheduledDonation } from '@/src/stores/scheduledDonations';
 import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
@@ -30,18 +32,19 @@ export default function DonationDetailsPage() {
   if (!charity) throw new Error(`Charity with id '${scheduledDonation.cid}' is undefined`);
 
   const [selectedItem, setSelecteditem] = useState<DonationItem | undefined>(undefined);
-  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [donationModalVisible, setDonationModalVisible] = useState(false);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const router = useRouter();
   const theme = useTheme();
 
   const handleCardPress = (item: DonationItem): void => {
     setSelecteditem(item);
-    setModalIsVisible(true);
+    setDonationModalVisible(true);
   };
 
-  const handleCancelDonationPress = (): void => {
+  const handleConfirmCancelDonation = (): void => {
     removeScheduledDonation(scheduledDonation.cid, scheduledDonation.scheduledDate);
-    router.dismissAll();
+    deleteDonationByDate(scheduledDate).then(() => router.dismissAll());
   };
 
   const renderStatusBanner = (): JSX.Element | undefined => {
@@ -85,9 +88,15 @@ export default function DonationDetailsPage() {
       </Appbar.Header>
       <DonationItemModalRead
         item={selectedItem}
-        isVisible={modalIsVisible}
-        setIsVisible={setModalIsVisible}
+        isVisible={donationModalVisible}
+        setIsVisible={setDonationModalVisible}
       />
+      <CancelDonationModal
+        visible={cancelModalVisible}
+        handleConfirm={handleConfirmCancelDonation}
+        handleDismiss={() => setCancelModalVisible(false)}
+      />
+
       <ThemedView>
         <View style={styles.container}>
           <View>
@@ -137,7 +146,7 @@ export default function DonationDetailsPage() {
                     <Entypo name="chevron-right" size={24} color={theme.colors.onBackground} />
                   )}
                   title="Cancel Donation"
-                  onPress={handleCancelDonationPress}
+                  onPress={() => setCancelModalVisible(true)}
                 />
               </List.Section>
             </View>
