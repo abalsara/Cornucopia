@@ -1,5 +1,5 @@
 import type { User } from '@supabase/supabase-js';
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from 'expo-crypto';
 
 import { geocodeAddress } from './geocode';
 import { supabase } from './supabase';
