@@ -1,7 +1,18 @@
 import { fetchAdmin } from './admin';
+import {
+  fetchAnimalCareSupplies,
+  fetchClothing,
+  fetchElectronics,
+  fetchFood,
+  fetchFurniture,
+  fetchHouseholdGoods,
+  fetchMedicalSupplies,
+  fetchSportsEquipment,
+  fetchToysGames,
+} from './category';
 import { fetchNeedsByAdmin } from './needs';
 import { supabase } from './supabase';
-import { DonationItem } from '../types/DonationItem/DonationItem.types';
+import { BaseDonationItem, DonationItem } from '../types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 import { Tables } from '../types/database.types';
 
@@ -46,7 +57,52 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
   const groups = new Map<string, DonationItem[]>();
   for (const row of join) {
     const key = `${row.scheduled_date}?${row.cid}`;
-    const curr: DonationItem = {
+
+    const category = row.Request.category;
+    const getSubtypes = async () => {
+      switch (category) {
+        case 'Animal Care Supplies': {
+          const data = await fetchAnimalCareSupplies(row.item_id);
+          return { animal: data.animal, type: data.type };
+        }
+        case 'Clothing': {
+          const data = await fetchClothing(row.item_id);
+          return { ageGroup: data.age_group, gender: data.gender };
+        }
+        case 'Electronics': {
+          const data = await fetchElectronics(row.item_id);
+          return { type: data.type };
+        }
+        case 'Food': {
+          const data = await fetchFood(row.item_id);
+          return { storageRequirement: data.storage_reqs };
+        }
+        case 'Household Goods': {
+          const data = await fetchHouseholdGoods(row.item_id);
+          return { type: data.type };
+        }
+        case 'Medical Supplies': {
+          const data = await fetchMedicalSupplies(row.item_id);
+          return { type: data.type };
+        }
+        case 'Sports Equipment': {
+          const data = await fetchSportsEquipment(row.item_id);
+          return { type: data.type };
+        }
+        case 'Toys & Games': {
+          const data = await fetchToysGames(row.item_id);
+          return { ageGroup: data.age_group };
+        }
+        case 'Furniture': {
+          const data = await fetchFurniture(row.item_id);
+          return { type: data.type };
+        }
+        default:
+          return {};
+      }
+    };
+
+    const base: BaseDonationItem = {
       itemName: row.Request.item_name,
       notes: row.Request.notes ?? '',
       quantity: row.quantity_comitted,
@@ -58,6 +114,8 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
       donationId: row.donation_id,
       fulfilled: row.fulfilled,
     };
+    const subtypes = await getSubtypes();
+    const curr: DonationItem = { ...base, ...subtypes };
     if (!groups.get(key)) {
       groups.set(key, []);
     }

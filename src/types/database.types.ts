@@ -68,21 +68,21 @@ export type Database = {
       };
       AnimalCareSupplies: {
         Row: {
-          animal: Database['public']['Enums']['AnimalTypeT'] | null;
+          animal: Database['public']['Enums']['AnimalTypeT'];
           cid: string;
           created_at: string;
           item_id: string;
           type: Database['public']['Enums']['AnimalNeedT'];
         };
         Insert: {
-          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
+          animal?: Database['public']['Enums']['AnimalTypeT'];
           cid: string;
           created_at?: string;
           item_id?: string;
           type?: Database['public']['Enums']['AnimalNeedT'];
         };
         Update: {
-          animal?: Database['public']['Enums']['AnimalTypeT'] | null;
+          animal?: Database['public']['Enums']['AnimalTypeT'];
           cid?: string;
           created_at?: string;
           item_id?: string;
@@ -152,8 +152,8 @@ export type Database = {
           city: string;
           created_at: string;
           email: string | null;
-          latitude: number | null;
-          longitude: number | null;
+          latitude: number;
+          longitude: number;
           mission: string;
           phone_num: string | null;
           state: string;
@@ -167,8 +167,8 @@ export type Database = {
           city: string;
           created_at?: string;
           email?: string | null;
-          latitude?: number | null;
-          longitude?: number | null;
+          latitude: number;
+          longitude: number;
           mission?: string;
           phone_num?: string | null;
           state: string;
@@ -182,8 +182,8 @@ export type Database = {
           city?: string;
           created_at?: string;
           email?: string | null;
-          latitude?: number | null;
-          longitude?: number | null;
+          latitude?: number;
+          longitude?: number;
           mission?: string;
           phone_num?: string | null;
           state?: string;
@@ -447,14 +447,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'HygieneProducts_cid_fkey';
+            foreignKeyName: 'HygieneProduct_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'HygieneProducts_item_id_fkey';
+            foreignKeyName: 'HygieneProduct_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';
@@ -571,11 +571,11 @@ export type Database = {
           created_at: string;
           item_name: string;
           notes: string | null;
+          priority: string;
           quantity: number;
           quantity_fulfilled: number;
           request_id: string;
           unit: string;
-          priority: string;
         };
         Insert: {
           category?: Database['public']['Enums']['RequestTypeT'];
@@ -583,6 +583,7 @@ export type Database = {
           created_at?: string;
           item_name: string;
           notes?: string | null;
+          priority?: string;
           quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
@@ -594,6 +595,7 @@ export type Database = {
           created_at?: string;
           item_name?: string;
           notes?: string | null;
+          priority?: string;
           quantity?: number;
           quantity_fulfilled?: number;
           request_id?: string;
@@ -735,14 +737,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'Uncategorized_cid_fkey';
+            foreignKeyName: 'Uncatergorized_cid_fkey';
             columns: ['cid'];
             isOneToOne: false;
             referencedRelation: 'Charities';
             referencedColumns: ['cid'];
           },
           {
-            foreignKeyName: 'Uncategorized_item_id_fkey';
+            foreignKeyName: 'Uncatergorized_item_id_fkey';
             columns: ['item_id'];
             isOneToOne: true;
             referencedRelation: 'Request';

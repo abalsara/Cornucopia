@@ -1,5 +1,5 @@
 export type AgeGroup = {
-  ageGroup: 'Baby' | 'Kids' | 'Teenager' | 'Adult';
+  ageGroup: 'Baby' | 'Kids' | 'Teenager' | 'Adult' | 'All Ages';
 };
 
 export type Animal = {

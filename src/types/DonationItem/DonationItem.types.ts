@@ -24,8 +24,7 @@ export type DonationItem =
   | SchoolAndOfficeSupplies
   | SportsEquipmentItem
   | ToysAndGames
-  | UncategorizedItem
-  | BaseDonationItem;
+  | UncategorizedItem;
 
 // all DonationItems have at least these attributes
 export type BaseDonationItem = {
