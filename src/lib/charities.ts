@@ -1,4 +1,5 @@
 import type { User } from '@supabase/supabase-js';
+import { randomUUID } from 'expo-crypto';
 
 import { geocodeAddress } from './geocode';
 import { supabase } from './supabase';
@@ -7,7 +8,7 @@ import { Tables } from '../types/database.types';
 export type Charity = Tables<'Charities'>;
 
 /**
- * Upsert a charity row (onConflict: "admin") and return the created/updated row.
+ * Insert a new Charity row and return the created/updated row.
  * Uses the passed user's id as the admin, c_name as the charity name
  */
 export async function createCharity(
@@ -22,36 +23,41 @@ export async function createCharity(
   email: string,
   causes: string[],
 ): Promise<Charity> {
-  if (!user || !user.id) throw new Error('User with a valid id is required');
+  if (!user?.id) throw new Error('User id required');
 
   const { lat, lng } = await geocodeAddress(`${address}, ${city}, ${state} ${zip_code}`);
 
-  const charity = {
-    admin: user.id,
-    name: c_name,
+  const cid = randomUUID(); // generate cid locally for proper insert into both tables
+
+  // 1) Insert charity
+  const { error: charityError } = await supabase.from('Charities').insert({
+    cid,
+    c_name,
+    mission,
     city,
     state,
     address,
     zip_code,
     phone_num,
     email,
-    mission,
-    created_at: new Date().toISOString(),
     causes,
-    longitude: lng,
     latitude: lat,
-  };
+    longitude: lng,
+  });
 
-  const { data, error } = await supabase
-    .from('Charities')
-    .upsert([charity], { onConflict: 'admin' })
-    .select()
-    .single();
+  if (charityError) throw charityError;
 
-  if (error) throw error;
-  if (!data) throw new Error('No charity returned from upsert');
+  // 2) Insert admin row (idempotent)
+  const { error: adminError } = await supabase.from('admin').insert({ uid: user.id, cid });
 
-  return data;
+  if (adminError) {
+    await supabase.from('Charities').delete().eq('cid', cid);
+    throw adminError;
+  }
+
+  // return created row
+  const { data } = await supabase.from('Charities').select('*').eq('cid', cid).single();
+  return data as Charity;
 }
 
 /**
