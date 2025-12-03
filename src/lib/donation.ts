@@ -20,7 +20,7 @@ type DonationDetails = {
  * Fetches all scheduled donations associated with the currently authenticated donor.
  *
  * This function:
- * 1. Retrieves the current user's PID from Supabase authentication.
+ * 1. Retrieves the current user's pid from Supabase authentication.
  * 2. Queries the `Donation` table (joined with the related `Request` data) for that pid.
  * 3. Groups donation rows by their `scheduled_date` and `cid` to form composite scheduled donations.
  * 4. Converts each grouped entry into a `ScheduledDonation` object containing metadata
@@ -38,15 +38,7 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
   if (!userResponse.data.user) throw new Error('user is undefined');
   const pid = userResponse.data.user.id;
 
-  const { data, error } = await supabase
-    .from('Donation')
-    .select(
-      `
-    *,
-    Request(*)
-    `,
-    )
-    .eq('pid', pid);
+  const { data, error } = await supabase.from('Donation').select(`*, Request(*)`).eq('pid', pid);
   if (error) throw error;
 
   const join: DonationRequestJoin[] = data;
@@ -132,7 +124,7 @@ export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDo
 
 /**
  * Fetches all donation records from the database
- * where cid column matches the charity associated with the admin
+ * where cid column matches the charity.
  *
  * @param cid - The uuid of the charity.
  * @returns {Promise<Donation[]>} A list of all donations.
@@ -140,25 +132,6 @@ export const getCharityScheduledDonationsByAdmin = async (): Promise<ScheduledDo
  */
 export const fetchDonationsByCharity = async (cid: string): Promise<Donation[]> => {
   const { data, error } = await supabase.from('Donation').select().eq('cid', cid);
-  if (error) throw error;
-
-  const donations: Donation[] = data;
-  return donations;
-};
-
-/**
- * Fetches all donation records from the database
- * where pid column matches the user's uuid
- *
- * @returns {Promise<Donation[]>} A list of all donations.
- * @throws {PostgrestError} If Supabase query fails.
- */
-export const fetchDonations = async (): Promise<Donation[]> => {
-  const userResponse = await supabase.auth.getUser();
-  if (!userResponse.data.user) throw new Error('user is undefined');
-  const pid = userResponse.data.user.id;
-
-  const { data, error } = await supabase.from('Donation').select().eq('pid', pid);
   if (error) throw error;
 
   const donations: Donation[] = data;
