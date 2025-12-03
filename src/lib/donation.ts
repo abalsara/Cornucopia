@@ -115,7 +115,7 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
       fulfilled: row.fulfilled,
     };
     const subtypes = await getSubtypes();
-    const curr: DonationItem = { ...base, ...subtypes };
+    const curr: DonationItem = { ...base, ...subtypes } as DonationItem;
     if (!groups.get(key)) {
       groups.set(key, []);
     }
