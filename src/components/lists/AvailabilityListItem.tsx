@@ -1,19 +1,19 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { JSX, useState } from 'react';
+import { JSX } from 'react';
 import { View } from 'react-native';
-import { ActivityIndicator, List, Text, useTheme } from 'react-native-paper';
+import { List, Text, useTheme } from 'react-native-paper';
 import { Style } from 'react-native-paper/lib/typescript/components/List/utils';
 
-import { Availability, deleteAvailability } from '@/src/lib/availability';
+import { Availability } from '@/src/lib/availability';
 import { formatTimeFromString } from '@/src/util/dateTimeFormatter';
 
 type AvailabilityListItemProps = {
   dayOfWeek: number;
   availabilityMap: Map<number, Availability[]>;
   onPlusIconPress: () => void;
-  onTrashPress: () => Promise<void>;
+  onTrashPress: (id: string) => void;
 };
 
 type IconName =
@@ -44,7 +44,6 @@ const iconNames: IconName[] = [
  * @param {Map<number, Availability[]>} props.availabilityMap - A map of dayOfWeek → availability entries for that day.
  */
 export default function AvailabilityListItem(props: AvailabilityListItemProps) {
-  const [pendingDeleteId, setPendingDeleteId] = useState(''); // track which items are being deleted for loading state
   const theme = useTheme();
   const availabilityList = props.availabilityMap.get(props.dayOfWeek);
 
@@ -62,32 +61,10 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
     );
   }
 
-  /**
-   * Deletes a specific availability entry and syncs the availability tab with the database.
-   * Displays a loading indicator for the row being deleted.
-   *
-   * @param {string} availability - The availability record to delete.
-   */
-  const handleTrashPress = async (availability: Availability): Promise<void> => {
-    setPendingDeleteId(availability.id);
-    await deleteAvailability(availability.id);
-    await props.onTrashPress();
-    setPendingDeleteId('');
-  };
-
   const renderRightButtons = (
     rightProps: { color: string; style?: Style },
     availability: Availability,
   ): JSX.Element => {
-    // replace the trash icon with an activity indicator if it is being deleted
-    if (pendingDeleteId === availability.id) {
-      return (
-        <View style={{ flexDirection: 'row' }}>
-          <ActivityIndicator color={theme.colors.error} />
-          <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
-        </View>
-      );
-    }
     return (
       <View style={{ flexDirection: 'row' }}>
         <FontAwesome
@@ -95,7 +72,7 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
           name="trash-o"
           size={24}
           color={theme.colors.error}
-          onPress={async () => handleTrashPress(availability)}
+          onPress={() => props.onTrashPress(availability.id)}
         />
         <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
       </View>
@@ -105,7 +82,7 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
   return availabilityList.map((availability) => {
     const item = (
       <List.Item
-        key={availability.id + '-' + availability.period_index}
+        key={availability.id}
         title={
           <Text style={{ marginLeft: 'auto' }}>
             {formatTimeFromString(availability.open_time)} -{' '}

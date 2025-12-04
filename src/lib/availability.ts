@@ -5,7 +5,7 @@ import { Tables } from '../types/database.types';
 export type Availability = Tables<'Availability'>;
 
 type AdminAvailability = {
-  cid: string | null;
+  cid: string;
   availability: Availability[];
 };
 
@@ -24,11 +24,9 @@ type AdminAvailability = {
  */
 export const fetchAvailabilityByAdmin = async (): Promise<AdminAvailability> => {
   const admin = await fetchAdmin();
-
-  if (!admin || !admin.cid) {
-    return { cid: null, availability: [] };
+  if (!admin) {
+    throw new Error('User is not a charity admin');
   }
-
   return {
     cid: admin.cid,
     availability: await fetchAvailabilityByCid(admin.cid),
@@ -92,5 +90,15 @@ export const insertAvailability = async (
  */
 export const deleteAvailability = async (id: string): Promise<void> => {
   const { error } = await supabase.from('Availability').delete().eq('id', id);
+  if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);
+};
+
+export const insertAvailabilities = async (availabilities: Availability[]): Promise<void> => {
+  const { error } = await supabase.from('Availability').insert(availabilities);
+  if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
+};
+
+export const deleteAvailabilities = async (cid: string): Promise<void> => {
+  const { error } = await supabase.from('Availability').delete().eq('cid', cid);
   if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);
 };

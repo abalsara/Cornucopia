@@ -35,17 +35,17 @@ export type Database = {
     Tables: {
       admin: {
         Row: {
-          cid: string | null;
+          cid: string;
           created_at: string;
           uid: string;
         };
         Insert: {
-          cid?: string | null;
+          cid: string;
           created_at?: string;
           uid: string;
         };
         Update: {
-          cid?: string | null;
+          cid?: string;
           created_at?: string;
           uid?: string;
         };
@@ -60,7 +60,7 @@ export type Database = {
           {
             foreignKeyName: 'admin_uid_fkey';
             columns: ['uid'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'Profiles';
             referencedColumns: ['id'];
           },
@@ -113,7 +113,6 @@ export type Database = {
           day_of_week: number;
           id: string;
           open_time: string;
-          period_index: number;
         };
         Insert: {
           cid: string;
@@ -122,7 +121,6 @@ export type Database = {
           day_of_week: number;
           id?: string;
           open_time: string;
-          period_index?: number;
         };
         Update: {
           cid?: string;
@@ -131,7 +129,6 @@ export type Database = {
           day_of_week?: number;
           id?: string;
           open_time?: string;
-          period_index?: number;
         };
         Relationships: [
           {

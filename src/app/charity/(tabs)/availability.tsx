@@ -1,26 +1,47 @@
+import { randomUUID } from 'expo-crypto';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Portal, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
 import TimePicker from '@/src/components/modals/TimePicker';
-import { Availability, fetchAvailabilityByAdmin, insertAvailability } from '@/src/lib/availability';
+import {
+  Availability,
+  deleteAvailabilities,
+  fetchAvailabilityByAdmin,
+  insertAvailabilities,
+} from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
+
+const defaultStartTime = new Date();
+const defaultEndTime = new Date();
+defaultStartTime.setHours(9);
+defaultEndTime.setHours(17);
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
  */
 export default function AvailabilityTab() {
-  const [cid, setCid] = useState<string | null>(null);
-  const [availability, setAvailability] = useState<Availability[]>([]);
+  // loading state
   const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  // availability related state
+  const [cid, setCid] = useState<string | undefined>(undefined);
+  const [availabilityMap, setAvailabilityMap] = useState<Map<string, Availability>>(new Map()); // maps id to availability
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
-  const [openTime, setOpenTime] = useState<Date | undefined>(undefined);
-  const [closeTime, setCloseTime] = useState<Date | undefined>(undefined);
-  const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
-  const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
+  const [startTime, setStartTime] = useState<Date>(defaultStartTime);
+  const [endTime, setEndTime] = useState<Date>(defaultEndTime);
+  const availabilityList = Array.from(availabilityMap.values());
+
+  // time picker related state
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
+  const [selectedTime, setSelectedTime] = useState<'start' | 'end'>('start');
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+
+  const theme = useTheme();
 
   // Synchronize availability with database
   useEffect(() => {
@@ -28,9 +49,13 @@ export default function AvailabilityTab() {
   }, []);
 
   const syncAvailability = async (): Promise<void> => {
-    const { cid, availability } = await fetchAvailabilityByAdmin();
-    setCid(cid);
-    setAvailability(availability);
+    const newAvailability = new Map(availabilityMap);
+    const response = await fetchAvailabilityByAdmin();
+    for (const a of response.availability) {
+      newAvailability.set(a.id, a);
+    }
+    setCid(response.cid);
+    setAvailabilityMap(newAvailability);
   };
 
   /**
@@ -39,55 +64,79 @@ export default function AvailabilityTab() {
    * @param dayOfWeek - The day of the week (0–6) that the user wants to add availability for.
    */
   const handlePlusIconPress = (dayOfWeek: number): void => {
+    // create a new availability obj
+    // update selectedId, dayOfWeek state
+    // update the availability map
+    // show time picker
+    if (cid === undefined) {
+      throw new Error(`cid is undefined`);
+    }
+    const id = randomUUID();
+    const now = new Date();
+    const newAvailability: Availability = {
+      cid,
+      id,
+      day_of_week: dayOfWeek,
+      open_time: defaultStartTime.toJSON(),
+      close_time: defaultEndTime.toJSON(),
+      created_at: now.toJSON(),
+    };
+    const copy = new Map(availabilityMap);
+    copy.set(newAvailability.id, newAvailability);
+    setAvailabilityMap(copy);
+    setSelectedId(id);
     setDayOfWeek(dayOfWeek);
-    setOpenTimeModalVisible(true);
+    setTimePickerVisible(true);
   };
 
   /**
    * Refreshes the availability state after a child component deletes an entry.
-   * Ensures the UI stays in sync with the database.
    */
-  const handleTrashPress = async (): Promise<void> => {
-    await syncAvailability();
+  const handleTrashPress = (id: string): void => {
+    const copy = new Map(availabilityMap);
+    copy.delete(id);
+    setAvailabilityMap(copy);
   };
 
   /**
-   * Called when the user confirms the time on the open TimePicker modal.
-   * Sets the openTime state and then renders the close TimePicker modal.
-   *
-   * @param hours - The hour returned by the TimePicker
-   * @param minutes - The minutes returned by the TimePicker
+   * Called when the user confirms the times on the TimePicker modal.
    */
-  const handleConfirmOpenTime = (hours: number, minutes: number): void => {
-    const date = new Date();
-    date.setHours(hours, minutes);
-    setOpenTime(date);
-    setOpenTimeModalVisible(false);
-    setCloseTimeModalVisible(true);
-  };
-
-  /**
-   * Called when the user confirms the time on the close TimePicker modal.
-   * Sets the closeTime state and then inserts the Availability object into the db.
-   *
-   * @param hours - The hour returned by the TimePicker
-   * @param minutes - The minutes returned by the TimePicker
-   */
-  const handleConfirmCloseTime = async (hours: number, minutes: number): Promise<void> => {
-    const date = new Date();
-    date.setHours(hours, minutes);
-    setCloseTime(date);
-    if (cid === null || dayOfWeek === undefined || openTime === undefined) {
+  const handleConfirm = async (startTimeParam: Date, endTimeParam: Date): Promise<void> => {
+    if (
+      cid === undefined ||
+      dayOfWeek === undefined ||
+      startTime === undefined ||
+      selectedId === undefined
+    ) {
       throw new Error(
-        `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
+        `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${startTime}, closeTime: ${endTime}, id: ${selectedId}}`,
       );
     }
+    setStartTime(startTimeParam);
+    setEndTime(endTimeParam);
+    const now = new Date();
+    const newAvailability: Availability = {
+      cid,
+      open_time: startTimeParam.toJSON(),
+      close_time: endTimeParam.toJSON(),
+      id: selectedId,
+      day_of_week: dayOfWeek,
+      created_at: now.toJSON(),
+    };
+    const newAvailabilityMap = new Map(availabilityMap);
+    newAvailabilityMap.set(newAvailability.id, newAvailability);
+  };
+
+  const handleSave = async (): Promise<void> => {
+    if (cid === undefined) {
+      throw new Error(`cid is undefined`);
+    }
     try {
-      setLoading(true);
-      setCloseTimeModalVisible(false);
-      await insertAvailability(cid, dayOfWeek, openTime, date);
+      setSaveLoading(true);
+      await deleteAvailabilities(cid);
+      await insertAvailabilities(Array.from(availabilityMap.values()));
       await syncAvailability();
-      setLoading(false);
+      setSaveLoading(false);
     } catch (error) {
       throw error;
     }
@@ -119,23 +168,32 @@ export default function AvailabilityTab() {
           Weekly Hours
         </Text>
         <AvailabilityList
-          availability={availability}
+          availability={availabilityList}
           onPlusIconPress={handlePlusIconPress}
           onTrashPress={handleTrashPress}
         />
-
-        <TimePicker
-          label="Select opening time"
-          visible={openTimeModalVisible}
-          onConfirm={handleConfirmOpenTime}
-          onDismiss={() => setOpenTimeModalVisible(false)}
-        />
-        <TimePicker
-          label="Select closing time"
-          visible={closeTimeModalVisible}
-          onConfirm={async (hours, minutes) => handleConfirmCloseTime(hours, minutes)}
-          onDismiss={() => setCloseTimeModalVisible(false)}
-        />
+        <Portal>
+          <TimePicker
+            visible={timePickerVisible}
+            setVisible={setTimePickerVisible}
+            startTime={startTime}
+            endTime={endTime}
+            selected={selectedTime}
+            setSelected={setSelectedTime}
+            onConfirm={handleConfirm}
+          />
+        </Portal>
+      </View>
+      <View style={styles.bottomBar}>
+        <View style={{ marginHorizontal: 20 }}>
+          <Button onPress={handleSave} mode="contained">
+            {saveLoading ? (
+              <ActivityIndicator color={theme.colors.onPrimary} />
+            ) : (
+              <Text style={{ color: theme.colors.onPrimary }}>Save</Text>
+            )}
+          </Button>
+        </View>
       </View>
     </ThemedView>
   );
@@ -144,5 +202,10 @@ export default function AvailabilityTab() {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
+    flex: 1,
+  },
+  bottomBar: {
+    flexDirection: 'row-reverse',
+    margin: 20,
   },
 });
