@@ -45,6 +45,7 @@ export default function Login() {
             secureTextEntry
             label="Password"
             autoCapitalize="none"
+            textContentType="password"
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
