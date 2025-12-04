@@ -232,8 +232,14 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
               label="Quantity"
               value={quantity.toString()}
               onChangeText={(text) => {
-                const num = parseInt(text) || 1;
-                setQuantity(num);
+                if (text === '') {
+                  setQuantity(0);
+                } else {
+                  const num = parseInt(text);
+                  if (!isNaN(num)) {
+                    setQuantity(num);
+                  }
+                }
               }}
               keyboardType="numeric"
               style={[styles.input, styles.halfWidth]}

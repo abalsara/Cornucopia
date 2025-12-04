@@ -88,6 +88,41 @@ export async function createNeed(cid: string, table: string, body: JSON) {
 }
 
 /**
+ * Edits an existing need in the specified table for the given charity ID (cid).
+ * @param cid - The charity ID for which the need is being edited.
+ * @param table - The table in which to edit the need.
+ * @param body - The body of the request containing the updated need details.
+ * @param remove? - Optional delete flag that will delete the need in the JSON.
+ * @returns The response data from the Supabase function, what was inserted.
+ * @throws An error if the request fails.
+ */
+export async function editNeed(cid: string, table: string, body: JSON, remove?: boolean) {
+  if (remove) {
+    const { data, error } = await supabase.functions.invoke('edit-need', {
+      body: { cid, table, body, remove },
+      method: 'POST',
+    });
+
+    if (error) {
+      console.error('Error editing charity need:', error);
+    }
+
+    return data;
+  }
+
+  const { data, error } = await supabase.functions.invoke('edit-need', {
+    body: { cid, table, body },
+    method: 'POST',
+  });
+
+  if (error) {
+    console.error('Error editing charity need:', error);
+  }
+
+  return data;
+}
+
+/**
  * Parse charity needs into DonationItem objects.
  * @param needs Array of charity needs returned from fetchAllCharityNeeds
  * @returns Array of DonationItem objects
