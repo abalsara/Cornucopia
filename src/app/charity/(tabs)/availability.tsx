@@ -17,8 +17,8 @@ import { getCharity } from '@/src/stores/charities';
 
 const defaultStartTime = new Date();
 const defaultEndTime = new Date();
-defaultStartTime.setHours(9);
-defaultEndTime.setHours(17);
+defaultStartTime.setHours(9, 0, 0, 0);
+defaultEndTime.setHours(17, 0, 0, 0);
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
@@ -34,6 +34,7 @@ export default function AvailabilityTab() {
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
   const [startTime, setStartTime] = useState<Date>(defaultStartTime);
   const [endTime, setEndTime] = useState<Date>(defaultEndTime);
+  const [modified, setModified] = useState(false);
   const availabilityList = Array.from(availabilityMap.values());
 
   // time picker related state
@@ -77,8 +78,8 @@ export default function AvailabilityTab() {
       cid,
       id,
       day_of_week: dayOfWeek,
-      open_time: defaultStartTime.toJSON(),
-      close_time: defaultEndTime.toJSON(),
+      open_time: defaultStartTime.toTimeString().substring(0, 5),
+      close_time: defaultEndTime.toTimeString().substring(0, 5),
       created_at: now.toJSON(),
     };
     const copy = new Map(availabilityMap);
@@ -86,6 +87,10 @@ export default function AvailabilityTab() {
     setAvailabilityMap(copy);
     setSelectedId(id);
     setDayOfWeek(dayOfWeek);
+    setStartTime(defaultStartTime);
+    setEndTime(defaultEndTime);
+    setSelectedTime('start');
+    setModified(true);
     setTimePickerVisible(true);
   };
 
@@ -95,13 +100,14 @@ export default function AvailabilityTab() {
   const handleTrashPress = (id: string): void => {
     const copy = new Map(availabilityMap);
     copy.delete(id);
+    setModified(true);
     setAvailabilityMap(copy);
   };
 
   /**
    * Called when the user confirms the times on the TimePicker modal.
    */
-  const handleConfirm = async (startTimeParam: Date, endTimeParam: Date): Promise<void> => {
+  const handleConfirm = (startTimeParam: Date, endTimeParam: Date): void => {
     if (
       cid === undefined ||
       dayOfWeek === undefined ||
@@ -112,19 +118,19 @@ export default function AvailabilityTab() {
         `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${startTime}, closeTime: ${endTime}, id: ${selectedId}}`,
       );
     }
-    setStartTime(startTimeParam);
-    setEndTime(endTimeParam);
     const now = new Date();
     const newAvailability: Availability = {
       cid,
-      open_time: startTimeParam.toJSON(),
-      close_time: endTimeParam.toJSON(),
+      open_time: startTimeParam.toTimeString().substring(0, 5),
+      close_time: endTimeParam.toTimeString().substring(0, 5),
       id: selectedId,
       day_of_week: dayOfWeek,
       created_at: now.toJSON(),
     };
     const newAvailabilityMap = new Map(availabilityMap);
     newAvailabilityMap.set(newAvailability.id, newAvailability);
+    setAvailabilityMap(newAvailabilityMap);
+    setTimePickerVisible(false);
   };
 
   const handleSave = async (): Promise<void> => {
@@ -181,12 +187,13 @@ export default function AvailabilityTab() {
             selected={selectedTime}
             setSelected={setSelectedTime}
             onConfirm={handleConfirm}
+            key={selectedId}
           />
         </Portal>
       </View>
       <View style={styles.bottomBar}>
         <View style={{ marginHorizontal: 20 }}>
-          <Button onPress={handleSave} mode="contained">
+          <Button onPress={handleSave} mode="contained" disabled={!modified}>
             {saveLoading ? (
               <ActivityIndicator color={theme.colors.onPrimary} />
             ) : (

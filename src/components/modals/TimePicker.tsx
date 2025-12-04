@@ -28,16 +28,10 @@ export default function TimePicker(props: TimePickerProps) {
   const renderDatePicker = (): JSX.Element => {
     if (props.selected === 'start') {
       return (
-        <DatePicker
-          date={props.startTime}
-          onDateChange={(time) => setStartTime(time)}
-          mode="time"
-        />
+        <DatePicker date={startTime} onDateChange={(time) => setStartTime(time)} mode="time" />
       );
     }
-    return (
-      <DatePicker date={props.endTime} onDateChange={(time) => setEndTime(time)} mode="time" />
-    );
+    return <DatePicker date={endTime} onDateChange={(time) => setEndTime(time)} mode="time" />;
   };
 
   return (
@@ -60,7 +54,7 @@ export default function TimePicker(props: TimePickerProps) {
               borderTopRightRadius: 5,
             }}>
             <Text>Start time</Text>
-            <Text>{formatTime(props.startTime)}</Text>
+            <Text>{formatTime(startTime)}</Text>
           </View>
         </Pressable>
         <Pressable style={{ flex: 1 }} onPress={() => props.setSelected('end')}>
@@ -72,7 +66,7 @@ export default function TimePicker(props: TimePickerProps) {
               borderTopLeftRadius: 5,
             }}>
             <Text>End time</Text>
-            <Text>{formatTime(props.endTime)}</Text>
+            <Text>{formatTime(endTime)}</Text>
           </View>
         </Pressable>
       </View>
