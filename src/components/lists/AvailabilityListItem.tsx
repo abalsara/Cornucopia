@@ -1,10 +1,11 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { JSX } from 'react';
 import { View } from 'react-native';
 import { List, Text, useTheme } from 'react-native-paper';
 import { Style } from 'react-native-paper/lib/typescript/components/List/utils';
+
+import DayIcon from '../icons/DayIcon';
 
 import { Availability } from '@/src/lib/availability';
 import { formatTimeFromString } from '@/src/util/dateTimeFormatter';
@@ -16,22 +17,7 @@ type AvailabilityListItemProps = {
   onTrashPress: (id: string) => void;
 };
 
-type IconName =
-  | 'alpha-s-circle-outline'
-  | 'alpha-m-circle-outline'
-  | 'alpha-t-circle-outline'
-  | 'alpha-w-circle-outline'
-  | 'alpha-f-circle-outline';
-
-const iconNames: IconName[] = [
-  'alpha-s-circle-outline',
-  'alpha-m-circle-outline',
-  'alpha-t-circle-outline',
-  'alpha-w-circle-outline',
-  'alpha-t-circle-outline',
-  'alpha-f-circle-outline',
-  'alpha-s-circle-outline',
-];
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * Renders the availability information for a specific day of the week.
@@ -51,9 +37,7 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
     return (
       <List.Item
         title="Closed"
-        left={(leftProps) => (
-          <MaterialCommunityIcons {...leftProps} name={iconNames[props.dayOfWeek]} size={40} />
-        )}
+        left={() => <DayIcon day={days[props.dayOfWeek]} />}
         right={(rightProps) => (
           <AntDesign {...rightProps} name="plus-circle" size={24} onPress={props.onPlusIconPress} />
         )}
@@ -89,13 +73,7 @@ export default function AvailabilityListItem(props: AvailabilityListItemProps) {
             {formatTimeFromString(availability.close_time)}
           </Text>
         }
-        left={(leftProps) => (
-          <MaterialCommunityIcons
-            {...leftProps}
-            name={iconNames[availability.day_of_week]}
-            size={40}
-          />
-        )}
+        left={() => <DayIcon day={days[props.dayOfWeek]} />}
         right={(rightProps) => renderRightButtons(rightProps, availability)}
       />
     );
