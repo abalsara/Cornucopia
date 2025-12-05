@@ -139,9 +139,7 @@ export default function ProfileScreen() {
               ) : (
                 <View
                   style={[styles.profilePhoto, { backgroundColor: theme.colors.primaryContainer }]}>
-                  <Text variant="headlineLarge" style={styles.initialsText}>
-                    {userInitials}
-                  </Text>
+                  <Text variant="headlineLarge">{userInitials}</Text>
                 </View>
               )}
             </View>

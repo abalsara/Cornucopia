@@ -111,9 +111,7 @@ export default function CharityProfileScreen() {
           {/* Charity Icon */}
           <View style={styles.charityIconContainer}>
             <View style={[styles.charityIcon, { backgroundColor: theme.colors.primaryContainer }]}>
-              <Text variant="headlineLarge" style={styles.iconText}>
-                {charity.c_name?.[0]?.toUpperCase() || 'C'}
-              </Text>
+              <Text variant="headlineLarge">{charity.c_name?.[0]?.toUpperCase() || 'C'}</Text>
             </View>
           </View>
 
