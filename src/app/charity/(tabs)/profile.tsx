@@ -288,7 +288,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     marginBottom: 12,
-  },
+  sectionTitle: {
+    fontWeight: '500',
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
