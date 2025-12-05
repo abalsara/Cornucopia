@@ -104,6 +104,9 @@ export default function CharityProfileScreen() {
           <Text variant="headlineLarge" style={styles.headerTitle}>
             Charity Profile
           </Text>
+          <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
+            Manage your charity's information
+          </Text>
         </View>
 
         {/* Charity Info Section */}
