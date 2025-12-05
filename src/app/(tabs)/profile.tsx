@@ -122,7 +122,7 @@ export default function ProfileScreen() {
             </Text>
             <Text
               variant="bodyMedium"
-              style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+              style={[styles.subtitle, { color: theme.colors.onBackground }]}>
               Manage your account and settings
             </Text>
           </View>

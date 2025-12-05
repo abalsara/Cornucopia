@@ -130,7 +130,7 @@ export default function FindCharityScreen() {
             </Text>
             <Text
               variant="bodyMedium"
-              style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+              style={[styles.subtitle, { color: theme.colors.onBackground }]}>
               Search by zip code, city, or use your own location.
             </Text>
           </View>

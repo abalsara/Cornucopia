@@ -57,7 +57,7 @@ export default function Index() {
           </Text>
           <Text
             variant="bodyMedium"
-            style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
             Donations you've scheduled
           </Text>
         </View>
