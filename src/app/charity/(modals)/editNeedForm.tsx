@@ -354,7 +354,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
           <View style={{ height: 24 }} />
         </ScrollView>
 
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { backgroundColor: themeColors.background }]}>
           <Pressable style={styles.removeWrap} onPress={handleRemove} accessibilityRole="button">
             <Text style={styles.removeText}>Remove need</Text>
           </Pressable>
@@ -477,18 +477,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
     paddingHorizontal: 20,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     elevation: 6,
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
   },
   postButtonContent: {
     height: 40,
