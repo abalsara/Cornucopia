@@ -244,7 +244,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
               label="Quantity"
               value={quantity.toString()}
               onChangeText={(text) => {
-                const num = parseInt(text) || 1;
+                const num = parseInt(text, 10) || 1;
                 setQuantity(num);
               }}
               keyboardType="numeric"
