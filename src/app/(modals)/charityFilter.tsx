@@ -37,14 +37,30 @@ type CharityFilterProps = {
   onApply: (charities: Charity[]) => void;
 };
 
-const CAUSES = ['Shelter & Housing', 'Youth', 'Families', 'Education', 'Animals', 'Veterans'];
+const CAUSES = [
+  'Homelessness',
+  'Youth',
+  'Women',
+  'Men',
+  'Veterans',
+  'Seniors',
+  'Animal welfare',
+  'Mental Health',
+  'Drugs',
+  'Human trafficking',
+  'Environment',
+  'Education',
+  'Domestic Violence',
+  'Refugees',
+  'Disability support',
+];
 
 export default function CharityFilter(props: CharityFilterProps) {
   const theme = useTheme();
   const router = useRouter();
 
   const [distance, setDistance] = useState(40);
-  const [selectedCauses, setSelectedCauses] = useState<string[]>([]);
+  const [selectedCauses, setSelectedCauses] = useState<string[]>(CAUSES);
   const [minRating, setMinRating] = useState(4);
   const [loading, setLoading] = useState(false);
   const [filteredCount, setFilteredCount] = useState(0);
@@ -187,10 +203,6 @@ export default function CharityFilter(props: CharityFilterProps) {
             </Chip>
           ))}
         </View>
-
-        <Button mode="text" onPress={() => {}} style={{ alignSelf: 'flex-start', marginTop: 4 }}>
-          Show More ↓
-        </Button>
 
         <Divider style={{ marginVertical: 16 }} />
 
