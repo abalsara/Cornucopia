@@ -1,63 +1,43 @@
+import { Enums } from '../database.types';
+
 export type AgeGroup = {
-  ageGroup: 'Baby' | 'Kids' | 'Teenager' | 'Adult';
+  ageGroup?: Enums<'AgeGroupT'> | undefined;
 };
 
 export type Animal = {
-  animal: 'Dogs' | 'Cats' | 'Small animals' | 'Birds' | 'Reptiles';
+  animal: Enums<'AnimalTypeT'>;
 };
 
 export type AnimalCareSuppliesType = {
-  type:
-    | 'Food'
-    | 'Bedding'
-    | 'Crates'
-    | 'Toys'
-    | 'Grooming'
-    | 'Bowls & feeders'
-    | 'Health & wellness'
-    | 'Accessories'
-    | 'Other';
+  type: Enums<'AnimalNeedT'>;
 };
 
 export type DonationStatus = 'Scheduled' | 'Cancelled' | 'Received' | 'Expired';
 
 export type ElectronicsSubtype = {
-  type:
-    | 'Computers, Tablets'
-    | 'Phone & mobile devices'
-    | 'TVs & monitors'
-    | 'Appliances'
-    | 'Accessories & cables'
-    | 'Other';
+  type: Enums<'ElectronicsTypeT'>;
 };
 
 export type FurnitureSubtype = {
-  type: 'Seating' | 'Tables' | 'Bedroom' | 'Storage' | 'Outdoor furniture' | 'Other';
+  type: Enums<'FurnitureTypeT'>;
 };
 
 export type Gender = {
-  gender: 'Girls' | 'Boys' | 'Neutral';
+  gender?: Enums<'GenderT'>;
 };
 
 export type HouseholdGoodsSubtype = {
-  type:
-    | 'Kitchen items'
-    | 'Bedding & linens'
-    | 'Cleaning supplies'
-    | 'Small appliances'
-    | 'Storage & organization'
-    | 'Decor & lighting'
-    | 'Other';
+  type: Enums<'HouseholdGoodsTypeT'>;
 };
 
 export type MedicalSuppliesSubtype = {
-  type: 'First aid' | 'Mobility aids' | 'OTC medications / Supplements' | 'Other';
+  type: Enums<'MedicalSuppliesTypeT'>;
 };
 
 export type SportsEquipmentSubtype = {
-  type: 'Team sports' | 'Winter sports' | 'Fitness equipment' | 'Bikes & recreation' | 'Other';
+  type: Enums<'SportsEquipmentTypeT'>;
 };
 
 export type StorageRequirement = {
-  storageRequirement: 'Fridge' | 'Freezer' | 'Shelf Stable';
+  storageRequirement: Enums<'StorageRequirementT'>;
 };
