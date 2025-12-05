@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -13,6 +13,7 @@ import { getCharity } from '@/src/stores/charities';
  * This tab renders the drop off hours for the charity that the user is an administrator of
  */
 export default function AvailabilityTab() {
+  const theme = useTheme();
   const [cid, setCid] = useState<string | null>(null);
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,9 +113,16 @@ export default function AvailabilityTab() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text variant="bodyMedium">
-          Choose which days & times {charity.c_name} can accept donations
-        </Text>
+        <View style={styles.header}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
+            Availability
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            Choose which days & times {charity.c_name} can accept donations
+          </Text>
+        </View>
         <Text variant="titleLarge" style={{ marginTop: 20 }}>
           Weekly Hours
         </Text>
@@ -144,5 +152,14 @@ export default function AvailabilityTab() {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
+  },
+  header: {
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
+  subtitle: {
+    marginTop: 6,
   },
 });
