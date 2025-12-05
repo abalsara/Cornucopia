@@ -108,7 +108,7 @@ const groupDonations = (
       curr!.push({
         pid: donation.pid,
         scheduledDate: donation.scheduled_date,
-        item: merge,
+        item: merge as DonationItem,
         fulfilled: donation.fulfilled,
       });
     }
