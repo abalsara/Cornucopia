@@ -19,7 +19,7 @@ type DonationItemModalEditProps = {
  * Shown when pressing a card on the charityNeedsPage.
  */
 export default function DonationItemModalEdit(props: DonationItemModalEditProps) {
-  const item = structuredClone(props.item);
+  const item: DonationItem | undefined = structuredClone(props.item);
   const [quantity, setQuantity] = useState('');
   const notes = props.item?.notes ?? '';
   const theme = useTheme();

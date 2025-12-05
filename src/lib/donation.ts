@@ -12,7 +12,7 @@ import {
 } from './category';
 import { fetchNeedsByAdmin } from './needs';
 import { supabase } from './supabase';
-import { BaseDonationItem, DonationItem } from '../types/DonationItem/DonationItem.types';
+import { BaseDonationItem, DonationItem, Priority } from '../types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 import { Tables } from '../types/database.types';
 
@@ -110,7 +110,7 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
       category: row.Request.category,
       item_id: row.item_id,
       cid: row.cid,
-      priority: row.Request.priority,
+      priority: row.Request.priority as Priority,
       donationId: row.donation_id,
       fulfilled: row.fulfilled,
     };
@@ -247,7 +247,7 @@ const groupDonations = (
   for (const donation of donations) {
     const need = needs.find((need) => need.item_id === donation.item_id);
     if (need) {
-      const merge = structuredClone(need);
+      const merge: DonationItem = structuredClone(need);
       merge.quantity = donation.quantity_comitted;
       merge.donationId = donation.donation_id;
       merge.fulfilled = donation.fulfilled;
@@ -259,7 +259,7 @@ const groupDonations = (
       curr!.push({
         pid: donation.pid,
         scheduledDate: donation.scheduled_date,
-        item: merge,
+        item: merge as DonationItem,
         fulfilled: donation.fulfilled,
       });
     }
