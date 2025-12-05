@@ -12,7 +12,7 @@ import {
 } from './category';
 import { fetchNeedsByAdmin } from './needs';
 import { supabase } from './supabase';
-import { BaseDonationItem, DonationItem } from '../types/DonationItem/DonationItem.types';
+import { BaseDonationItem, DonationItem, Priority } from '../types/DonationItem/DonationItem.types';
 import { ScheduledDonation } from '../types/DonationItem/ScheduledDonation';
 import { Tables } from '../types/database.types';
 
@@ -110,7 +110,7 @@ export const fetchDonorScheduledDonations = async (): Promise<ScheduledDonation[
       category: row.Request.category,
       item_id: row.item_id,
       cid: row.cid,
-      priority: row.Request.priority,
+      priority: row.Request.priority as Priority,
       donationId: row.donation_id,
       fulfilled: row.fulfilled,
     };
