@@ -1,11 +1,8 @@
-import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Card, Text, useTheme } from 'react-native-paper';
 
-import { DonationItem } from '@/src/types/DonationItem/DonationItem.types';
+import { DonationItem, Priority } from '@/src/types/DonationItem/DonationItem.types';
 import { getDonationCardSubtitle } from '@/src/util/donationItem';
-
-type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
 
 type DonationItemCardProps = {
   item: DonationItem;
@@ -16,7 +13,7 @@ type DonationItemCardProps = {
  * Returns the background color for a given priority level
  */
 function getPriorityColor(
-  priority: string,
+  priority: Priority,
   themeColors: { error: string; secondary: string; tertiary: string },
 ): string {
   switch (priority) {
@@ -36,7 +33,7 @@ function getPriorityColor(
 /**
  * Renders a priority badge/label
  */
-function PriorityBadge({ priority }: { priority: string }) {
+function PriorityBadge({ priority }: { priority: Priority }) {
   const theme = useTheme();
   const themeColors = theme.colors;
   const backgroundColor = getPriorityColor(priority, themeColors);
