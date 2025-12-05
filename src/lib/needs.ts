@@ -1,7 +1,7 @@
 import { fetchAdmin } from './admin';
 import { supabase } from './supabase';
 import { NeedPayload } from '../app/charity/(modals)/newNeedForm';
-import { DonationItem } from '../types/DonationItem/DonationItem.types';
+import { DonationItem, Priority } from '../types/DonationItem/DonationItem.types';
 
 export type AdminNeeds = {
   cid: string | null;
@@ -108,7 +108,7 @@ function parseNeedsToDonationItems(needs: any[]): DonationItem[] {
       unit: need.unit ?? request.unit ?? 'Ea.',
       item_id: request.request_id ?? need.item_id,
       cid: need.cid,
-      priority: request.priority ?? need.priority ?? 'Low',
+      priority: (request.priority ?? need.priority ?? 'Low') as Priority,
     };
 
     let donationItem: DonationItem;
