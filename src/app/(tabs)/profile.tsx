@@ -116,9 +116,16 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header with notification bell */}
         <View style={styles.header}>
-          <Text variant="headlineMedium" style={styles.headerTitle}>
-            Profile
-          </Text>
+          <View style={styles.headerLeft}>
+            <Text variant="headlineLarge" style={styles.headerTitle}>
+              Profile
+            </Text>
+            <Text
+              variant="bodyMedium"
+              style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+              Manage your account and settings
+            </Text>
+          </View>
           <IconButton icon="bell-outline" size={28} onPress={handleNotifications} />
         </View>
 
@@ -206,7 +213,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   centerContainer: {
     flex: 1,
@@ -220,10 +228,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 12,
   },
   headerTitle: {
-    fontWeight: '700',
+    fontWeight: '500',
+    marginBottom: 6,
+  },
+  subtitle: {
+    marginTop: 6,
+    marginBottom: 12,
+  },
+  headerLeft: {
+    flex: 1,
+    paddingRight: 8,
   },
   profileSection: {
     marginBottom: 32,
@@ -245,15 +262,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  initialsText: {
-    fontWeight: 'bold',
-  },
   userInfo: {
     flex: 1,
     justifyContent: 'center',
   },
   userName: {
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 4,
   },
   userEmail: {
