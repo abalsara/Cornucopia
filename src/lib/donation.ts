@@ -96,7 +96,7 @@ const groupDonations = (
   for (const donation of donations) {
     const need = needs.find((need) => need.item_id === donation.item_id);
     if (need) {
-      const merge = structuredClone(need);
+      const merge: DonationItem = structuredClone(need);
       merge.quantity = donation.quantity_comitted;
       merge.donationId = donation.donation_id;
       merge.fulfilled = donation.fulfilled;
