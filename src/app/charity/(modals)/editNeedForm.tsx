@@ -350,8 +350,6 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
               )}
             </View>
           ))}
-
-          <View />
         </ScrollView>
 
         <View style={[styles.bottomBar, { backgroundColor: themeColors.background }]}>
