@@ -351,7 +351,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
             </View>
           ))}
 
-          <View style={{ height: 24 }} />
+          <View />
         </ScrollView>
 
         <View style={[styles.bottomBar, { backgroundColor: themeColors.background }]}>
@@ -473,10 +473,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bottomBar: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     paddingHorizontal: 20,
     paddingVertical: 12,
     flexDirection: 'row',
