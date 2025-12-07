@@ -247,7 +247,7 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
                 if (text === '') {
                   setQuantity(0);
                 } else {
-                  const num = parseInt(text);
+                  const num = parseInt(text, 10);
                   if (!isNaN(num)) {
                     setQuantity(num);
                   }
@@ -356,21 +356,22 @@ export default function EditNeedForm({ onClose, initial, onUpdate, onRemove }: P
               )}
             </View>
           ))}
-
-          <View style={{ height: 24 }} />
         </ScrollView>
 
-        <Pressable style={styles.removeWrap} onPress={handleRemove} accessibilityRole="button">
-          <Text style={styles.removeText}>Remove need</Text>
-        </Pressable>
+        <View style={[styles.bottomBar, { backgroundColor: themeColors.background }]}>
+          <Pressable style={styles.removeWrap} onPress={handleRemove} accessibilityRole="button">
+            <Text style={styles.removeText}>Remove need</Text>
+          </Pressable>
 
-        <Button
-          mode="contained"
-          onPress={handleUpdate}
-          disabled={!changed}
-          style={styles.postButton}>
-          Update Need
-        </Button>
+          <Button
+            mode="contained"
+            onPress={handleUpdate}
+            disabled={!changed}
+            style={styles.postButton}
+            contentStyle={styles.postButtonContent}>
+            Update Need
+          </Button>
+        </View>
       </View>
     </Modal>
   );
@@ -427,16 +428,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   postButton: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
     borderRadius: 24,
     minWidth: 100,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   removeWrap: {
-    position: 'absolute',
-    left: 20,
-    bottom: 28,
+    marginRight: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   removeText: {
     color: '#000',
@@ -475,5 +475,16 @@ const styles = StyleSheet.create({
   },
   halfWidth: {
     flex: 1,
+  },
+  bottomBar: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    elevation: 6,
+  },
+  postButtonContent: {
+    height: 40,
   },
 });
