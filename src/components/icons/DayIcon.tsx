@@ -5,6 +5,10 @@ type DayIconProps = {
   day: string;
 };
 
+/**
+ * Renders a custom icon for the given day for the availability tab
+ * @param props.day - Day of the week (0 - 6)
+ */
 export default function DayIcon(props: DayIconProps) {
   const theme = useTheme();
   return (

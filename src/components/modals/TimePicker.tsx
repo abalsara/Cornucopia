@@ -15,6 +15,10 @@ type TimePickerProps = {
   setVisible: (status: boolean) => void;
 };
 
+/**
+ * Renders a bottom-sheet style modal that allows a charity admin to enter a start time and end time
+ * for a day of the week on the availability tab.
+ */
 export default function TimePicker(props: TimePickerProps) {
   const [startTime, setStartTime] = useState<Date>(props.startTime);
   const [endTime, setEndTime] = useState<Date>(props.endTime);

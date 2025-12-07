@@ -15,10 +15,10 @@ import {
 } from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
 
-const defaultStartTime = new Date();
-const defaultEndTime = new Date();
-defaultStartTime.setHours(9, 0, 0, 0);
-defaultEndTime.setHours(17, 0, 0, 0);
+const DEFAULT_START_TIME = new Date();
+const DEFAULT_END_TIME = new Date();
+DEFAULT_START_TIME.setHours(9, 0, 0, 0);
+DEFAULT_END_TIME.setHours(17, 0, 0, 0);
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
@@ -32,8 +32,8 @@ export default function AvailabilityTab() {
   const [cid, setCid] = useState<string | undefined>(undefined);
   const [availabilityMap, setAvailabilityMap] = useState<Map<string, Availability>>(new Map()); // maps id to availability
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
-  const [startTime, setStartTime] = useState<Date>(defaultStartTime);
-  const [endTime, setEndTime] = useState<Date>(defaultEndTime);
+  const [startTime, setStartTime] = useState<Date>(DEFAULT_START_TIME);
+  const [endTime, setEndTime] = useState<Date>(DEFAULT_END_TIME);
   const [modified, setModified] = useState(false);
   const availabilityList = Array.from(availabilityMap.values());
 
@@ -59,14 +59,11 @@ export default function AvailabilityTab() {
 
   /**
    * Opens the time selection modal for creating a new availability entry.
+   * Creates a new Availability object with default times and refreshes the availability state
    *
    * @param dayOfWeek - The day of the week (0–6) that the user wants to add availability for.
    */
   const handlePlusIconPress = (dayOfWeek: number): void => {
-    // create a new availability obj
-    // update selectedId, dayOfWeek state
-    // update the availability map
-    // show time picker
     if (cid === undefined) {
       throw new Error(`cid is undefined`);
     }
@@ -76,8 +73,8 @@ export default function AvailabilityTab() {
       cid,
       id,
       day_of_week: dayOfWeek,
-      open_time: defaultStartTime.toTimeString().substring(0, 5),
-      close_time: defaultEndTime.toTimeString().substring(0, 5),
+      open_time: DEFAULT_START_TIME.toTimeString().substring(0, 5), // format HH:MM
+      close_time: DEFAULT_END_TIME.toTimeString().substring(0, 5),
       created_at: now.toJSON(),
     };
     const copy = new Map(availabilityMap);
@@ -85,8 +82,8 @@ export default function AvailabilityTab() {
     setAvailabilityMap(copy);
     setSelectedId(id);
     setDayOfWeek(dayOfWeek);
-    setStartTime(defaultStartTime);
-    setEndTime(defaultEndTime);
+    setStartTime(DEFAULT_START_TIME);
+    setEndTime(DEFAULT_END_TIME);
     setSelectedTime('start');
     setModified(true);
     setTimePickerVisible(true);
@@ -106,14 +103,9 @@ export default function AvailabilityTab() {
    * Called when the user confirms the times on the TimePicker modal.
    */
   const handleConfirm = (startTimeParam: Date, endTimeParam: Date): void => {
-    if (
-      cid === undefined ||
-      dayOfWeek === undefined ||
-      startTime === undefined ||
-      selectedId === undefined
-    ) {
+    if (cid === undefined || dayOfWeek === undefined || selectedId === undefined) {
       throw new Error(
-        `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${startTime}, closeTime: ${endTime}, id: ${selectedId}}`,
+        `Invalid parameters: {cid: ${cid}, dayOfWeek: ${dayOfWeek}, selectedId: ${selectedId}}`,
       );
     }
     const now = new Date();
@@ -131,6 +123,9 @@ export default function AvailabilityTab() {
     setTimePickerVisible(false);
   };
 
+  /**
+   * Deletes, then inserts the new availabilities into the database and refreshes state
+   */
   const handleSave = async (): Promise<void> => {
     if (cid === undefined) {
       throw new Error(`cid is undefined`);
@@ -147,16 +142,12 @@ export default function AvailabilityTab() {
     }
   };
 
-  if (loading) {
+  if (loading || cid === undefined) {
     return (
       <ThemedView>
         <CenteredActivityIndicator />
       </ThemedView>
     );
-  }
-
-  if (!cid) {
-    return <></>;
   }
 
   const charity = getCharity(cid);
