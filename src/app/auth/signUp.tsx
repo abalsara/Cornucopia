@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Keyboard, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
@@ -96,6 +96,7 @@ export default function SignUp() {
             value={password}
             secureTextEntry
             autoCapitalize="none"
+            textContentType="password"
           />
         </View>
         <View style={styles.verticallySpaced}>
@@ -105,6 +106,7 @@ export default function SignUp() {
             value={confirmPassword}
             secureTextEntry
             autoCapitalize="none"
+            textContentType="password"
           />
         </View>
         <View style={[styles.verticallySpaced, styles.mt20]}>
