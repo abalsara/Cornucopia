@@ -26,7 +26,7 @@ export async function createCharity(
 
   const { lat, lng } = await geocodeAddress(`${address}, ${city}, ${state} ${zip_code}`);
 
-  const { data, error } = await supabase.functions.invoke('crete-charity', {
+  const { data, error } = await supabase.functions.invoke('create-charity', {
     body: {
       user_id: user.id,
       c_name,
