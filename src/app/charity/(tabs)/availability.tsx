@@ -1,7 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Portal, Text, useTheme } from 'react-native-paper';
+import { Button, Portal, Text } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -41,8 +41,6 @@ export default function AvailabilityTab() {
   const [timePickerVisible, setTimePickerVisible] = useState(false);
   const [selectedTime, setSelectedTime] = useState<'start' | 'end'>('start');
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
-
-  const theme = useTheme();
 
   // Synchronize availability with database
   useEffect(() => {
@@ -143,6 +141,7 @@ export default function AvailabilityTab() {
       await insertAvailabilities(Array.from(availabilityMap.values()));
       await syncAvailability();
       setSaveLoading(false);
+      setModified(false);
     } catch (error) {
       throw error;
     }
@@ -157,7 +156,6 @@ export default function AvailabilityTab() {
   }
 
   if (!cid) {
-    // the user is a charity administrator, but has not created a charity
     return <></>;
   }
 
@@ -193,12 +191,8 @@ export default function AvailabilityTab() {
       </View>
       <View style={styles.bottomBar}>
         <View style={{ marginHorizontal: 20 }}>
-          <Button onPress={handleSave} mode="contained" disabled={!modified}>
-            {saveLoading ? (
-              <ActivityIndicator color={theme.colors.onPrimary} />
-            ) : (
-              <Text style={{ color: theme.colors.onPrimary }}>Save</Text>
-            )}
+          <Button onPress={handleSave} loading={saveLoading} mode="contained" disabled={!modified}>
+            Save
           </Button>
         </View>
       </View>
