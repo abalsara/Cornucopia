@@ -11,6 +11,9 @@ import {
   SportsEquipmentSubtype,
 } from './DonationItemSubtypes.types';
 
+// Priority levels for donation items
+export type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
+
 // The set of possible kinds of donations
 export type DonationItem =
   | AnimalCareSuppliesItem
@@ -35,7 +38,7 @@ export type BaseDonationItem = {
   category: Category;
   item_id: string;
   cid: string;
-  priority: string;
+  priority: Priority;
   donationId?: string;
   fulfilled?: boolean;
 };

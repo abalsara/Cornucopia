@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
 import { Text, IconButton, TextInput, Button, useTheme } from 'react-native-paper';
 
+import { Priority } from '@/src/types/DonationItem/DonationItem.types';
 import { type Database } from '@/src/types/database.types';
 import { Constants } from '@/src/types/database.types';
 
-export type Priority = 'Urgent' | 'High Priority' | 'Ongoing' | 'Low';
+export { Priority };
 
 export type GenderT = Database['public']['Enums']['GenderT'];
 export type AgeGroupT = Database['public']['Enums']['AgeGroupT'];
