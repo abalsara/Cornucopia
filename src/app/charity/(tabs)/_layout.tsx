@@ -22,6 +22,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Donations',
+          headerTitle: '',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="gift" color={color} />,
         }}
       />
@@ -30,7 +31,7 @@ export default function TabLayout() {
         name="availability"
         options={{
           title: 'Availability',
-          headerTitle: 'Drop-off Availability',
+          headerTitle: '',
           tabBarIcon: ({ color }) => <FontAwesome6 size={28} name="clock" color={color} />,
         }}
       />
@@ -48,6 +49,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
+          headerTitle: '',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
         }}
       />

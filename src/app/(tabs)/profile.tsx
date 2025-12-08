@@ -55,6 +55,10 @@ export default function ProfileScreen() {
     Alert.alert('Saved Charities', 'Saved charities page coming soon');
   };
 
+  const handleCreateCharity = () => {
+    router.push('/pages/createCharity');
+  };
+
   const handleAccountSettings = () => {
     // Navigate to account settings page
     Alert.alert('Account Settings', 'Account settings page coming soon');
@@ -116,9 +120,16 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header with notification bell */}
         <View style={styles.header}>
-          <Text variant="headlineMedium" style={styles.headerTitle}>
-            Profile
-          </Text>
+          <View style={styles.headerLeft}>
+            <Text variant="headlineLarge" style={styles.headerTitle}>
+              Profile
+            </Text>
+            <Text
+              variant="bodyMedium"
+              style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+              Manage your account and settings
+            </Text>
+          </View>
           <IconButton icon="bell-outline" size={28} onPress={handleNotifications} />
         </View>
 
@@ -132,9 +143,7 @@ export default function ProfileScreen() {
               ) : (
                 <View
                   style={[styles.profilePhoto, { backgroundColor: theme.colors.primaryContainer }]}>
-                  <Text variant="headlineLarge" style={styles.initialsText}>
-                    {userInitials}
-                  </Text>
+                  <Text variant="headlineLarge">{userInitials}</Text>
                 </View>
               )}
             </View>
@@ -178,6 +187,14 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.linkItem}>
+            <IconButton icon="office-building-outline" size={24} />
+            <Text variant="bodyLarge" style={styles.linkText} onPress={handleCreateCharity}>
+              Create a Charity
+            </Text>
+            <IconButton icon="chevron-right" size={24} onPress={handleCreateCharity} />
+          </View>
+
+          <View style={styles.linkItem}>
             <IconButton icon="cog-outline" size={24} />
             <Text variant="bodyLarge" style={styles.linkText} onPress={handleAccountSettings}>
               Account Settings
@@ -206,7 +223,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   centerContainer: {
     flex: 1,
@@ -220,10 +238,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 12,
   },
   headerTitle: {
-    fontWeight: '700',
+    fontWeight: '500',
+    marginBottom: 6,
+  },
+  subtitle: {
+    marginTop: 6,
+    marginBottom: 12,
+  },
+  headerLeft: {
+    flex: 1,
+    paddingRight: 8,
   },
   profileSection: {
     marginBottom: 32,
@@ -245,15 +272,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  initialsText: {
-    fontWeight: 'bold',
-  },
   userInfo: {
     flex: 1,
     justifyContent: 'center',
   },
   userName: {
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 4,
   },
   userEmail: {

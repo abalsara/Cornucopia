@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -16,6 +17,7 @@ import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
  * associated with the logged in admin.
  */
 export default function Donations() {
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [donations, setDonations] = useState<ScheduledDonation[]>([]);
 
@@ -46,6 +48,17 @@ export default function Donations() {
   return (
     <ThemedView>
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
+            Donations
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            View donations scheduled by donors for your charity
+          </Text>
+        </View>
+
         <ScheduledDonationCardList
           onCardPress={handleCardPress}
           scheduledDonations={donations}
@@ -60,5 +73,14 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     gap: 12,
+  },
+  header: {
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
+  subtitle: {
+    marginTop: 6,
   },
 });

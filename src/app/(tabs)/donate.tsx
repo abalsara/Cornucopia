@@ -3,7 +3,7 @@ import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { Button, IconButton, Text, TextInput } from 'react-native-paper';
+import { Button, IconButton, Text, TextInput, useTheme } from 'react-native-paper';
 
 import ThemedView from '@/src/components/ThemedView';
 import { LatLng, geocodePartialAddress } from '@/src/lib/geocode';
@@ -25,6 +25,7 @@ export const waZipCodes = [
 ];
 
 export default function FindCharityScreen() {
+  const theme = useTheme();
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [useLocation, setUseLocation] = useState(false);
@@ -122,16 +123,19 @@ export default function FindCharityScreen() {
   return (
     <ThemedView>
       <View style={{ marginHorizontal: 20 }}>
-        <View style={styles.headerRow}>
-          <Text variant="headlineMedium" style={styles.title}>
-            Find a Charity
-          </Text>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Text variant="headlineLarge" style={styles.headerTitle}>
+              Find a Charity
+            </Text>
+            <Text
+              variant="bodyMedium"
+              style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+              Search by zip code, city, or use your own location.
+            </Text>
+          </View>
           <IconButton icon="information-outline" onPress={handleInfoPress} />
         </View>
-
-        <Text variant="bodyMedium" style={styles.subtitle}>
-          Search by zip code, city, or use your own location.
-        </Text>
 
         {!searchVisible ? (
           <Button
@@ -199,9 +203,22 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '700',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
   subtitle: {
-    color: '#888',
-    marginBottom: 20,
+    marginTop: 6,
+    marginRight: 8,
+  },
+  headerLeft: {
+    flex: 1,
+    paddingRight: 8,
   },
   searchButton: {
     borderRadius: 10,

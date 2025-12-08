@@ -1,26 +1,47 @@
+import { randomUUID } from 'expo-crypto';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, Portal, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
 import AvailabilityList from '@/src/components/lists/AvailabilityList';
 import TimePicker from '@/src/components/modals/TimePicker';
-import { Availability, fetchAvailabilityByAdmin, insertAvailability } from '@/src/lib/availability';
+import {
+  Availability,
+  deleteAvailabilities,
+  fetchAvailabilityByAdmin,
+  insertAvailabilities,
+} from '@/src/lib/availability';
 import { getCharity } from '@/src/stores/charities';
+
+const DEFAULT_START_TIME = new Date();
+const DEFAULT_END_TIME = new Date();
+DEFAULT_START_TIME.setHours(9, 0, 0, 0);
+DEFAULT_END_TIME.setHours(17, 0, 0, 0);
 
 /**
  * This tab renders the drop off hours for the charity that the user is an administrator of
  */
 export default function AvailabilityTab() {
-  const [cid, setCid] = useState<string | null>(null);
-  const [availability, setAvailability] = useState<Availability[]>([]);
+  // loading state
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  // availability related state
+  const [cid, setCid] = useState<string | undefined>(undefined);
+  const [availabilityMap, setAvailabilityMap] = useState<Map<string, Availability>>(new Map()); // maps id to availability
   const [dayOfWeek, setDayOfWeek] = useState<number | undefined>(undefined);
-  const [openTime, setOpenTime] = useState<Date | undefined>(undefined);
-  const [closeTime, setCloseTime] = useState<Date | undefined>(undefined);
-  const [openTimeModalVisible, setOpenTimeModalVisible] = useState(false);
-  const [closeTimeModalVisible, setCloseTimeModalVisible] = useState(false);
+  const [startTime, setStartTime] = useState<Date>(DEFAULT_START_TIME);
+  const [endTime, setEndTime] = useState<Date>(DEFAULT_END_TIME);
+  const [modified, setModified] = useState(false);
+  const availabilityList = Array.from(availabilityMap.values());
+
+  // time picker related state
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
+  const [selectedTime, setSelectedTime] = useState<'start' | 'end'>('start');
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
   // Synchronize availability with database
   useEffect(() => {
@@ -28,82 +49,106 @@ export default function AvailabilityTab() {
   }, []);
 
   const syncAvailability = async (): Promise<void> => {
-    const { cid, availability } = await fetchAvailabilityByAdmin();
-    setCid(cid);
-    setAvailability(availability);
+    const newAvailability = new Map(availabilityMap);
+    const response = await fetchAvailabilityByAdmin();
+    for (const a of response.availability) {
+      newAvailability.set(a.id, a);
+    }
+    setCid(response.cid);
+    setAvailabilityMap(newAvailability);
   };
 
   /**
    * Opens the time selection modal for creating a new availability entry.
+   * Creates a new Availability object with default times and refreshes the availability state
    *
    * @param dayOfWeek - The day of the week (0–6) that the user wants to add availability for.
    */
   const handlePlusIconPress = (dayOfWeek: number): void => {
+    if (cid === undefined) {
+      throw new Error(`cid is undefined`);
+    }
+    const id = randomUUID();
+    const now = new Date();
+    const newAvailability: Availability = {
+      cid,
+      id,
+      day_of_week: dayOfWeek,
+      open_time: DEFAULT_START_TIME.toTimeString().substring(0, 5), // format HH:MM
+      close_time: DEFAULT_END_TIME.toTimeString().substring(0, 5),
+      created_at: now.toJSON(),
+    };
+    const copy = new Map(availabilityMap);
+    copy.set(newAvailability.id, newAvailability);
+    setAvailabilityMap(copy);
+    setSelectedId(id);
     setDayOfWeek(dayOfWeek);
-    setOpenTimeModalVisible(true);
+    setStartTime(DEFAULT_START_TIME);
+    setEndTime(DEFAULT_END_TIME);
+    setSelectedTime('start');
+    setModified(true);
+    setTimePickerVisible(true);
   };
 
   /**
    * Refreshes the availability state after a child component deletes an entry.
-   * Ensures the UI stays in sync with the database.
    */
-  const handleTrashPress = async (): Promise<void> => {
-    await syncAvailability();
+  const handleTrashPress = (id: string): void => {
+    const copy = new Map(availabilityMap);
+    copy.delete(id);
+    setModified(true);
+    setAvailabilityMap(copy);
   };
 
   /**
-   * Called when the user confirms the time on the open TimePicker modal.
-   * Sets the openTime state and then renders the close TimePicker modal.
-   *
-   * @param hours - The hour returned by the TimePicker
-   * @param minutes - The minutes returned by the TimePicker
+   * Called when the user confirms the times on the TimePicker modal.
    */
-  const handleConfirmOpenTime = (hours: number, minutes: number): void => {
-    const date = new Date();
-    date.setHours(hours, minutes);
-    setOpenTime(date);
-    setOpenTimeModalVisible(false);
-    setCloseTimeModalVisible(true);
-  };
-
-  /**
-   * Called when the user confirms the time on the close TimePicker modal.
-   * Sets the closeTime state and then inserts the Availability object into the db.
-   *
-   * @param hours - The hour returned by the TimePicker
-   * @param minutes - The minutes returned by the TimePicker
-   */
-  const handleConfirmCloseTime = async (hours: number, minutes: number): Promise<void> => {
-    const date = new Date();
-    date.setHours(hours, minutes);
-    setCloseTime(date);
-    if (cid === null || dayOfWeek === undefined || openTime === undefined) {
+  const handleConfirm = (startTimeParam: Date, endTimeParam: Date): void => {
+    if (cid === undefined || dayOfWeek === undefined || selectedId === undefined) {
       throw new Error(
-        `Invalid parameters: {dayOfWeek: ${dayOfWeek}, openTime: ${openTime}, closeTime: ${closeTime}}`,
+        `Invalid parameters: {cid: ${cid}, dayOfWeek: ${dayOfWeek}, selectedId: ${selectedId}}`,
       );
     }
+    const now = new Date();
+    const newAvailability: Availability = {
+      cid,
+      open_time: startTimeParam.toTimeString().substring(0, 5),
+      close_time: endTimeParam.toTimeString().substring(0, 5),
+      id: selectedId,
+      day_of_week: dayOfWeek,
+      created_at: now.toJSON(),
+    };
+    const newAvailabilityMap = new Map(availabilityMap);
+    newAvailabilityMap.set(newAvailability.id, newAvailability);
+    setAvailabilityMap(newAvailabilityMap);
+    setTimePickerVisible(false);
+  };
+
+  /**
+   * Deletes, then inserts the new availabilities into the database and refreshes state
+   */
+  const handleSave = async (): Promise<void> => {
+    if (cid === undefined) {
+      throw new Error(`cid is undefined`);
+    }
     try {
-      setLoading(true);
-      setCloseTimeModalVisible(false);
-      await insertAvailability(cid, dayOfWeek, openTime, date);
+      setSaveLoading(true);
+      await deleteAvailabilities(cid);
+      await insertAvailabilities(Array.from(availabilityMap.values()));
       await syncAvailability();
-      setLoading(false);
+      setSaveLoading(false);
+      setModified(false);
     } catch (error) {
       throw error;
     }
   };
 
-  if (loading) {
+  if (loading || cid === undefined) {
     return (
       <ThemedView>
         <CenteredActivityIndicator />
       </ThemedView>
     );
-  }
-
-  if (!cid) {
-    // the user is a charity administrator, but has not created a charity
-    return <></>;
   }
 
   const charity = getCharity(cid);
@@ -112,30 +157,43 @@ export default function AvailabilityTab() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text variant="bodyMedium">
-          Choose which days & times {charity.c_name} can accept donations
-        </Text>
+        <View style={styles.header}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
+            Availability
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            Choose which days & times {charity.c_name} can accept donations
+          </Text>
+        </View>
         <Text variant="titleLarge" style={{ marginTop: 20 }}>
           Weekly Hours
         </Text>
         <AvailabilityList
-          availability={availability}
+          availability={availabilityList}
           onPlusIconPress={handlePlusIconPress}
           onTrashPress={handleTrashPress}
         />
-
-        <TimePicker
-          label="Select opening time"
-          visible={openTimeModalVisible}
-          onConfirm={handleConfirmOpenTime}
-          onDismiss={() => setOpenTimeModalVisible(false)}
-        />
-        <TimePicker
-          label="Select closing time"
-          visible={closeTimeModalVisible}
-          onConfirm={async (hours, minutes) => handleConfirmCloseTime(hours, minutes)}
-          onDismiss={() => setCloseTimeModalVisible(false)}
-        />
+        <Portal>
+          <TimePicker
+            visible={timePickerVisible}
+            setVisible={setTimePickerVisible}
+            startTime={startTime}
+            endTime={endTime}
+            selected={selectedTime}
+            setSelected={setSelectedTime}
+            onConfirm={handleConfirm}
+            key={selectedId}
+          />
+        </Portal>
+      </View>
+      <View style={styles.bottomBar}>
+        <View style={{ marginHorizontal: 20 }}>
+          <Button onPress={handleSave} loading={saveLoading} mode="contained" disabled={!modified}>
+            Save
+          </Button>
+        </View>
       </View>
     </ThemedView>
   );
@@ -144,5 +202,19 @@ export default function AvailabilityTab() {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
+    flex: 1,
+  },
+  bottomBar: {
+    flexDirection: 'row-reverse',
+    margin: 20,
+  },
+  header: {
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
+  subtitle: {
+    marginTop: 6,
   },
 });
