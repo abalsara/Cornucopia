@@ -235,7 +235,7 @@ export default function NewNeedForm({ onClose, onPost, cid }: Props) {
                 if (text === '') {
                   setQuantity(0);
                 } else {
-                  const num = parseInt(text);
+                  const num = parseInt(text, 10);
                   if (!isNaN(num)) {
                     setQuantity(num);
                   }
