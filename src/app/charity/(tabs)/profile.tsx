@@ -101,8 +101,11 @@ export default function CharityProfileScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text variant="headlineMedium" style={styles.headerTitle}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
             Charity Profile
+          </Text>
+          <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
+            Manage your charity's information
           </Text>
         </View>
 
@@ -111,9 +114,7 @@ export default function CharityProfileScreen() {
           {/* Charity Icon */}
           <View style={styles.charityIconContainer}>
             <View style={[styles.charityIcon, { backgroundColor: theme.colors.primaryContainer }]}>
-              <Text variant="headlineLarge" style={styles.iconText}>
-                {charity.c_name?.[0]?.toUpperCase() || 'C'}
-              </Text>
+              <Text variant="headlineLarge">{charity.c_name?.[0]?.toUpperCase() || 'C'}</Text>
             </View>
           </View>
 
@@ -139,7 +140,7 @@ export default function CharityProfileScreen() {
 
         {/* Contact Information */}
         <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleLarge" style={styles.sectionTitle}>
             Contact Information
           </Text>
 
@@ -176,7 +177,7 @@ export default function CharityProfileScreen() {
 
         {/* Causes */}
         <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
+          <Text variant="titleLarge" style={styles.sectionTitle}>
             Causes We Support
           </Text>
           {charity.causes && charity.causes.length > 0 ? (
@@ -216,7 +217,8 @@ export default function CharityProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   centerContainer: {
     flex: 1,
@@ -246,7 +248,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerTitle: {
-    fontWeight: '700',
+    fontWeight: '500',
+    marginBottom: 6,
   },
   profileSection: {
     alignItems: 'center',
@@ -265,11 +268,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  iconText: {
-    fontWeight: 'bold',
-  },
   charityName: {
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -287,8 +287,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontWeight: '700',
     marginBottom: 12,
+    fontWeight: '500',
   },
   infoRow: {
     flexDirection: 'row',

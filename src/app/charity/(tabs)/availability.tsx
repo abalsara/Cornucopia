@@ -1,7 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Portal, Text } from 'react-native-paper';
+import { Button, Portal, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -25,6 +25,7 @@ DEFAULT_END_TIME.setHours(17, 0, 0, 0);
  */
 export default function AvailabilityTab() {
   // loading state
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -156,9 +157,16 @@ export default function AvailabilityTab() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text variant="bodyMedium">
-          Choose which days & times {charity.c_name} can accept donations
-        </Text>
+        <View style={styles.header}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
+            Availability
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            Choose which days & times {charity.c_name} can accept donations
+          </Text>
+        </View>
         <Text variant="titleLarge" style={{ marginTop: 20 }}>
           Weekly Hours
         </Text>
@@ -199,5 +207,14 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row-reverse',
     margin: 20,
+  },
+  header: {
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
+  subtitle: {
+    marginTop: 6,
   },
 });

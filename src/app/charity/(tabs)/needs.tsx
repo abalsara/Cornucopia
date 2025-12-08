@@ -94,8 +94,12 @@ export default function Needs() {
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
             <View style={styles.titleBlock}>
-              <Text variant="headlineLarge">Needs</Text>
-              <Text variant="bodyMedium" style={styles.subtitle}>
+              <Text variant="headlineLarge" style={styles.headerTitle}>
+                Needs
+              </Text>
+              <Text
+                variant="bodyMedium"
+                style={[styles.subtitle, { color: theme.colors.onBackground }]}>
                 Post your organization's current needs so donors know what to give
               </Text>
             </View>
@@ -244,13 +248,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 12,
   },
+  headerTitle: {
+    fontWeight: '500',
+  },
   titleBlock: {
     flex: 1,
     paddingRight: 8,
   },
   subtitle: {
     marginTop: 6,
-    color: '#888',
   },
   sectionBlock: {
     marginTop: 18,

@@ -1,7 +1,7 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
 import ThemedView from '@/src/components/ThemedView';
@@ -14,6 +14,7 @@ import { ScheduledDonation } from '@/src/types/DonationItem/ScheduledDonation';
  * Displays all donations that the currently logged-in donor has scheduled with charities.
  */
 export default function Index() {
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [donations, setDonations] = useState<ScheduledDonation[] | undefined>(undefined);
   const router = useRouter();
@@ -50,7 +51,16 @@ export default function Index() {
   return (
     <ThemedView>
       <View style={styles.container}>
-        <Text>Upcoming</Text>
+        <View style={styles.header}>
+          <Text variant="headlineLarge" style={styles.headerTitle}>
+            Upcoming
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            Donations you've scheduled
+          </Text>
+        </View>
         <ScrollView>
           <ScheduledDonationCardList
             scheduledDonations={donations}
@@ -68,5 +78,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     gap: 12,
     flex: 1,
+  },
+  header: {
+    marginBottom: 12,
+  },
+  headerTitle: {
+    fontWeight: '500',
+  },
+  subtitle: {
+    marginTop: 6,
   },
 });
