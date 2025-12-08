@@ -7,7 +7,7 @@ import { Availability } from '@/src/lib/availability';
 type AvailabilityListProps = {
   availability: Availability[];
   onPlusIconPress: (dayOfWeek: number) => void;
-  onTrashPress: () => Promise<void>;
+  onTrashPress: (id: string) => void;
 };
 
 /**

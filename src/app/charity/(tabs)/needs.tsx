@@ -6,7 +6,7 @@ import EditNeedForm from '@/src/app/charity/(modals)/editNeedForm';
 import NewNeedForm, { type NeedPayload } from '@/src/app/charity/(modals)/newNeedForm';
 import ThemedView from '@/src/components/ThemedView';
 import { getAdminByUid } from '@/src/lib/admin';
-import { insertNeed, getCharityNeeds } from '@/src/lib/needs';
+import { insertNeed, getCharityNeeds, editNeed } from '@/src/lib/needs';
 import { getCurrentUserId } from '@/src/lib/userId';
 
 type NeedCard = {
@@ -34,9 +34,12 @@ export default function Needs() {
     Low: themeColors.primary,
   };
 
+  const [needsData, setNeedsData] = useState<any[]>([]);
+
   const loadNeeds = useCallback(async (charityId: string) => {
     try {
       const fetchedNeeds = await getCharityNeeds(charityId);
+      setNeedsData(fetchedNeeds);
 
       // Group flat list by category
       const groups: Record<string, NeedCard[]> = {};
@@ -126,16 +129,25 @@ export default function Needs() {
                     style={styles.card}
                     mode="elevated"
                     // Opens the edit need modal
-                    onPress={() =>
-                      setSelectedNeed({
-                        cid: cid || '',
-                        item_name: need.title,
-                        notes: need.subtitle,
-                        category: section.title, // Note: section.title is the category name
-                        priority: need.status,
-                        // Note: Assuming we might want to pass ID or other fields for editing later
-                      })
-                    }>
+                    onPress={() => {
+                      const fullNeedData = needsData.find((n) => n.item_id === need.id);
+                      if (fullNeedData) {
+                        setSelectedNeed({
+                          cid: cid || '',
+                          item_name: fullNeedData.itemName,
+                          notes: fullNeedData.notes,
+                          category: fullNeedData.category,
+                          priority: fullNeedData.priority,
+                          quantity: fullNeedData.quantity,
+                          unit: fullNeedData.unit,
+                          type: fullNeedData.type,
+                          animal: fullNeedData.animal,
+                          gender: fullNeedData.gender,
+                          age_group: fullNeedData.ageGroup,
+                          storage_reqs: fullNeedData.storageRequirement,
+                        });
+                      }
+                    }}>
                     <Card.Title
                       title={need.title}
                       subtitle={need.subtitle}
@@ -179,13 +191,42 @@ export default function Needs() {
               initial={selectedNeed}
               onClose={() => setSelectedNeed(null)}
               onUpdate={async (payload) => {
-                // TODO: persist `payload`
-                if (cid) await loadNeeds(cid);
+                try {
+                  const needData = needsData.find(
+                    (n) =>
+                      n.itemName === selectedNeed.item_name && n.category === selectedNeed.category,
+                  );
+                  if (needData && cid) {
+                    const table = needData.category;
+                    const body = {
+                      item_id: needData.item_id,
+                      ...payload,
+                    };
+                    await editNeed(cid, table, body as any, false);
+                    await loadNeeds(cid);
+                  }
+                } catch (error) {
+                  console.error('Error updating need:', error);
+                }
                 setSelectedNeed(null);
               }}
               onRemove={async () => {
-                // TODO: delete selectedNeed
-                if (cid) await loadNeeds(cid);
+                try {
+                  const needData = needsData.find(
+                    (n) =>
+                      n.itemName === selectedNeed.item_name && n.category === selectedNeed.category,
+                  );
+                  if (needData && cid) {
+                    const table = needData.category;
+                    const body = {
+                      item_id: needData.item_id,
+                    };
+                    await editNeed(cid, table, body as any, true);
+                    await loadNeeds(cid);
+                  }
+                } catch (error) {
+                  console.error('Error removing need:', error);
+                }
                 setSelectedNeed(null);
               }}
             />
