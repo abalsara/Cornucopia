@@ -55,6 +55,10 @@ export default function ProfileScreen() {
     Alert.alert('Saved Charities', 'Saved charities page coming soon');
   };
 
+  const handleCreateCharity = () => {
+    router.push('/pages/createCharity');
+  };
+
   const handleAccountSettings = () => {
     // Navigate to account settings page
     Alert.alert('Account Settings', 'Account settings page coming soon');
@@ -175,6 +179,14 @@ export default function ProfileScreen() {
               Saved Charities
             </Text>
             <IconButton icon="chevron-right" size={24} onPress={handleSavedCharities} />
+          </View>
+
+          <View style={styles.linkItem}>
+            <IconButton icon="office-building-outline" size={24} />
+            <Text variant="bodyLarge" style={styles.linkText} onPress={handleCreateCharity}>
+              Create a Charity
+            </Text>
+            <IconButton icon="chevron-right" size={24} onPress={handleCreateCharity} />
           </View>
 
           <View style={styles.linkItem}>

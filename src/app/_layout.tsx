@@ -117,6 +117,7 @@ export default function RootLayout() {
               <Stack.Screen name="pages/donationConfirmedPage" />
               <Stack.Screen name="pages/donationDetailsPage" />
               <Stack.Screen name="pages/howDropoffWorksPage" />
+              <Stack.Screen name="pages/createCharity" />
             </Stack.Protected>
 
             <Stack.Protected guard={!isDonor}>
