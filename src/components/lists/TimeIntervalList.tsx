@@ -28,7 +28,11 @@ export default function TimeIntervalList({
   // Filter to this specific day
   const todaysPeriods = availability
     .filter((a) => a.day_of_week === dayOfWeek)
-    .sort((a, b) => a.period_index - b.period_index);
+    .sort((a, b) => {
+      const aOpenTime = new Date(a.open_time);
+      const bOpenTime = new Date(b.open_time);
+      return aOpenTime.getTime() - bOpenTime.getTime();
+    });
 
   // Generate all time segments
   const intervals: string[] = [];

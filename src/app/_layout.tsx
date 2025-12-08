@@ -5,7 +5,6 @@ import * as SystemUI from 'expo-system-ui';
 import { useState, useEffect } from 'react';
 import { useColorScheme, View } from 'react-native';
 import { ActivityIndicator, PaperProvider } from 'react-native-paper';
-import { en, registerTranslation } from 'react-native-paper-dates';
 
 import ThemedView from '../components/ThemedView';
 import { fetchAdmin } from '../lib/admin';
@@ -15,47 +14,6 @@ import { supabase } from '../lib/supabase';
 import { initCharitiesStore } from '../stores/charities';
 import { initRatingsStore } from '../stores/ratings';
 import { darkTheme, lightTheme } from '../styles/themes';
-
-/**
- * --------------------------------------------------------
- *  This section configures the React Native Paper Dates module
- * --------------------------------------------------------
- */
-const isAndroid = require('react-native').Platform.OS === 'android';
-
-if (isAndroid) {
-  require('@formatjs/intl-getcanonicallocales/polyfill');
-  require('@formatjs/intl-locale/polyfill');
-
-  require('@formatjs/intl-pluralrules/polyfill');
-  require('@formatjs/intl-pluralrules/locale-data/en.js');
-
-  require('@formatjs/intl-displaynames/polyfill');
-  require('@formatjs/intl-displaynames/locale-data/en.js');
-
-  require('@formatjs/intl-listformat/polyfill');
-  require('@formatjs/intl-listformat/locale-data/en.js');
-
-  require('@formatjs/intl-numberformat/polyfill');
-  require('@formatjs/intl-numberformat/locale-data/en.js');
-
-  require('@formatjs/intl-relativetimeformat/polyfill');
-  require('@formatjs/intl-relativetimeformat/locale-data/en.js');
-
-  require('@formatjs/intl-datetimeformat/polyfill');
-  require('@formatjs/intl-datetimeformat/locale-data/en.js');
-
-  require('@formatjs/intl-datetimeformat/add-golden-tz.js');
-
-  // https://formatjs.io/docs/polyfills/intl-datetimeformat/#default-timezone
-  if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-    (Intl.DateTimeFormat as any).__setDefaultTimeZone(require('expo-localization').timezone);
-  }
-}
-registerTranslation('en', en);
-/**
- * --------------------------------------------------------
- */
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);

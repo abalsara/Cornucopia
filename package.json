@@ -13,7 +13,8 @@
     "format": "prettier --write **/*.{js,jsx,ts,tsx,json,md}",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "test": "jest --passWithNoTests",
-    "deno-test": "deno test --allow-all supabase/functions/tests/*.ts"
+    "deno-test": "deno test --allow-all supabase/functions/tests/*.ts",
+    "postinstall": "patch-package"
   },
   "jest": {
     "preset": "jest-expo"
@@ -68,13 +69,13 @@
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",
     "expo-web-browser": "~15.0.10",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-native": "0.81.5",
     "react-native-calendars": "^1.1313.0",
+    "react-native-date-picker": "^5.0.13",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-paper": "^5.14.5",
-    "react-native-paper-dates": "^0.22.50",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
@@ -95,6 +96,7 @@
     "jest": "~29.7.0",
     "jest-expo": "~54.0.14",
     "lint-staged": "^16.2.6",
+    "patch-package": "^8.0.1",
     "prettier": "^3.6.2",
     "supabase": "^2.53.6",
     "ts-node": "^10.9.2",
