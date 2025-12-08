@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Portal, Text, useTheme } from 'react-native-paper';
 
 import CenteredActivityIndicator from '@/src/components/CenteredActivityIndicator';
@@ -167,14 +167,14 @@ export default function AvailabilityTab() {
             Choose which days & times {charity.c_name} can accept donations
           </Text>
         </View>
-        <Text variant="titleLarge" style={{ marginTop: 20 }}>
-          Weekly Hours
-        </Text>
-        <AvailabilityList
-          availability={availabilityList}
-          onPlusIconPress={handlePlusIconPress}
-          onTrashPress={handleTrashPress}
-        />
+        <ScrollView>
+          <AvailabilityList
+            availability={availabilityList}
+            onPlusIconPress={handlePlusIconPress}
+            onTrashPress={handleTrashPress}
+          />
+        </ScrollView>
+
         <Portal>
           <TimePicker
             visible={timePickerVisible}
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     flexDirection: 'row-reverse',
-    margin: 20,
+    margin: 10,
   },
   header: {
     marginBottom: 12,
