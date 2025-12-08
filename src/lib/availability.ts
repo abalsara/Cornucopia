@@ -5,7 +5,7 @@ import { Tables } from '../types/database.types';
 export type Availability = Tables<'Availability'>;
 
 type AdminAvailability = {
-  cid: string | null;
+  cid: string;
   availability: Availability[];
 };
 
@@ -13,22 +13,17 @@ type AdminAvailability = {
  * Fetches the charity ID and full availability list for the currently
  * authenticated administrator.
  *
- * If the logged-in user is not a charity administrator or has no associated
- * charity (`cid`), the function returns `{ cid: null, availability: [] }`.
- *
- * @returns {Promise<{ cid: string | null, availability: Availability[] }>}
- *   An object containing the admin's `cid` (or `null` if none) and the list
+ * @returns {Promise<{ cid: string, availability: Availability[] }>}
+ *   An object containing the admin's `cid` and the list
  *   of availability records for that charity.
  *
- * @throws {Error} If fetching the admin or availability data fails unexpectedly.
+ * @throws {Error} If user is not an admin or fetching the admin/availability data fails unexpectedly.
  */
 export const fetchAvailabilityByAdmin = async (): Promise<AdminAvailability> => {
   const admin = await fetchAdmin();
-
-  if (!admin || !admin.cid) {
-    return { cid: null, availability: [] };
+  if (!admin) {
+    throw new Error('User is not a charity admin');
   }
-
   return {
     cid: admin.cid,
     availability: await fetchAvailabilityByCid(admin.cid),
@@ -92,5 +87,29 @@ export const insertAvailability = async (
  */
 export const deleteAvailability = async (id: string): Promise<void> => {
   const { error } = await supabase.from('Availability').delete().eq('id', id);
+  if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);
+};
+
+/**
+ * Inserts one or more availability records into the `Availability` table.
+ *
+ * @param {Availability[]} availabilities - An array of availability objects to insert.
+ * @returns {Promise<void>} Resolves when the insert operation completes successfully.
+ * @throws {Error} If Supabase returns an error during insertion.
+ */
+export const insertAvailabilities = async (availabilities: Availability[]): Promise<void> => {
+  const { error } = await supabase.from('Availability').insert(availabilities);
+  if (error) throw new Error(`Error while calling insertAvailability: ${error.message}`);
+};
+
+/**
+ * Deletes all availability records associated with a specific charity.
+ *
+ * @param {string} cid - The charity id whose availability records should be deleted.
+ * @returns {Promise<void>} Resolves when the delete operation completes successfully.
+ * @throws {Error} If Supabase returns an error during deletion.
+ */
+export const deleteAvailabilities = async (cid: string): Promise<void> => {
+  const { error } = await supabase.from('Availability').delete().eq('cid', cid);
   if (error) throw new Error(`Error while calling deleteAvailability: ${error.message}`);
 };

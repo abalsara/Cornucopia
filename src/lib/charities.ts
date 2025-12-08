@@ -1,5 +1,4 @@
 import type { User } from '@supabase/supabase-js';
-import { randomUUID } from 'expo-crypto';
 
 import { geocodeAddress } from './geocode';
 import { supabase } from './supabase';
@@ -27,36 +26,27 @@ export async function createCharity(
 
   const { lat, lng } = await geocodeAddress(`${address}, ${city}, ${state} ${zip_code}`);
 
-  const cid = randomUUID(); // generate cid locally for proper insert into both tables
-
-  // 1) Insert charity
-  const { error: charityError } = await supabase.from('Charities').insert({
-    cid,
-    c_name,
-    mission,
-    city,
-    state,
-    address,
-    zip_code,
-    phone_num,
-    email,
-    causes,
-    latitude: lat,
-    longitude: lng,
+  const { data, error } = await supabase.functions.invoke('create-charity', {
+    body: {
+      user_id: user.id,
+      c_name,
+      mission,
+      city,
+      state,
+      address,
+      zip_code,
+      phone_num,
+      email,
+      causes,
+      latitude: lat,
+      longitude: lng,
+    },
+    method: 'POST',
   });
 
-  if (charityError) throw charityError;
-
-  // 2) Insert admin row (idempotent)
-  const { error: adminError } = await supabase.from('admin').insert({ uid: user.id, cid });
-
-  if (adminError) {
-    await supabase.from('Charities').delete().eq('cid', cid);
-    throw adminError;
-  }
+  if (error) throw error;
 
   // return created row
-  const { data } = await supabase.from('Charities').select('*').eq('cid', cid).single();
   return data as Charity;
 }
 
